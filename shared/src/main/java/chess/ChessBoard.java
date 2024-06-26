@@ -8,8 +8,12 @@ package chess;
  */
 public class ChessBoard {
 
+    public ChessPiece[][] board;
+
     public ChessBoard() {
-        
+        board = new ChessPiece[8][8];
+        clearBoard();
+        resetHelper();
     }
 
     /**
@@ -19,7 +23,9 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
+        board[row][column] = piece;
     }
 
     /**
@@ -30,7 +36,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
+        return board[row][column];
     }
 
     /**
@@ -38,6 +46,36 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        clearBoard();
+        resetHelper();
+    }
+
+    /**
+     * Places the pieces on the board in normal starting position
+     */
+    private void resetHelper() {
+        for (ChessPiece spot : board[1]) {
+            spot = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        }
+        for (ChessPiece spot : board[6]) {
+            spot = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        }
+
+        ChessPiece.PieceType[] order = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
+        for (int i = 0; i < 8; i++) {
+            board[0][i] = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
+            board[7][i] = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
+        }
+    }
+
+    /**
+     * Removes all pieces from the board
+     */
+    private void clearBoard() {
+        for (ChessPiece[] row : board) {
+            for (ChessPiece square : row) {
+                square = null;
+            }
+        }
     }
 }
