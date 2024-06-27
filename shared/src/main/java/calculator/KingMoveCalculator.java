@@ -11,30 +11,30 @@ public class KingMoveCalculator implements MoveCalculator {
 
         if (row + 1 <= 7) {
             chess.ChessPosition position = new chess.ChessPosition(row+1, column);
-            chess.ChessMove m = getMove(board, position, start, piece);
+            chess.ChessMove m = getMove(board, start, position, piece);
             if (m != null) {
                 moves.add(m);
             }
             if (column + 1 <= 7) {
                 chess.ChessPosition position2 = new chess.ChessPosition(row+1, column+1);
-                chess.ChessMove m2 = getMove(board, position2, start, piece);
+                chess.ChessMove m2 = getMove(board, start, position2, piece);
                 if (m2 != null) {
                     moves.add(m2);
                 }
                 chess.ChessPosition position4 = new chess.ChessPosition(row, column-1);
-                chess.ChessMove m4 = getMove(board, position4, start, piece);
+                chess.ChessMove m4 = getMove(board, start, position4, piece);
                 if (m4 != null) {
                     moves.add(m4);
                 }
             }
             if (column - 1 >= 0) {
                 chess.ChessPosition position3 = new chess.ChessPosition(row+1, column-1);
-                chess.ChessMove m3 = getMove(board, position3, start, piece);
+                chess.ChessMove m3 = getMove(board, start, position3, piece);
                 if (m3 != null) {
                     moves.add(m3);
                 }
                 chess.ChessPosition position5 = new chess.ChessPosition(row, column-1);
-                chess.ChessMove m5 = getMove(board, position5, start, piece);
+                chess.ChessMove m5 = getMove(board, start, position5, piece);
                 if (m5 != null) {
                     moves.add(m5);
                 }
@@ -43,20 +43,20 @@ public class KingMoveCalculator implements MoveCalculator {
 
         if (row - 1 >= 0) {
             chess.ChessPosition position = new chess.ChessPosition(row-1, column);
-            chess.ChessMove m = getMove(board, position, start, piece);
+            chess.ChessMove m = getMove(board, start, position, piece);
             if (m != null) {
                 moves.add(m);
             }
             if (column + 1 <= 7) {
                 chess.ChessPosition position2 = new chess.ChessPosition(row-1, column+1);
-                chess.ChessMove m2 = getMove(board, position2, start, piece);
+                chess.ChessMove m2 = getMove(board, start, position2, piece);
                 if (m2 != null) {
                     moves.add(m2);
                 }
             }
             if (column - 1 >= 0) {
                 chess.ChessPosition position3 = new chess.ChessPosition(row-1, column-1);
-                chess.ChessMove m3 = getMove(board, position3, start, piece);
+                chess.ChessMove m3 = getMove(board, start, position3, piece);
                 if (m3 != null) {
                     moves.add(m3);
                 }
@@ -68,29 +68,17 @@ public class KingMoveCalculator implements MoveCalculator {
 
     public chess.ChessMove getMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessPiece piece) {
         chess.ChessMove move = null;
-        if (isValidMove(board, end, piece.getTeamColor())) {
-            if (isPromote(end, piece.getTeamColor())) {
-                move = new chess.ChessMove(start, end, chess.ChessPiece.PieceType.QUEEN);
-            }
-            else {
-                move = new chess.ChessMove(start, end, piece.getPieceType());
-            }
+        if (isValidMove(board, start, end, piece.getTeamColor())) {
+            move = new chess.ChessMove(start, end, piece.getPieceType());
         }
         return move;
     }
 
-    public boolean isValidMove(chess.ChessBoard board, chess.ChessPosition end, chess.ChessGame.TeamColor team) {
+    public boolean isValidMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessGame.TeamColor team) {
         chess.ChessPiece piece = board.getPiece(end);
         if (piece == null) {
             return true;
         }
         return piece.getTeamColor() != team;
-    }
-
-    public boolean isPromote(chess.ChessPosition end, chess.ChessGame.TeamColor team) {
-        if (team == chess.ChessGame.TeamColor.BLACK && end.getRow() == 0) {
-            return true;
-        }
-        return team == chess.ChessGame.TeamColor.WHITE && end.getRow() == 7;
     }
 }
