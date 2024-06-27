@@ -1,5 +1,8 @@
 package chess;
 
+import calculator.KingMoveCalculator;
+import calculator.KnightMoveCalculator;
+
 import java.util.Collection;
 
 /**
@@ -52,6 +55,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        if (type == PieceType.KNIGHT) {
+            KnightMoveCalculator p = new KnightMoveCalculator(board, myPosition, this);
+            return p.calculateMoves();
+        }
     }
 }

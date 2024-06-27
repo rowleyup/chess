@@ -6,7 +6,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class BishopMoveCalculator implements MoveCalculator {
-    public Collection<ChessMove> calculateMoves(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPiece piece) {
+    private final chess.ChessBoard board;
+    private final chess.ChessPosition start;
+    private final chess.ChessPiece piece;
+
+    public BishopMoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
+        board = b;
+        start = s;
+        piece = p;
+    }
+
+    public Collection<ChessMove> calculateMoves() {
         Collection<chess.ChessMove> moves = new ArrayList<ChessMove>();
         int row = start.getRow() - 1;
         int column = start.getColumn() - 1;
