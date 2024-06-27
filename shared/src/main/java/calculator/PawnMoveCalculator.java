@@ -1,13 +1,21 @@
 package calculator;
 
-import chess.ChessMove;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class PawnMoveCalculator implements MoveCalculator {
-    public Collection<ChessMove> calculateMoves(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPiece piece) {
-        Collection<chess.ChessMove> moves = new ArrayList<ChessMove>();
+    private final chess.ChessBoard board;
+    private final chess.ChessPosition start;
+    private final chess.ChessPiece piece;
+
+    public PawnMoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
+        board = b;
+        start = s;
+        piece = p;
+    }
+
+    public Collection<chess.ChessMove> calculateMoves() {
+        Collection<chess.ChessMove> moves = new ArrayList<chess.ChessMove>();
         int row = start.getRow() - 1;
         int column = start.getColumn() - 1;
 
