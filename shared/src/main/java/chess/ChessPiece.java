@@ -2,6 +2,10 @@ package chess;
 
 import calculator.KingMoveCalculator;
 import calculator.KnightMoveCalculator;
+import calculator.RookMoveCalculator;
+import calculator.QueenMoveCalculator;
+import calculator.PawnMoveCalculator;
+import calculator.BishopMoveCalculator;
 
 import java.util.Collection;
 
@@ -57,6 +61,26 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (type == PieceType.KNIGHT) {
             KnightMoveCalculator p = new KnightMoveCalculator(board, myPosition, this);
+            return p.calculateMoves();
+        }
+        else if (type == PieceType.ROOK) {
+            RookMoveCalculator p = new RookMoveCalculator(board, myPosition, this);
+            return p.calculateMoves();
+        }
+        else if (type == PieceType.PAWN) {
+            PawnMoveCalculator p = new PawnMoveCalculator(board, myPosition, this);
+            return p.calculateMoves();
+        }
+        else if (type == PieceType.KING) {
+            KingMoveCalculator p = new KingMoveCalculator(board, myPosition, this);
+            return p.calculateMoves();
+        }
+        else if (type == PieceType.BISHOP) {
+            BishopMoveCalculator p = new BishopMoveCalculator(board, myPosition, this);
+            return p.calculateMoves();
+        }
+        else {
+            QueenMoveCalculator p = new QueenMoveCalculator(board, myPosition, this);
             return p.calculateMoves();
         }
     }
