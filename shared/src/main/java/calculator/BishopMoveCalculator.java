@@ -18,13 +18,13 @@ public class BishopMoveCalculator implements MoveCalculator {
 
     public Collection<ChessMove> calculateMoves() {
         Collection<chess.ChessMove> moves = new ArrayList<ChessMove>();
-        int row = start.getRow() - 1;
-        int column = start.getColumn() - 1;
+        int row = start.getRow();
+        int column = start.getColumn();
 
         int r = row;
         int c = column;
 
-        while (r < 7 && c < 7) {
+        while (r < 8 && c < 8) {
             r++;
             c++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
@@ -40,7 +40,7 @@ public class BishopMoveCalculator implements MoveCalculator {
         r = row;
         c = column;
 
-        while (r < 7 && c > 0) {
+        while (r < 8 && c > 1) {
             r++;
             c--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
@@ -56,7 +56,7 @@ public class BishopMoveCalculator implements MoveCalculator {
         r = row;
         c = column;
 
-        while (r > 0 && c < 7) {
+        while (r > 1 && c < 8) {
             r--;
             c++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
@@ -72,7 +72,7 @@ public class BishopMoveCalculator implements MoveCalculator {
         r = row;
         c = column;
 
-        while (r > 0 && c > 0) {
+        while (r > 1 && c > 1) {
             r--;
             c--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);

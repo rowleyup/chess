@@ -16,16 +16,16 @@ public class KingMoveCalculator implements MoveCalculator {
 
     public Collection<chess.ChessMove> calculateMoves() {
         Collection<chess.ChessMove> moves = new ArrayList<chess.ChessMove>();
-        int row = start.getRow() - 1;
-        int column = start.getColumn() - 1;
+        int row = start.getRow();
+        int column = start.getColumn();
 
-        if (row + 1 <= 7) {
+        if (row + 1 <= 8) {
             chess.ChessPosition position = new chess.ChessPosition(row+1, column);
             chess.ChessMove m = getMove(board, start, position, piece);
             if (m != null) {
                 moves.add(m);
             }
-            if (column + 1 <= 7) {
+            if (column + 1 <= 8) {
                 chess.ChessPosition position2 = new chess.ChessPosition(row+1, column+1);
                 chess.ChessMove m2 = getMove(board, start, position2, piece);
                 if (m2 != null) {
@@ -37,7 +37,7 @@ public class KingMoveCalculator implements MoveCalculator {
                     moves.add(m4);
                 }
             }
-            if (column - 1 >= 0) {
+            if (column - 1 >= 1) {
                 chess.ChessPosition position3 = new chess.ChessPosition(row+1, column-1);
                 chess.ChessMove m3 = getMove(board, start, position3, piece);
                 if (m3 != null) {
@@ -51,20 +51,20 @@ public class KingMoveCalculator implements MoveCalculator {
             }
         }
 
-        if (row - 1 >= 0) {
+        if (row - 1 >= 1) {
             chess.ChessPosition position = new chess.ChessPosition(row-1, column);
             chess.ChessMove m = getMove(board, start, position, piece);
             if (m != null) {
                 moves.add(m);
             }
-            if (column + 1 <= 7) {
+            if (column + 1 <= 8) {
                 chess.ChessPosition position2 = new chess.ChessPosition(row-1, column+1);
                 chess.ChessMove m2 = getMove(board, start, position2, piece);
                 if (m2 != null) {
                     moves.add(m2);
                 }
             }
-            if (column - 1 >= 0) {
+            if (column - 1 >= 1) {
                 chess.ChessPosition position3 = new chess.ChessPosition(row-1, column-1);
                 chess.ChessMove m3 = getMove(board, start, position3, piece);
                 if (m3 != null) {

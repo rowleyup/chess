@@ -16,8 +16,8 @@ public class PawnMoveCalculator implements MoveCalculator {
 
     public Collection<chess.ChessMove> calculateMoves() {
         Collection<chess.ChessMove> moves = new ArrayList<chess.ChessMove>();
-        int row = start.getRow() - 1;
-        int column = start.getColumn() - 1;
+        int row = start.getRow();
+        int column = start.getColumn();
 
         if (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK) {
             chess.ChessPosition position = new chess.ChessPosition(row-1, column);
@@ -36,7 +36,7 @@ public class PawnMoveCalculator implements MoveCalculator {
                 moves.add(m3);
             }
 
-            if (row == 6) {
+            if (row == 7) {
                 chess.ChessPosition position4 = new chess.ChessPosition(row-2, column);
                 chess.ChessMove m4 = getMove(board, start, position4, piece);
                 if (m4 != null) {
@@ -61,7 +61,7 @@ public class PawnMoveCalculator implements MoveCalculator {
                 moves.add(m3);
             }
 
-            if (row == 1) {
+            if (row == 2) {
                 chess.ChessPosition position4 = new chess.ChessPosition(row+2, column);
                 chess.ChessMove m4 = getMove(board, start, position4, piece);
                 if (m4 != null) {
@@ -75,6 +75,11 @@ public class PawnMoveCalculator implements MoveCalculator {
 
     public chess.ChessMove getMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessPiece piece) {
         chess.ChessMove move = null;
+        int row = end.getRow();
+        int column = end.getColumn();
+        if (row > 8 || row < 1 || column > 8 || column < 1) {
+            return move;
+        }
         if (isValidMove(board, start, end, piece.getTeamColor())) {
             if (isPromote(end, piece.getTeamColor())) {
                 move = new chess.ChessMove(start, end, chess.ChessPiece.PieceType.QUEEN);

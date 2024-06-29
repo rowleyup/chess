@@ -16,13 +16,13 @@ public class RookMoveCalculator implements MoveCalculator {
 
     public Collection<chess.ChessMove> calculateMoves() {
         Collection<chess.ChessMove> moves = new ArrayList<chess.ChessMove>();
-        int row = start.getRow() - 1;
-        int column = start.getColumn() - 1;
+        int row = start.getRow();
+        int column = start.getColumn();
 
         int r = row;
         int c = column;
 
-        while (r < 7) {
+        while (r < 8) {
             r++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
@@ -36,7 +36,7 @@ public class RookMoveCalculator implements MoveCalculator {
 
         r = row;
 
-        while (c > 0) {
+        while (c > 1) {
             c--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
@@ -50,7 +50,7 @@ public class RookMoveCalculator implements MoveCalculator {
 
         c = column;
 
-        while (r > 0) {
+        while (r > 1) {
             r--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
@@ -64,7 +64,7 @@ public class RookMoveCalculator implements MoveCalculator {
 
         r = row;
 
-        while (c < 7) {
+        while (c < 8) {
             c++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
