@@ -85,7 +85,7 @@ public class PawnMoveCalculator implements MoveCalculator {
                 move = new chess.ChessMove(start, end, chess.ChessPiece.PieceType.QUEEN);
             }
             else {
-                move = new chess.ChessMove(start, end, piece.getPieceType());
+                move = new chess.ChessMove(start, end, null);
             }
         }
         return move;

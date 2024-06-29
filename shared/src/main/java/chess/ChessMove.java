@@ -61,14 +61,22 @@ public class ChessMove {
         }
 
         ChessMove other = (ChessMove)obj;
-        return (start == other.start && end == other.end && promote == other.promote);
+        if (promote != null && other.promote != null) {
+            return (start.equals(other.start) && end.equals(other.end) && promote.equals(other.promote));
+        }
+        else if (promote != null || other.promote != null) {
+            return false;
+        }
+        return (start.equals(other.start) && end.equals(other.end));
     }
 
     @Override
     public int hashCode() {
         int result = start.hashCode();
         result = 31 * result + end.hashCode();
-        result = 31 * result + promote.hashCode();
+        if (promote != null) {
+            result = 31 * result + promote.hashCode();
+        }
         return result;
     }
 }

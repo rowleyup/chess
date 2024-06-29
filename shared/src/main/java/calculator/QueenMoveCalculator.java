@@ -146,7 +146,7 @@ public class QueenMoveCalculator implements MoveCalculator {
     public chess.ChessMove getMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessPiece piece) {
         chess.ChessMove move = null;
         if (isValidMove(board, start, end, piece.getTeamColor())) {
-            move = new chess.ChessMove(start, end, piece.getPieceType());
+            move = new chess.ChessMove(start, end, null);
         }
         return move;
     }
