@@ -84,4 +84,32 @@ public class ChessPiece {
             return p.calculateMoves();
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] type: %s, color: %s", getClass().getName(), this.type, this.color);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        ChessPiece other = (ChessPiece)obj;
+        return (type == other.type && color == other.color);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + color.hashCode();
+        return result;
+    }
 }
