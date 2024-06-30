@@ -19,58 +19,52 @@ public class KingMoveCalculator implements MoveCalculator {
         int row = start.getRow();
         int column = start.getColumn();
 
-        if (row + 1 <= 8) {
-            chess.ChessPosition position = new chess.ChessPosition(row+1, column);
-            chess.ChessMove m = getMove(board, start, position, piece);
-            if (m != null) {
-                moves.add(m);
-            }
-            if (column + 1 <= 8) {
-                chess.ChessPosition position2 = new chess.ChessPosition(row+1, column+1);
-                chess.ChessMove m2 = getMove(board, start, position2, piece);
-                if (m2 != null) {
-                    moves.add(m2);
-                }
-                chess.ChessPosition position4 = new chess.ChessPosition(row, column-1);
-                chess.ChessMove m4 = getMove(board, start, position4, piece);
-                if (m4 != null) {
-                    moves.add(m4);
-                }
-            }
-            if (column - 1 >= 1) {
-                chess.ChessPosition position3 = new chess.ChessPosition(row+1, column-1);
-                chess.ChessMove m3 = getMove(board, start, position3, piece);
-                if (m3 != null) {
-                    moves.add(m3);
-                }
-                chess.ChessPosition position5 = new chess.ChessPosition(row, column-1);
-                chess.ChessMove m5 = getMove(board, start, position5, piece);
-                if (m5 != null) {
-                    moves.add(m5);
-                }
-            }
+        chess.ChessPosition position = new chess.ChessPosition(row+1, column);
+        chess.ChessMove m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
         }
 
-        if (row - 1 >= 1) {
-            chess.ChessPosition position = new chess.ChessPosition(row-1, column);
-            chess.ChessMove m = getMove(board, start, position, piece);
-            if (m != null) {
-                moves.add(m);
-            }
-            if (column + 1 <= 8) {
-                chess.ChessPosition position2 = new chess.ChessPosition(row-1, column+1);
-                chess.ChessMove m2 = getMove(board, start, position2, piece);
-                if (m2 != null) {
-                    moves.add(m2);
-                }
-            }
-            if (column - 1 >= 1) {
-                chess.ChessPosition position3 = new chess.ChessPosition(row-1, column-1);
-                chess.ChessMove m3 = getMove(board, start, position3, piece);
-                if (m3 != null) {
-                    moves.add(m3);
-                }
-            }
+        position = new chess.ChessPosition(row+1, column+1);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
+        }
+
+        position = new chess.ChessPosition(row, column+1);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
+        }
+
+        position = new chess.ChessPosition(row-1, column+1);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
+        }
+
+        position = new chess.ChessPosition(row-1, column);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
+        }
+
+        position = new chess.ChessPosition(row-1, column-1);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
+        }
+
+        position = new chess.ChessPosition(row, column-1);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
+        }
+
+        position = new chess.ChessPosition(row+1, column-1);
+        m = getMove(board, start, position, piece);
+        if (m != null) {
+            moves.add(m);
         }
 
         return moves;
@@ -85,6 +79,9 @@ public class KingMoveCalculator implements MoveCalculator {
     }
 
     public boolean isValidMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessGame.TeamColor team) {
+        if (end.getRow() > 8 || end.getRow() < 1 || end.getColumn() > 8 || end.getColumn() < 1) {
+            return false;
+        }
         chess.ChessPiece piece = board.getPiece(end);
         if (piece == null) {
             return true;

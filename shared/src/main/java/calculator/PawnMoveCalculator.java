@@ -36,7 +36,7 @@ public class PawnMoveCalculator implements MoveCalculator {
                 moves.add(m3);
             }
 
-            if (row == 7) {
+            if (row == 7 && board.getPiece(new chess.ChessPosition(row-1, column)) == null) {
                 chess.ChessPosition position4 = new chess.ChessPosition(row-2, column);
                 chess.ChessMove m4 = getMove(board, start, position4, piece);
                 if (m4 != null) {
@@ -61,7 +61,7 @@ public class PawnMoveCalculator implements MoveCalculator {
                 moves.add(m3);
             }
 
-            if (row == 2) {
+            if (row == 2 && board.getPiece(new chess.ChessPosition(row+1, column)) == null) {
                 chess.ChessPosition position4 = new chess.ChessPosition(row+2, column);
                 chess.ChessMove m4 = getMove(board, start, position4, piece);
                 if (m4 != null) {
@@ -100,10 +100,7 @@ public class PawnMoveCalculator implements MoveCalculator {
             }
             return piece.getTeamColor() != team;
         }
-        if (piece == null) {
-            return true;
-        }
-        return piece.getTeamColor() != team;
+        return piece == null;
     }
 
     public boolean isPromote(chess.ChessPosition end, chess.ChessGame.TeamColor team) {

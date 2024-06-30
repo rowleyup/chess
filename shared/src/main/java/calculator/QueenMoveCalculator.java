@@ -28,6 +28,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -44,6 +48,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -60,6 +68,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -76,6 +88,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -91,6 +107,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -105,6 +125,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -119,6 +143,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -133,6 +161,10 @@ public class QueenMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {

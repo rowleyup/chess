@@ -30,22 +30,10 @@ public class BishopMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
-                moves.add(m);
-            }
-            else {
-                break;
-            }
-        }
-
-        r = row;
-        c = column;
-
-        while (r < 8 && c > 1) {
-            r++;
-            c--;
-            chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(board, start, p, piece);
-            if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -62,6 +50,10 @@ public class BishopMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {
@@ -78,6 +70,30 @@ public class BishopMoveCalculator implements MoveCalculator {
             chess.ChessPosition p = new chess.ChessPosition(r, c);
             chess.ChessMove m = getMove(board, start, p, piece);
             if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
+                moves.add(m);
+            }
+            else {
+                break;
+            }
+        }
+
+        r = row;
+        c = column;
+
+        while (r < 8 && c > 1) {
+            r++;
+            c--;
+            chess.ChessPosition p = new chess.ChessPosition(r, c);
+            chess.ChessMove m = getMove(board, start, p, piece);
+            if (m != null) {
+                if (board.getPiece(p) != null) {
+                    moves.add(m);
+                    break;
+                }
                 moves.add(m);
             }
             else {

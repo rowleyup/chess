@@ -13,7 +13,6 @@ public class ChessBoard {
     public ChessBoard() {
         board = new ChessPiece[8][8];
         clearBoard();
-        resetHelper();
     }
 
     /**
