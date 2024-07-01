@@ -1,11 +1,6 @@
 package chess;
 
-import calculator.KingMoveCalculator;
-import calculator.KnightMoveCalculator;
-import calculator.RookMoveCalculator;
-import calculator.QueenMoveCalculator;
-import calculator.PawnMoveCalculator;
-import calculator.BishopMoveCalculator;
+import calculator.*;
 
 import java.util.Collection;
 
@@ -18,7 +13,7 @@ import java.util.Collection;
 public class ChessPiece {
 
     private final ChessGame.TeamColor color;
-    private ChessPiece.PieceType type;
+    private final ChessPiece.PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType pieceType) {
         color = pieceColor;
@@ -59,28 +54,29 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        MoveCalculator p;
         if (type == PieceType.KNIGHT) {
-            KnightMoveCalculator p = new KnightMoveCalculator(board, myPosition, this);
+            p = new KnightMoveCalculator(board, myPosition);
             return p.calculateMoves();
         }
         else if (type == PieceType.ROOK) {
-            RookMoveCalculator p = new RookMoveCalculator(board, myPosition, this);
+            p = new RookMoveCalculator(board, myPosition);
             return p.calculateMoves();
         }
         else if (type == PieceType.PAWN) {
-            PawnMoveCalculator p = new PawnMoveCalculator(board, myPosition, this);
+            p = new PawnMoveCalculator(board, myPosition);
             return p.calculateMoves();
         }
         else if (type == PieceType.KING) {
-            KingMoveCalculator p = new KingMoveCalculator(board, myPosition, this);
+            p = new KingMoveCalculator(board, myPosition);
             return p.calculateMoves();
         }
         else if (type == PieceType.BISHOP) {
-            BishopMoveCalculator p = new BishopMoveCalculator(board, myPosition, this);
+            p = new BishopMoveCalculator(board, myPosition);
             return p.calculateMoves();
         }
         else {
-            QueenMoveCalculator p = new QueenMoveCalculator(board, myPosition, this);
+            p = new QueenMoveCalculator(board, myPosition);
             return p.calculateMoves();
         }
     }

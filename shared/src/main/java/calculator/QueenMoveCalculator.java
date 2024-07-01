@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class QueenMoveCalculator extends MoveCalculator {
-    public QueenMoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
-        super(b, s, p);
+    public QueenMoveCalculator(chess.ChessBoard b, chess.ChessPosition s) {
+        super(b, s);
     }
 
     public Collection<chess.ChessMove> calculateMoves() {

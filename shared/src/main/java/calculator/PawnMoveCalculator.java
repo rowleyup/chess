@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class PawnMoveCalculator extends MoveCalculator {
-    public PawnMoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
-        super(b, s, p);
+    public PawnMoveCalculator(chess.ChessBoard b, chess.ChessPosition s) {
+        super(b, s);
     }
 
     public Collection<chess.ChessMove> calculateMoves() {
@@ -90,7 +90,7 @@ public class PawnMoveCalculator extends MoveCalculator {
     }
 
     private Collection<chess.ChessMove> blackMove (chess.ChessPiece.PieceType type) {
-        Collection<chess.ChessMove> moves = new HashSet<chess.ChessMove>();
+        Collection<chess.ChessMove> moves = new HashSet<>();
         int row = start.getRow();
         int column = start.getColumn();
         chess.ChessPosition position = new chess.ChessPosition(row - 1, column);

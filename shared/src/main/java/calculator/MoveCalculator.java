@@ -7,10 +7,10 @@ public abstract class MoveCalculator {
     protected final chess.ChessPosition start;
     protected final chess.ChessPiece piece;
 
-    public MoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
+    public MoveCalculator(chess.ChessBoard b, chess.ChessPosition s) {
         board = b;
         start = s;
-        piece = p;
+        piece = b.getPiece(s);
     }
 
     public abstract Collection<chess.ChessMove> calculateMoves();

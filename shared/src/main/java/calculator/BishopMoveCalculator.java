@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class BishopMoveCalculator extends MoveCalculator {
-    public BishopMoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
-        super(b, s, p);
+    public BishopMoveCalculator(chess.ChessBoard b, chess.ChessPosition s) {
+        super(b, s);
     }
 
     public Collection<ChessMove> calculateMoves() {
