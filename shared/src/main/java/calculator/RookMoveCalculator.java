@@ -25,7 +25,7 @@ public class RookMoveCalculator implements MoveCalculator {
         while (r < 8) {
             r++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(board, start, p, piece);
+            chess.ChessMove m = getMove(p, null);
             if (m != null) {
                 if (board.getPiece(p) != null) {
                     moves.add(m);
@@ -43,7 +43,7 @@ public class RookMoveCalculator implements MoveCalculator {
         while (c > 1) {
             c--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(board, start, p, piece);
+            chess.ChessMove m = getMove(p, null);
             if (m != null) {
                 if (board.getPiece(p) != null) {
                     moves.add(m);
@@ -61,7 +61,7 @@ public class RookMoveCalculator implements MoveCalculator {
         while (r > 1) {
             r--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(board, start, p, piece);
+            chess.ChessMove m = getMove(p, null);
             if (m != null) {
                 if (board.getPiece(p) != null) {
                     moves.add(m);
@@ -79,7 +79,7 @@ public class RookMoveCalculator implements MoveCalculator {
         while (c < 8) {
             c++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(board, start, p, piece);
+            chess.ChessMove m = getMove(p, null);
             if (m != null) {
                 if (board.getPiece(p) != null) {
                     moves.add(m);
@@ -95,19 +95,19 @@ public class RookMoveCalculator implements MoveCalculator {
         return moves;
     }
 
-    public chess.ChessMove getMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessPiece piece) {
+    public chess.ChessMove getMove(chess.ChessPosition end, chess.ChessPiece.PieceType newType) {
         chess.ChessMove move = null;
-        if (isValidMove(board, start, end, piece.getTeamColor())) {
-            move = new chess.ChessMove(start, end, null);
+        if (isValidMove(end)) {
+            move = new chess.ChessMove(start, end, newType);
         }
         return move;
     }
 
-    public boolean isValidMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessGame.TeamColor team) {
-        chess.ChessPiece piece = board.getPiece(end);
-        if (piece == null) {
+    public boolean isValidMove(chess.ChessPosition end) {
+        chess.ChessPiece piece2 = board.getPiece(end);
+        if (piece2 == null) {
             return true;
         }
-        return piece.getTeamColor() != team;
+        return piece2.getTeamColor() != piece.getTeamColor();
     }
 }

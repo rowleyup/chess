@@ -1,7 +1,7 @@
 package calculator;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class PawnMoveCalculator implements MoveCalculator {
     private final chess.ChessBoard board;
@@ -15,98 +15,122 @@ public class PawnMoveCalculator implements MoveCalculator {
     }
 
     public Collection<chess.ChessMove> calculateMoves() {
-        Collection<chess.ChessMove> moves = new ArrayList<chess.ChessMove>();
-        int row = start.getRow();
-        int column = start.getColumn();
-
+        HashSet<chess.ChessMove> moves = new HashSet<>();
         if (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK) {
-            chess.ChessPosition position = new chess.ChessPosition(row-1, column);
-            chess.ChessMove m = getMove(board,  start, position, piece);
-            if (m != null) {
-                moves.add(m);
+            if (isPromote()) {
+                moves.addAll(blackMove(chess.ChessPiece.PieceType.QUEEN));
+                moves.addAll(blackMove(chess.ChessPiece.PieceType.BISHOP));
+                moves.addAll(blackMove(chess.ChessPiece.PieceType.ROOK));
+                moves.addAll(blackMove(chess.ChessPiece.PieceType.KNIGHT));
             }
-            chess.ChessPosition position2 = new chess.ChessPosition(row-1, column+1);
-            chess.ChessMove m2 = getMove(board, start, position2, piece);
-            if (m2 != null) {
-                moves.add(m2);
-            }
-            chess.ChessPosition position3 = new chess.ChessPosition(row-1, column-1);
-            chess.ChessMove m3 = getMove(board, start, position3, piece);
-            if (m3 != null) {
-                moves.add(m3);
-            }
-
-            if (row == 7 && board.getPiece(new chess.ChessPosition(row-1, column)) == null) {
-                chess.ChessPosition position4 = new chess.ChessPosition(row-2, column);
-                chess.ChessMove m4 = getMove(board, start, position4, piece);
-                if (m4 != null) {
-                    moves.add(m4);
-                }
+            else {
+                moves.addAll(blackMove(null));
             }
         }
-        else if (piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE) {
-            chess.ChessPosition position = new chess.ChessPosition(row+1, column);
-            chess.ChessMove m = getMove(board,  start, position, piece);
-            if (m != null) {
-                moves.add(m);
+        else {
+            if (isPromote()) {
+                moves.addAll(whiteMove(chess.ChessPiece.PieceType.QUEEN));
+                moves.addAll(whiteMove(chess.ChessPiece.PieceType.BISHOP));
+                moves.addAll(whiteMove(chess.ChessPiece.PieceType.ROOK));
+                moves.addAll(whiteMove(chess.ChessPiece.PieceType.KNIGHT));
             }
-            chess.ChessPosition position2 = new chess.ChessPosition(row+1, column+1);
-            chess.ChessMove m2 = getMove(board, start, position2, piece);
-            if (m2 != null) {
-                moves.add(m2);
-            }
-            chess.ChessPosition position3 = new chess.ChessPosition(row+1, column-1);
-            chess.ChessMove m3 = getMove(board, start, position3, piece);
-            if (m3 != null) {
-                moves.add(m3);
-            }
-
-            if (row == 2 && board.getPiece(new chess.ChessPosition(row+1, column)) == null) {
-                chess.ChessPosition position4 = new chess.ChessPosition(row+2, column);
-                chess.ChessMove m4 = getMove(board, start, position4, piece);
-                if (m4 != null) {
-                    moves.add(m4);
-                }
+            else {
+                moves.addAll(whiteMove(null));
             }
         }
 
         return moves;
     }
 
-    public chess.ChessMove getMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessPiece piece) {
+    public chess.ChessMove getMove(chess.ChessPosition end, chess.ChessPiece.PieceType newType) {
         chess.ChessMove move = null;
         int row = end.getRow();
         int column = end.getColumn();
         if (row > 8 || row < 1 || column > 8 || column < 1) {
             return move;
         }
-        if (isValidMove(board, start, end, piece.getTeamColor())) {
-            if (isPromote(end, piece.getTeamColor())) {
-                move = new chess.ChessMove(start, end, chess.ChessPiece.PieceType.QUEEN);
-            }
-            else {
-                move = new chess.ChessMove(start, end, null);
-            }
+        if (isValidMove(end)) {
+            move = new chess.ChessMove(start, end, newType);
         }
         return move;
     }
 
-    public boolean isValidMove(chess.ChessBoard board, chess.ChessPosition start, chess.ChessPosition end, chess.ChessGame.TeamColor team) {
+    public boolean isValidMove(chess.ChessPosition end) {
         int col_diff = end.getColumn() - start.getColumn();
-        chess.ChessPiece piece = board.getPiece(end);
+        chess.ChessPiece piece2 = board.getPiece(end);
         if (col_diff != 0) {
-            if (piece == null) {
+            if (piece2 == null) {
                 return false;
             }
-            return piece.getTeamColor() != team;
+            return piece2.getTeamColor() != piece.getTeamColor();
         }
-        return piece == null;
+        return piece2 == null;
     }
 
-    public boolean isPromote(chess.ChessPosition end, chess.ChessGame.TeamColor team) {
-        if (team == chess.ChessGame.TeamColor.BLACK && end.getRow() == 0) {
+    public boolean isPromote() {
+        if (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && start.getRow() == 2) {
             return true;
         }
-        return team == chess.ChessGame.TeamColor.WHITE && end.getRow() == 7;
+        return piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && start.getRow() == 7;
+    }
+
+    private Collection<chess.ChessMove> whiteMove (chess.ChessPiece.PieceType type) {
+        Collection<chess.ChessMove> moves = new HashSet<>();
+        int row = start.getRow();
+        int column = start.getColumn();
+        chess.ChessPosition position = new chess.ChessPosition(row + 1, column);
+        chess.ChessMove m = getMove(position, type);
+        if (m != null) {
+            moves.add(m);
+        }
+        chess.ChessPosition position2 = new chess.ChessPosition(row + 1, column + 1);
+        chess.ChessMove m2 = getMove(position2, type);
+        if (m2 != null) {
+            moves.add(m2);
+        }
+        chess.ChessPosition position3 = new chess.ChessPosition(row + 1, column - 1);
+        chess.ChessMove m3 = getMove(position3, type);
+        if (m3 != null) {
+            moves.add(m3);
+        }
+
+        if (row == 2 && board.getPiece(new chess.ChessPosition(row + 1, column)) == null) {
+            chess.ChessPosition position4 = new chess.ChessPosition(row + 2, column);
+            chess.ChessMove m4 = getMove(position4, type);
+            if (m4 != null) {
+                moves.add(m4);
+            }
+        }
+        return moves;
+    }
+
+    private Collection<chess.ChessMove> blackMove (chess.ChessPiece.PieceType type) {
+        Collection<chess.ChessMove> moves = new HashSet<chess.ChessMove>();
+        int row = start.getRow();
+        int column = start.getColumn();
+        chess.ChessPosition position = new chess.ChessPosition(row - 1, column);
+        chess.ChessMove m = getMove(position, type);
+        if (m != null) {
+            moves.add(m);
+        }
+        chess.ChessPosition position2 = new chess.ChessPosition(row - 1, column + 1);
+        chess.ChessMove m2 = getMove(position2, type);
+        if (m2 != null) {
+            moves.add(m2);
+        }
+        chess.ChessPosition position3 = new chess.ChessPosition(row - 1, column - 1);
+        chess.ChessMove m3 = getMove(position3, type);
+        if (m3 != null) {
+            moves.add(m3);
+        }
+
+        if (row == 7 && board.getPiece(new chess.ChessPosition(row - 1, column)) == null) {
+            chess.ChessPosition position4 = new chess.ChessPosition(row - 2, column);
+            chess.ChessMove m4 = getMove(position4, type);
+            if (m4 != null) {
+                moves.add(m4);
+            }
+        }
+        return moves;
     }
 }
