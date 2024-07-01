@@ -3,15 +3,9 @@ package calculator;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class PawnMoveCalculator implements MoveCalculator {
-    private final chess.ChessBoard board;
-    private final chess.ChessPosition start;
-    private final chess.ChessPiece piece;
-
+public class PawnMoveCalculator extends MoveCalculator {
     public PawnMoveCalculator(chess.ChessBoard b, chess.ChessPosition s, chess.ChessPiece p) {
-        board = b;
-        start = s;
-        piece = p;
+        super(b, s, p);
     }
 
     public Collection<chess.ChessMove> calculateMoves() {
@@ -42,20 +36,11 @@ public class PawnMoveCalculator implements MoveCalculator {
         return moves;
     }
 
-    public chess.ChessMove getMove(chess.ChessPosition end, chess.ChessPiece.PieceType newType) {
-        chess.ChessMove move = null;
-        int row = end.getRow();
-        int column = end.getColumn();
-        if (row > 8 || row < 1 || column > 8 || column < 1) {
-            return move;
-        }
-        if (isValidMove(end)) {
-            move = new chess.ChessMove(start, end, newType);
-        }
-        return move;
-    }
-
+    @Override
     public boolean isValidMove(chess.ChessPosition end) {
+        if (end.getRow() > 8 || end.getRow() < 1 || end.getColumn() > 8 || end.getColumn() < 1) {
+            return false;
+        }
         int col_diff = end.getColumn() - start.getColumn();
         chess.ChessPiece piece2 = board.getPiece(end);
         if (col_diff != 0) {
