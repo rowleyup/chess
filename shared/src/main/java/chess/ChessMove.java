@@ -61,13 +61,10 @@ public class ChessMove {
         }
 
         ChessMove other = (ChessMove)obj;
-        if (promote != null && other.promote != null) {
-            return (start.equals(other.start) && end.equals(other.end) && promote.equals(other.promote));
+        if (start.equals(other.start) && end.equals(other.end)) {
+            return promote == other.promote;
         }
-        else if (promote != null || other.promote != null) {
-            return false;
-        }
-        return (start.equals(other.start) && end.equals(other.end));
+        return false;
     }
 
     @Override
