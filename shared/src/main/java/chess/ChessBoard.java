@@ -69,12 +69,12 @@ public class ChessBoard {
             pos = new ChessPosition(7, i);
             addPiece(pos, p);
 
-            p = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
-            pos = new ChessPosition(1, i+1);
+            p = new ChessPiece(ChessGame.TeamColor.WHITE, order[i-1]);
+            pos = new ChessPosition(1, i);
             addPiece(pos, p);
 
-            p = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
-            pos = new ChessPosition(8, i+1);
+            p = new ChessPiece(ChessGame.TeamColor.BLACK, order[i-1]);
+            pos = new ChessPosition(8, i);
             addPiece(pos, p);
         }
     }
