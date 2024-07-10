@@ -56,27 +56,26 @@ public class ChessBoard {
      * Places the pieces on the board in normal starting position
      */
     private void resetHelper() {
+        ChessPiece.PieceType[] order = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
+
         for (int i = 1; i <= 8; i++) {
             ChessPiece p = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
             ChessPosition pos = new ChessPosition(2, i);
             addPiece(pos, p);
-        }
-        for (int i = 1; i <= 8; i++) {
-            ChessPiece p = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-            ChessPosition pos = new ChessPosition(7, i);
-            addPiece(pos, p);
-        }
 
-        ChessPiece.PieceType[] order = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT,
-                ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING,
-                ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
-        for (int i = 0; i < 8; i++) {
-            ChessPiece p = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
-            ChessPiece q = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
-            ChessPosition pos = new ChessPosition(1, i+1);
-            ChessPosition qos = new ChessPosition(8, i+1);
+            p = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            pos = new ChessPosition(7, i);
             addPiece(pos, p);
-            addPiece(qos, q);
+
+            p = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
+            pos = new ChessPosition(1, i+1);
+            addPiece(pos, p);
+
+            p = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
+            pos = new ChessPosition(8, i+1);
+            addPiece(pos, p);
         }
     }
 
@@ -135,6 +134,9 @@ public class ChessBoard {
                 ChessPiece pie = getPiece(p);
                 if (pie != null) {
                     result = 31 * result + pie.hashCode();
+                }
+                else {
+                    result++;
                 }
             }
         }

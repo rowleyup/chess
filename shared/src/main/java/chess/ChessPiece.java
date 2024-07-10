@@ -55,30 +55,27 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         MoveCalculator p;
-        if (type == PieceType.KNIGHT) {
-            p = new KnightMoveCalculator(board, myPosition);
-            return p.calculateMoves();
+        switch (type) {
+            case KNIGHT:
+                p = new KnightMoveCalculator(board, myPosition);
+                break;
+            case ROOK:
+                p = new RookMoveCalculator(board, myPosition);
+                break;
+            case PAWN:
+                p = new PawnMoveCalculator(board, myPosition);
+                break;
+            case KING:
+                p = new KingMoveCalculator(board, myPosition);
+                break;
+            case BISHOP:
+                p = new BishopMoveCalculator(board, myPosition);
+                break;
+            default:
+                p = new QueenMoveCalculator(board, myPosition);
         }
-        else if (type == PieceType.ROOK) {
-            p = new RookMoveCalculator(board, myPosition);
-            return p.calculateMoves();
-        }
-        else if (type == PieceType.PAWN) {
-            p = new PawnMoveCalculator(board, myPosition);
-            return p.calculateMoves();
-        }
-        else if (type == PieceType.KING) {
-            p = new KingMoveCalculator(board, myPosition);
-            return p.calculateMoves();
-        }
-        else if (type == PieceType.BISHOP) {
-            p = new BishopMoveCalculator(board, myPosition);
-            return p.calculateMoves();
-        }
-        else {
-            p = new QueenMoveCalculator(board, myPosition);
-            return p.calculateMoves();
-        }
+
+        return p.calculateMoves();
     }
 
     @Override
