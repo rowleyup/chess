@@ -105,13 +105,13 @@ public class ChessGame {
                     ChessPiece piece2 = board.getPiece(p2);
                     if (piece1 != null) {
                         if (piece1.getTeamColor() != piece.getTeamColor() && piece1.getPieceType() == ChessPiece.PieceType.PAWN) {
-                            ChessPiece np = new ChessPiece(piece1.getTeamColor(), piece1.getPieceType(), true, true);
+                            ChessPiece np = new ChessPiece(piece1.getTeamColor(), piece1.getPieceType(), true);
                             board.addPiece(p1, np);
                         }
                     }
                     if (piece2 != null) {
                         if (piece2.getTeamColor() != piece.getTeamColor() && piece2.getPieceType() == ChessPiece.PieceType.PAWN) {
-                            ChessPiece np = new ChessPiece(piece2.getTeamColor(), piece2.getPieceType(), true, true);
+                            ChessPiece np = new ChessPiece(piece2.getTeamColor(), piece2.getPieceType(), true);
                             board.addPiece(p2, np);
                         }
                     }
