@@ -14,10 +14,21 @@ public class ChessPiece {
 
     private final ChessGame.TeamColor color;
     private final ChessPiece.PieceType type;
+    private final boolean enPassant;
+    private final boolean hasMoved;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType pieceType) {
         color = pieceColor;
         type = pieceType;
+        enPassant = false;
+        hasMoved = true;
+    }
+
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType pieceType, boolean ep, boolean hm) {
+        color = pieceColor;
+        type = pieceType;
+        enPassant = ep;
+        hasMoved = hm;
     }
 
     /**
@@ -76,6 +87,14 @@ public class ChessPiece {
         }
 
         return p.calculateMoves();
+    }
+
+    public boolean getEnPassant() {
+        return enPassant;
+    }
+
+    public boolean getHasMoved() {
+        return hasMoved;
     }
 
     @Override

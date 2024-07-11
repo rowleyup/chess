@@ -61,19 +61,19 @@ public class ChessBoard {
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
 
         for (int i = 1; i <= 8; i++) {
-            ChessPiece p = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            ChessPiece p = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN, false, false);
             ChessPosition pos = new ChessPosition(2, i);
             addPiece(pos, p);
 
-            p = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            p = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN, false, false);
             pos = new ChessPosition(7, i);
             addPiece(pos, p);
 
-            p = new ChessPiece(ChessGame.TeamColor.WHITE, order[i-1]);
+            p = new ChessPiece(ChessGame.TeamColor.WHITE, order[i-1], false, false);
             pos = new ChessPosition(1, i);
             addPiece(pos, p);
 
-            p = new ChessPiece(ChessGame.TeamColor.BLACK, order[i-1]);
+            p = new ChessPiece(ChessGame.TeamColor.BLACK, order[i-1], false, false);
             pos = new ChessPosition(8, i);
             addPiece(pos, p);
         }

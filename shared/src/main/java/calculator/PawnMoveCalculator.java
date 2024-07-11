@@ -45,6 +45,14 @@ public class PawnMoveCalculator extends MoveCalculator {
         chess.ChessPiece piece2 = board.getPiece(end);
         if (col_diff != 0) {
             if (piece2 == null) {
+                if (piece.getEnPassant()) {
+                    chess.ChessPosition pos = new chess.ChessPosition(start.getRow(), start.getColumn()+col_diff);
+                    chess.ChessPiece piece3 = board.getPiece(pos);
+                    if (piece3 != null) {
+                        return piece3.getTeamColor() != piece.getTeamColor() && piece3.getPieceType() == chess.ChessPiece.PieceType.PAWN;
+                    }
+                    return false;
+                }
                 return false;
             }
             return piece2.getTeamColor() != piece.getTeamColor();
@@ -63,29 +71,44 @@ public class PawnMoveCalculator extends MoveCalculator {
         Collection<chess.ChessMove> moves = new HashSet<>();
         int row = start.getRow();
         int column = start.getColumn();
-        chess.ChessPosition position = new chess.ChessPosition(row + 1, column);
-        chess.ChessMove m = getMove(position, type);
+        chess.ChessPosition p = new chess.ChessPosition(row + 1, column);
+        chess.ChessMove m = getMove(p, type);
         if (m != null) {
             moves.add(m);
         }
-        chess.ChessPosition position2 = new chess.ChessPosition(row + 1, column + 1);
-        chess.ChessMove m2 = getMove(position2, type);
-        if (m2 != null) {
-            moves.add(m2);
+        p = new chess.ChessPosition(row + 1, column + 1);
+        m = getMove(p, type);
+        if (m != null) {
+            moves.add(m);
         }
-        chess.ChessPosition position3 = new chess.ChessPosition(row + 1, column - 1);
-        chess.ChessMove m3 = getMove(position3, type);
-        if (m3 != null) {
-            moves.add(m3);
+        p = new chess.ChessPosition(row + 1, column - 1);
+        m = getMove(p, type);
+        if (m != null) {
+            moves.add(m);
         }
 
         if (row == 2 && board.getPiece(new chess.ChessPosition(row + 1, column)) == null) {
-            chess.ChessPosition position4 = new chess.ChessPosition(row + 2, column);
-            chess.ChessMove m4 = getMove(position4, type);
-            if (m4 != null) {
-                moves.add(m4);
+            p = new chess.ChessPosition(row + 2, column);
+            m = getMove(p, type);
+            if (m != null) {
+                moves.add(m);
             }
         }
+
+        if (board.getPiece(start).getEnPassant()) {
+            p = new chess.ChessPosition(start.getRow()+1, start.getColumn()-1);
+            m = getMove(p, null);
+            if (m != null) {
+                moves.add(m);
+            }
+
+            p = new chess.ChessPosition(start.getRow()+1, start.getColumn()+1);
+            m = getMove(p, null);
+            if (m != null) {
+                moves.add(m);
+            }
+        }
+
         return moves;
     }
 
@@ -93,29 +116,44 @@ public class PawnMoveCalculator extends MoveCalculator {
         Collection<chess.ChessMove> moves = new HashSet<>();
         int row = start.getRow();
         int column = start.getColumn();
-        chess.ChessPosition position = new chess.ChessPosition(row - 1, column);
-        chess.ChessMove m = getMove(position, type);
+        chess.ChessPosition p = new chess.ChessPosition(row - 1, column);
+        chess.ChessMove m = getMove(p, type);
         if (m != null) {
             moves.add(m);
         }
-        chess.ChessPosition position2 = new chess.ChessPosition(row - 1, column + 1);
-        chess.ChessMove m2 = getMove(position2, type);
-        if (m2 != null) {
-            moves.add(m2);
+        p = new chess.ChessPosition(row - 1, column + 1);
+        m = getMove(p, type);
+        if (m != null) {
+            moves.add(m);
         }
-        chess.ChessPosition position3 = new chess.ChessPosition(row - 1, column - 1);
-        chess.ChessMove m3 = getMove(position3, type);
-        if (m3 != null) {
-            moves.add(m3);
+        p = new chess.ChessPosition(row - 1, column - 1);
+        m = getMove(p, type);
+        if (m != null) {
+            moves.add(m);
         }
 
         if (row == 7 && board.getPiece(new chess.ChessPosition(row - 1, column)) == null) {
-            chess.ChessPosition position4 = new chess.ChessPosition(row - 2, column);
-            chess.ChessMove m4 = getMove(position4, type);
-            if (m4 != null) {
-                moves.add(m4);
+            p = new chess.ChessPosition(row - 2, column);
+            m = getMove(p, type);
+            if (m != null) {
+                moves.add(m);
             }
         }
+
+        if (board.getPiece(start).getEnPassant()) {
+            p = new chess.ChessPosition(start.getRow()-1, start.getColumn()-1);
+            m = getMove(p, null);
+            if (m != null) {
+                moves.add(m);
+            }
+
+            p = new chess.ChessPosition(start.getRow()-1, start.getColumn()+1);
+            m = getMove(p, null);
+            if (m != null) {
+                moves.add(m);
+            }
+        }
+
         return moves;
     }
 }
