@@ -55,7 +55,7 @@ public class ChessGame {
         if (oldPiece == null) {
             return null;
         }
-        if (oldPiece.getTeamColor() != turn) {
+        if (oldPiece.getTeamColor() != getTeamTurn()) {
             return null;
         }
         Collection<ChessMove> moves = oldPiece.pieceMoves(board, startPosition);
