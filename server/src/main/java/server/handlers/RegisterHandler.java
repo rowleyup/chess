@@ -1,6 +1,6 @@
 package server.handlers;
 
-import model.UserData;
+import model.*;
 import spark.*;
 import com.google.gson.Gson;
 
