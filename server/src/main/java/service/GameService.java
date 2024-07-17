@@ -24,4 +24,8 @@ public class GameService {
     public boolean joinGame(String authToken, String gameID, String playerColor) {
         return false;
     }
+
+    public boolean clear() {
+        return false;
+    }
 }

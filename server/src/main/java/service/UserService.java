@@ -35,4 +35,8 @@ public class UserService {
     public boolean logout(AuthData authData) throws ResponseException, DataAccessException {
         return false;
     }
+
+    public boolean clear() {
+        return false;
+    }
 }
