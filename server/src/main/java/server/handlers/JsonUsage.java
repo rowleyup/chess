@@ -10,4 +10,8 @@ public class JsonUsage {
     public static String getJson(Object obj) {
         return new Gson().toJson(obj);
     }
+
+    public static String fromError(String message) {
+        return String.format("{ \"message\": \"%s\" }", message);
+    }
 }

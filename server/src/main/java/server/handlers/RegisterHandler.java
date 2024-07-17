@@ -17,7 +17,7 @@ public class RegisterHandler implements Route{
         String message;
         if (user.username() == null || user.username().isEmpty() || user.password() == null || user.password().isEmpty() || user.email() == null || user.email().isEmpty()) {
             res.status(400);
-            message = JsonUsage.getJson(new Message("Error: bad request"));
+            message = JsonUsage.fromError("Error: bad request");
             return message;
         }
 
@@ -26,10 +26,10 @@ public class RegisterHandler implements Route{
             message = JsonUsage.getJson(auth);
         } catch (ResponseException e) {
             res.status(403);
-            message = JsonUsage.getJson(new Message(e.getMessage()));
+            message = JsonUsage.fromError(e.getMessage());
         } catch (DataAccessException e) {
             res.status(500);
-            message = JsonUsage.getJson(new Message(e.getMessage()));
+            message = JsonUsage.fromError(e.getMessage());
         }
 
         return message;
