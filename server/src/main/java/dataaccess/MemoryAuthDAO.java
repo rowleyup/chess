@@ -14,7 +14,7 @@ public class MemoryAuthDAO implements AuthDAO {
     public AuthData createAuth(String username) {
         String token = UUID.randomUUID().toString();
         authTokens.put(token, username);
-        return new AuthData(token, username);
+        return new AuthData(username, token);
     }
 
     public boolean removeAuth(AuthData authData) {
@@ -32,7 +32,7 @@ public class MemoryAuthDAO implements AuthDAO {
             return null;
         }
 
-        return new AuthData(authToken, username);
+        return new AuthData(username, authToken);
     }
 
     public boolean clearAuth() {

@@ -29,7 +29,15 @@ public class UserService {
     }
 
     public AuthData login(UserData user) throws ResponseException, DataAccessException {
-        return null;
+        UserData dbUser = userDao.getUser(user.username());
+        if (dbUser == null) {
+            throw new ResponseException("Error: user not found");
+        }
+        if (!user.password().equals(dbUser.password())) {
+            throw new ResponseException("Error: wrong password");
+        }
+
+        return authDao.createAuth(user.username());
     }
 
     public boolean logout(AuthData authData) throws ResponseException, DataAccessException {
