@@ -32,7 +32,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public boolean clearUsers() {
-        users = new HashMap<>();
+        users.clear();
         return true;
     }
 }

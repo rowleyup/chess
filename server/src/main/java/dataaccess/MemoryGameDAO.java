@@ -2,36 +2,116 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
+import server.handlers.ResponseException;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 
 public class MemoryGameDAO implements GameDAO {
-    public Collection<ChessGame> getGames() throws DataAccessException {
-        return List.of();
+    private final HashSet<GameData> games;
+    private int nextID;
+
+    public MemoryGameDAO() {
+        games = new HashSet<>();
+        nextID = 1111;
     }
 
-    public GameData getGameName(String gameName) throws DataAccessException {
-        return null;
+    public Collection<GameData> getGames() {
+        return games;
     }
 
-    public GameData getGameID(String gameID) throws DataAccessException {
-        return null;
+    public GameData getGameName(String gameName) {
+        GameData result = null;
+        for (GameData game : games) {
+            if (gameName.equals(game.gameName())) {
+                result = game;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public GameData getGameID(int gameID) {
+        GameData result = null;
+        for (GameData game : games) {
+            if (gameID == game.gameID()) {
+                result = game;
+                break;
+            }
+        }
+        return result;
     }
 
     public GameData createGame(String gameName) throws DataAccessException {
-        return null;
+        for (GameData game : games) {
+            if (gameName.equals(game.gameName())) {
+                throw new DataAccessException("Error: game name already exists");
+            }
+        }
+
+        GameData game = new GameData(nextID, null, null, gameName, new ChessGame());
+        nextID = nextID + 1111;
+        games.add(game);
+        return game;
     }
 
-    public String getColor(GameData game, String color) throws DataAccessException {
-        return "";
+    public String getColor(int gameID, String color) throws DataAccessException, ResponseException {
+        GameData result = null;
+        for (GameData game : games) {
+            if (gameID == game.gameID()) {
+                result = game;
+                break;
+            }
+        }
+        if (result == null) {
+            throw new DataAccessException("Error: game not found");
+        }
+
+        if (color.equals("WHITE")) {
+            return result.whiteUsername();
+        }
+        else if (color.equals("BLACK")) {
+            return result.blackUsername();
+        }
+        else {
+            throw new ResponseException("Error: invalid color");
+        }
     }
 
-    public boolean addPlayer(GameData game, String color, String authToken) throws DataAccessException {
-        return false;
+    public boolean addPlayer(int gameID, String color, String username) throws ResponseException {
+        GameData result = getGameID(gameID);
+        GameData result2;
+
+        if (color.equals("WHITE")) {
+            if (result.whiteUsername() != null) {
+                throw new ResponseException("Error: color already taken");
+            }
+            result2 = new GameData(result.gameID(), username, result.blackUsername(), result.gameName(), result.game());
+        }
+        else if (color.equals("BLACK")) {
+            if (result.blackUsername() != null) {
+                throw new ResponseException("Error: color already taken");
+            }
+            result2 = new GameData(result.gameID(), result.whiteUsername(), username, result.gameName(), result.game());
+        }
+        else {
+            throw new ResponseException("Error: invalid color");
+        }
+
+        games.remove(result);
+        games.add(result2);
+        return true;
     }
 
-    public boolean clearGames() throws DataAccessException {
-        return false;
+    public boolean clearGames() {
+        games.clear();
+        nextID = 1111;
+        return true;
+    }
+
+    public boolean removeGame(int gameID) {
+        GameData rem = getGameID(gameID);
+        games.remove(rem);
+        return true;
     }
 }
