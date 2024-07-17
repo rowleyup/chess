@@ -20,7 +20,7 @@ public class MemoryGameDAO implements GameDAO {
         return games;
     }
 
-    public GameData getGameName(String gameName) {
+    public GameData getGameByName(String gameName) {
         GameData result = null;
         for (GameData game : games) {
             if (gameName.equals(game.gameName())) {
@@ -31,7 +31,7 @@ public class MemoryGameDAO implements GameDAO {
         return result;
     }
 
-    public GameData getGameID(int gameID) {
+    public GameData getGameByID(int gameID) {
         GameData result = null;
         for (GameData game : games) {
             if (gameID == game.gameID()) {
@@ -43,10 +43,9 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     public GameData createGame(String gameName) throws DataAccessException {
-        for (GameData game : games) {
-            if (gameName.equals(game.gameName())) {
-                throw new DataAccessException("Error: game name already exists");
-            }
+        GameData old = getGameByName(gameName);
+        if (old != null) {
+            throw new DataAccessException("Error: game name already exists");
         }
 
         GameData game = new GameData(nextID, null, null, gameName, new ChessGame());
@@ -55,31 +54,8 @@ public class MemoryGameDAO implements GameDAO {
         return game;
     }
 
-    public String getColor(int gameID, String color) throws DataAccessException, ResponseException {
-        GameData result = null;
-        for (GameData game : games) {
-            if (gameID == game.gameID()) {
-                result = game;
-                break;
-            }
-        }
-        if (result == null) {
-            throw new DataAccessException("Error: game not found");
-        }
-
-        if (color.equals("WHITE")) {
-            return result.whiteUsername();
-        }
-        else if (color.equals("BLACK")) {
-            return result.blackUsername();
-        }
-        else {
-            throw new ResponseException("Error: invalid color");
-        }
-    }
-
     public boolean addPlayer(int gameID, String color, String username) throws ResponseException {
-        GameData result = getGameID(gameID);
+        GameData result = getGameByID(gameID);
         GameData result2;
 
         if (color.equals("WHITE")) {
@@ -87,20 +63,18 @@ public class MemoryGameDAO implements GameDAO {
                 throw new ResponseException("Error: color already taken");
             }
             result2 = new GameData(result.gameID(), username, result.blackUsername(), result.gameName(), result.game());
+            return updateGame(result2);
         }
         else if (color.equals("BLACK")) {
             if (result.blackUsername() != null) {
                 throw new ResponseException("Error: color already taken");
             }
             result2 = new GameData(result.gameID(), result.whiteUsername(), username, result.gameName(), result.game());
+            return updateGame(result2);
         }
         else {
             throw new ResponseException("Error: invalid color");
         }
-
-        games.remove(result);
-        games.add(result2);
-        return true;
     }
 
     public boolean clearGames() {
@@ -110,8 +84,20 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     public boolean removeGame(int gameID) {
-        GameData rem = getGameID(gameID);
+        GameData rem = getGameByID(gameID);
         games.remove(rem);
+        return true;
+    }
+
+    public boolean updateGame(GameData game) {
+        int id = game.gameID();
+        GameData old = getGameByID(id);
+        if (old == null) {
+            games.add(game);
+            return true;
+        }
+        games.remove(old);
+        games.add(game);
         return true;
     }
 }
