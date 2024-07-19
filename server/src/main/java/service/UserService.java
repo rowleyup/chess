@@ -31,17 +31,26 @@ public class UserService {
     public AuthData login(UserData user) throws ResponseException, DataAccessException {
         UserData dbUser = userDao.getUser(user.username());
         if (dbUser == null) {
-            throw new ResponseException("Error: user not found");
+            throw new ResponseException("Error: unauthorized");
         }
         if (!user.password().equals(dbUser.password())) {
-            throw new ResponseException("Error: wrong password");
+            throw new ResponseException("Error: unauthorized");
         }
 
         return authDao.createAuth(user.username());
     }
 
     public boolean logout(AuthData authData) throws ResponseException, DataAccessException {
-        return false;
+        AuthData user = authDao.getAuth(authData.authToken());
+        if (user == null) {
+            throw new ResponseException("Error: unauthorized");
+        }
+
+        boolean done = authDao.removeAuth(user);
+        if (!done) {
+            throw new DataAccessException("Error: unable to logout user");
+        }
+        return true;
     }
 
     public boolean clear() {
