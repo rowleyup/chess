@@ -16,10 +16,7 @@ public class GameService {
     }
 
     public Collection<GameData> listGames(String authToken) throws DataAccessException, ResponseException {
-        AuthData auth = authDao.getAuth(authToken);
-        if (auth == null) {
-            throw new ResponseException("Unauthorized");
-        }
+        authenticate(authToken);
 
         Collection<GameData> games = gameDao.getGames();
         if (games == null) {
@@ -29,8 +26,15 @@ public class GameService {
         return games;
     }
 
-    public String createGame(String authToken, String gameName) throws DataAccessException, ResponseException {
-        return null;
+    public int createGame(String authToken, String gameName) throws DataAccessException, ResponseException {
+        authenticate(authToken);
+
+        GameData game = gameDao.createGame(gameName);
+        if (game == null) {
+            throw new DataAccessException("Game creation failed");
+        }
+
+        return game.gameID();
     }
 
     public boolean joinGame(String authToken, String gameID, String playerColor) throws DataAccessException, ResponseException {
@@ -44,5 +48,12 @@ public class GameService {
         }
 
         return true;
+    }
+
+    private void authenticate(String authToken) throws DataAccessException, ResponseException {
+        AuthData auth = authDao.getAuth(authToken);
+        if (auth == null) {
+            throw new ResponseException("Unauthorized");
+        }
     }
 }
