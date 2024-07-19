@@ -8,8 +8,6 @@ import model.*;
 import org.junit.jupiter.api.*;
 import server.handlers.ResponseException;
 
-import java.util.HashSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
@@ -57,25 +55,25 @@ class GameServiceTest {
     @Test
     @Order(5)
     void JoinNoAuthTest() {
-        assertThrows(ResponseException.class, () -> {gs.joinGame(badAuth.authToken(), "1111", "WHITE");});
+        assertThrows(ResponseException.class, () -> {gs.joinGame(badAuth.authToken(), 1111, "WHITE");});
     }
 
     @Test
     @Order(6)
     void JoinOutputTest() throws ResponseException, DataAccessException {
-        assertTrue(gs.joinGame(auth.authToken(), "1111", "WHITE"));
+        assertTrue(gs.joinGame(auth.authToken(), 1111, "WHITE"));
     }
 
     @Test
     @Order(7)
-    void JoinTakenTest() {
-        assertThrows(ResponseException.class, () -> {gs.joinGame(auth.authToken(), "1111", "WHITE");});
+    void JoinTakenTest() throws ResponseException, DataAccessException {
+        assertFalse(gs.joinGame(auth.authToken(), 1111, "WHITE"));
     }
 
     @Test
     @Order(8)
     void ClearTest() throws DataAccessException, ResponseException {
         assertTrue(gs.clear());
-        assertNull(gs.listGames(auth.authToken()));
+        assertEquals(0, gs.listGames(auth.authToken()).size());
     }
 }
