@@ -2,6 +2,7 @@ package server.handlers;
 
 import dataaccess.DataAccessException;
 import model.GameData;
+import server.RequestResponse.ListResponse;
 import service.GameService;
 import spark.*;
 
@@ -25,7 +26,8 @@ public class ListHandler implements Route{
 
         try {
             Collection<GameData> games = gameService.listGames(auth);
-            message = JsonUsage.getJson(games);
+            ListResponse gamesRes = new ListResponse(games);
+            message = JsonUsage.getJson(gamesRes);
         } catch (ResponseException e) {
             res.status(401);
             message = JsonUsage.fromError(e.getMessage());

@@ -2,7 +2,7 @@ package server.handlers;
 
 import dataaccess.DataAccessException;
 import service.GameService;
-import service.JoinRequest;
+import server.RequestResponse.JoinRequest;
 import spark.*;
 
 public class JoinHandler implements Route{
