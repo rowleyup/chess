@@ -51,7 +51,7 @@ class GameServiceTest {
     @Test
     @Order(2)
     void CreateOutputTest() throws ResponseException, DataAccessException {
-        assertEquals(gameName, gs.createGame(auth.authToken(), gameName));
+        assertEquals(1111, gs.createGame(auth.authToken(), gameName));
     }
 
     @Test

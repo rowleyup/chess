@@ -12,8 +12,9 @@ public class Server {
     private final GameService gameService;
 
     public Server() {
-        userService = new UserService(new MemoryUserDAO(), new MemoryAuthDAO());
-        gameService = new GameService(new MemoryGameDAO(), new MemoryAuthDAO());
+        MemoryAuthDAO mem = new MemoryAuthDAO();
+        userService = new UserService(new MemoryUserDAO(), mem);
+        gameService = new GameService(new MemoryGameDAO(), mem);
     }
 
     public int run(int desiredPort) {
