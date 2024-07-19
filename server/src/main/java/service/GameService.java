@@ -37,8 +37,15 @@ public class GameService {
         return game.gameID();
     }
 
-    public boolean joinGame(String authToken, String gameID, String playerColor) throws DataAccessException, ResponseException {
-        return false;
+    public boolean joinGame(String authToken, int gameID, String playerColor) throws DataAccessException, ResponseException {
+        authenticate(authToken);
+
+        GameData game = gameDao.getGameByID(gameID);
+        if (game == null) {
+            throw new DataAccessException("Game not found");
+        }
+
+        return gameDao.addPlayer(game, playerColor, authDao.getAuth(authToken).username());
     }
 
     public boolean clear() throws DataAccessException {

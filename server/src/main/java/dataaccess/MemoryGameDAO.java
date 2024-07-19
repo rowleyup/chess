@@ -54,23 +54,22 @@ public class MemoryGameDAO implements GameDAO {
         return game;
     }
 
-    public boolean addPlayer(int gameID, String color, String username) throws ResponseException {
-        GameData result = getGameByID(gameID);
-        GameData result2;
+    public boolean addPlayer(GameData game, String color, String username) throws ResponseException {
+        GameData result;
 
         if (color.equals("WHITE")) {
-            if (result.whiteUsername() != null) {
-                throw new ResponseException("Error: color already taken");
+            if (game.whiteUsername() != null) {
+                return false;
             }
-            result2 = new GameData(result.gameID(), username, result.blackUsername(), result.gameName(), result.game());
-            return updateGame(result2);
+            result = new GameData(game.gameID(), username, game.blackUsername(), game.gameName(), game.game());
+            return updateGame(result);
         }
         else if (color.equals("BLACK")) {
-            if (result.blackUsername() != null) {
-                throw new ResponseException("Error: color already taken");
+            if (game.blackUsername() != null) {
+                return false;
             }
-            result2 = new GameData(result.gameID(), result.whiteUsername(), username, result.gameName(), result.game());
-            return updateGame(result2);
+            result = new GameData(game.gameID(), game.whiteUsername(), username, game.gameName(), game.game());
+            return updateGame(result);
         }
         else {
             throw new ResponseException("Error: invalid color");

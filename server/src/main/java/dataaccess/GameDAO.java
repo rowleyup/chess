@@ -10,7 +10,7 @@ public interface GameDAO {
     GameData getGameByName(String gameName) throws DataAccessException;
     GameData getGameByID(int gameID) throws DataAccessException;
     GameData createGame(String gameName) throws DataAccessException;
-    boolean addPlayer(int gameID, String color, String username) throws DataAccessException, ResponseException;
+    boolean addPlayer(GameData game, String color, String username) throws DataAccessException, ResponseException;
     boolean clearGames() throws DataAccessException;
     boolean removeGame(int gameID) throws DataAccessException;
     boolean updateGame(GameData game) throws DataAccessException;
