@@ -37,7 +37,7 @@ class GameServiceTest {
 
     @Test
     @Order(4)
-    void ListOutputTest() {
+    void ListOutputTest() throws ResponseException, DataAccessException {
         assertNotNull(gs.listGames(auth.authToken()));
         assertEquals(1, gs.listGames(auth.authToken()).size());
     }
@@ -50,7 +50,7 @@ class GameServiceTest {
 
     @Test
     @Order(2)
-    void CreateOutputTest() {
+    void CreateOutputTest() throws ResponseException, DataAccessException {
         assertEquals(gameName, gs.createGame(auth.authToken(), gameName));
     }
 
@@ -62,7 +62,7 @@ class GameServiceTest {
 
     @Test
     @Order(6)
-    void JoinOutputTest() {
+    void JoinOutputTest() throws ResponseException, DataAccessException {
         assertTrue(gs.joinGame(auth.authToken(), "1111", "WHITE"));
     }
 
@@ -74,7 +74,7 @@ class GameServiceTest {
 
     @Test
     @Order(8)
-    void ClearTest() throws DataAccessException {
+    void ClearTest() throws DataAccessException, ResponseException {
         assertTrue(gs.clear());
         assertNull(gs.listGames(auth.authToken()));
     }

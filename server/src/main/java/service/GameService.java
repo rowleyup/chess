@@ -2,6 +2,8 @@ package service;
 
 import dataaccess.*;
 import model.*;
+import server.handlers.ResponseException;
+
 import java.util.Collection;
 
 public class GameService {
@@ -13,15 +15,25 @@ public class GameService {
         this.authDao = authDao;
     }
 
-    public Collection<GameData> listGames(String authToken) {
+    public Collection<GameData> listGames(String authToken) throws DataAccessException, ResponseException {
+        AuthData auth = authDao.getAuth(authToken);
+        if (auth == null) {
+            throw new ResponseException("Unauthorized");
+        }
+
+        Collection<GameData> games = gameDao.getGames();
+        if (games == null) {
+            throw new DataAccessException("No games list");
+        }
+
+        return games;
+    }
+
+    public String createGame(String authToken, String gameName) throws DataAccessException, ResponseException {
         return null;
     }
 
-    public String createGame(String authToken, String gameName) {
-        return null;
-    }
-
-    public boolean joinGame(String authToken, String gameID, String playerColor) {
+    public boolean joinGame(String authToken, String gameID, String playerColor) throws DataAccessException, ResponseException {
         return false;
     }
 
