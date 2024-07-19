@@ -25,7 +25,12 @@ public class GameService {
         return false;
     }
 
-    public boolean clear() {
-        return false;
+    public boolean clear() throws DataAccessException {
+        boolean done = gameDao.clearGames();
+        if (!done) {
+            throw new DataAccessException("Error: unable to clear game data");
+        }
+
+        return true;
     }
 }

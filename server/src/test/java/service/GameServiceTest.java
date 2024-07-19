@@ -74,7 +74,7 @@ class GameServiceTest {
 
     @Test
     @Order(8)
-    void ClearTest() {
+    void ClearTest() throws DataAccessException {
         assertTrue(gs.clear());
         assertNull(gs.listGames(auth.authToken()));
     }

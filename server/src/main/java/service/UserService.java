@@ -53,7 +53,17 @@ public class UserService {
         return true;
     }
 
-    public boolean clear() {
-        return false;
+    public boolean clear() throws DataAccessException {
+        boolean done = userDao.clearUsers();
+        if (!done) {
+            throw new DataAccessException("Error: unable to clear user data");
+        }
+
+        done = authDao.clearAuth();
+        if (!done) {
+            throw new DataAccessException("Error: unable to clear authentication data");
+        }
+
+        return true;
     }
 }
