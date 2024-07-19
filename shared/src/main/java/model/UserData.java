@@ -1,3 +1,5 @@
 package model;
 
-public record UserData(String username, String password, String email) {}
+import com.google.gson.annotations.Expose;
+
+public record UserData(@Expose String username, @Expose String password, @Expose String email) {}
