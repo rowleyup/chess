@@ -16,7 +16,7 @@ public class JoinHandler implements Route{
         String auth = req.headers("authorization");
         JoinRequest joinReq = JsonUsage.fromJson(req.body(), JoinRequest.class);
         String message;
-        if (auth == null || auth.isEmpty()) {
+        if (auth == null || auth.isEmpty() || joinReq.playerColor() == null) {
             res.status(400);
             message = JsonUsage.fromError("Error: bad request");
             return message;

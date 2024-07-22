@@ -55,19 +55,19 @@ class GameServiceTest {
     @Test
     @Order(5)
     void JoinNoAuthTest() {
-        assertThrows(ResponseException.class, () -> {gs.joinGame(badAuth.authToken(), 1111, "WHITE");});
+        assertThrows(ResponseException.class, () -> {gs.joinGame(badAuth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE);});
     }
 
     @Test
     @Order(6)
     void JoinOutputTest() throws ResponseException, DataAccessException {
-        assertTrue(gs.joinGame(auth.authToken(), 1111, "WHITE"));
+        assertTrue(gs.joinGame(auth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE));
     }
 
     @Test
     @Order(7)
     void JoinTakenTest() throws ResponseException, DataAccessException {
-        assertFalse(gs.joinGame(auth.authToken(), 1111, "WHITE"));
+        assertFalse(gs.joinGame(auth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE));
     }
 
     @Test

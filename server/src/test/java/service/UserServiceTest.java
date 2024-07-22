@@ -50,7 +50,8 @@ class UserServiceTest {
 
     @Test
     void LogoutNotFoundTest() throws ResponseException, DataAccessException {
-        var login = us.login(user);
+        var login = us.register(user);
+        us.logout(login);
         assertThrows(ResponseException.class, () -> us.logout(login));
     }
 

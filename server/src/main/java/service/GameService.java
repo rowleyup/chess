@@ -37,7 +37,7 @@ public class GameService {
         return game.gameID();
     }
 
-    public boolean joinGame(String authToken, int gameID, String playerColor) throws DataAccessException, ResponseException {
+    public boolean joinGame(String authToken, int gameID, chess.ChessGame.TeamColor playerColor) throws DataAccessException, ResponseException {
         authenticate(authToken);
 
         GameData game = gameDao.getGameByID(gameID);
