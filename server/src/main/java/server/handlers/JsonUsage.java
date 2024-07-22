@@ -3,8 +3,6 @@ package server.handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.Collection;
-
 public class JsonUsage {
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -14,10 +12,6 @@ public class JsonUsage {
 
     public static String getJson(Object obj) {
         return gson.toJson(obj);
-    }
-
-    public static <T> String getJson(Collection<T> coll) {
-        return gson.toJson(coll);
     }
 
     public static String fromError(String message) {
