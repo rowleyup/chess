@@ -84,12 +84,6 @@ public class MemoryGameDAO implements GameDAO {
         return true;
     }
 
-    public boolean removeGame(int gameID) {
-        GameData rem = getGameByID(gameID);
-        games.remove(rem);
-        return true;
-    }
-
     public boolean updateGame(GameData game) {
         int id = game.gameID();
         GameData old = getGameByID(id);

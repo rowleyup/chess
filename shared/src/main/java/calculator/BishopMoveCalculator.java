@@ -1,7 +1,6 @@
 package calculator;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 public class BishopMoveCalculator extends MoveCalculator {
     public BishopMoveCalculator(chess.ChessBoard b, chess.ChessPosition s) {
@@ -9,90 +8,54 @@ public class BishopMoveCalculator extends MoveCalculator {
     }
 
     public Collection<chess.ChessMove> calculateMoves() {
-        Collection<chess.ChessMove> moves = new HashSet<>();
         int row = start.getRow();
         int column = start.getColumn();
+        BishopRookMoves brk = new BishopRookMoves(board, start);
 
         int r = row;
         int c = column;
+        boolean going = true;
 
-        for (;;) {
+        while (going) {
             r++;
             c++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(p, null);
-            if (m != null) {
-                if (board.getPiece(p) != null) {
-                    moves.add(m);
-                    break;
-                }
-                moves.add(m);
-            }
-            else {
-                break;
-            }
+            going = brk.checkMove(p);
         }
 
         r = row;
         c = column;
+        going = true;
 
-        for (;;) {
+        while (going) {
             r--;
             c++;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(p, null);
-            if (m != null) {
-                if (board.getPiece(p) != null) {
-                    moves.add(m);
-                    break;
-                }
-                moves.add(m);
-            }
-            else {
-                break;
-            }
+            going = brk.checkMove(p);
         }
 
         r = row;
         c = column;
+        going = true;
 
-        for (;;) {
+        while (going) {
             r--;
             c--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(p, null);
-            if (m != null) {
-                if (board.getPiece(p) != null) {
-                    moves.add(m);
-                    break;
-                }
-                moves.add(m);
-            }
-            else {
-                break;
-            }
+            going = brk.checkMove(p);
         }
 
         r = row;
         c = column;
+        going = true;
 
-        for (;;) {
+        while (going) {
             r++;
             c--;
             chess.ChessPosition p = new chess.ChessPosition(r, c);
-            chess.ChessMove m = getMove(p, null);
-            if (m != null) {
-                if (board.getPiece(p) != null) {
-                    moves.add(m);
-                    break;
-                }
-                moves.add(m);
-            }
-            else {
-                break;
-            }
+            going = brk.checkMove(p);
         }
 
-        return moves;
+        return brk.calculateMoves();
     }
 }

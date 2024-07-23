@@ -63,15 +63,6 @@ public interface GameDAO {
     boolean clearGames() throws DataAccessException;
 
     /**
-     * Removes a game from the database
-     *
-     * @param gameID is an int representing the game ID
-     * @return true if successful
-     * @throws DataAccessException if unable to update database
-     */
-    boolean removeGame(int gameID) throws DataAccessException;
-
-    /**
      * Updates the fields of a game
      *
      * @param game is the GameData object of the active game to be updated

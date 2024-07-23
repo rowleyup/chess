@@ -2,7 +2,7 @@ package server.handlers;
 
 import dataaccess.DataAccessException;
 import model.GameData;
-import server.request_response.ListResponse;
+import server.request.ListResponse;
 import service.GameService;
 import spark.*;
 import java.util.Collection;

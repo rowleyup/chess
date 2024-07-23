@@ -1,3 +1,3 @@
-package server.request_response;
+package server.request;
 
 public record JoinRequest(chess.ChessGame.TeamColor playerColor, int gameID) {}

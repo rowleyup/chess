@@ -2,7 +2,7 @@ package server.handlers;
 
 import dataaccess.DataAccessException;
 import service.GameService;
-import server.request_response.JoinRequest;
+import server.request.JoinRequest;
 import spark.*;
 
 /**
