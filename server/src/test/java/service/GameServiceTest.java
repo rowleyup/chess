@@ -72,8 +72,8 @@ class GameServiceTest {
     @Test
     @Order(7)
     @DisplayName("Join - Name Taken Test")
-    void joinTakenTest() throws ResponseException, DataAccessException {
-        assertFalse(gs.joinGame(auth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE));
+    void joinTakenTest() {
+        assertThrows(DataAccessException.class, () -> {gs.joinGame(auth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE);});
     }
 
     @Test
