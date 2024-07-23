@@ -1,7 +1,5 @@
 package calculator;
 
-import chess.ChessMove;
-
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -10,7 +8,7 @@ public class BishopMoveCalculator extends MoveCalculator {
         super(b, s);
     }
 
-    public Collection<ChessMove> calculateMoves() {
+    public Collection<chess.ChessMove> calculateMoves() {
         Collection<chess.ChessMove> moves = new HashSet<>();
         int row = start.getRow();
         int column = start.getColumn();

@@ -1,4 +1,4 @@
-package server.RequestResponse;
+package server.request_response;
 
 import com.google.gson.annotations.Expose;
 import model.GameData;

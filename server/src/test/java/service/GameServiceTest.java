@@ -29,50 +29,57 @@ class GameServiceTest {
 
     @Test
     @Order(3)
-    void ListNoAuthTest() {
+    void listNoAuthTest() {
         assertThrows(ResponseException.class, () -> {gs.listGames(badAuth.authToken());});
     }
 
     @Test
     @Order(4)
-    void ListOutputTest() throws ResponseException, DataAccessException {
+    @DisplayName("List Output Test")
+    void listOutputTest() throws ResponseException, DataAccessException {
         assertNotNull(gs.listGames(auth.authToken()));
         assertEquals(1, gs.listGames(auth.authToken()).size());
     }
 
     @Test
     @Order(1)
-    void CreateNoAuthTest() {
+    @DisplayName("Create - Bad Authentication Test")
+    void createNoAuthTest() {
         assertThrows(ResponseException.class, () -> {gs.createGame(badAuth.authToken(), gameName);});
     }
 
     @Test
     @Order(2)
-    void CreateOutputTest() throws ResponseException, DataAccessException {
+    @DisplayName("Create Output Test")
+    void createOutputTest() throws ResponseException, DataAccessException {
         assertEquals(1111, gs.createGame(auth.authToken(), gameName));
     }
 
     @Test
     @Order(5)
-    void JoinNoAuthTest() {
+    @DisplayName("Join - Bad Authentication Test")
+    void joinNoAuthTest() {
         assertThrows(ResponseException.class, () -> {gs.joinGame(badAuth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE);});
     }
 
     @Test
     @Order(6)
-    void JoinOutputTest() throws ResponseException, DataAccessException {
+    @DisplayName("Join Output Test")
+    void joinOutputTest() throws ResponseException, DataAccessException {
         assertTrue(gs.joinGame(auth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE));
     }
 
     @Test
     @Order(7)
-    void JoinTakenTest() throws ResponseException, DataAccessException {
+    @DisplayName("Join - Name Taken Test")
+    void joinTakenTest() throws ResponseException, DataAccessException {
         assertFalse(gs.joinGame(auth.authToken(), 1111, chess.ChessGame.TeamColor.WHITE));
     }
 
     @Test
     @Order(8)
-    void ClearTest() throws DataAccessException, ResponseException {
+    @DisplayName("Game Clear Test")
+    void clearTest() throws DataAccessException, ResponseException {
         assertTrue(gs.clear());
         assertEquals(0, gs.listGames(auth.authToken()).size());
     }

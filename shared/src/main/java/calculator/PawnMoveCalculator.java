@@ -41,12 +41,12 @@ public class PawnMoveCalculator extends MoveCalculator {
         if (end.getRow() > 8 || end.getRow() < 1 || end.getColumn() > 8 || end.getColumn() < 1) {
             return false;
         }
-        int col_diff = end.getColumn() - start.getColumn();
+        int colDiff = end.getColumn() - start.getColumn();
         chess.ChessPiece piece2 = board.getPiece(end);
-        if (col_diff != 0) {
+        if (colDiff != 0) {
             if (piece2 == null) {
                 if (piece.getEnPassant()) {
-                    chess.ChessPosition pos = new chess.ChessPosition(start.getRow(), start.getColumn()+col_diff);
+                    chess.ChessPosition pos = new chess.ChessPosition(start.getRow(), start.getColumn()+ colDiff);
                     chess.ChessPiece piece3 = board.getPiece(pos);
                     if (piece3 != null) {
                         return piece3.getTeamColor() != piece.getTeamColor() && piece3.getPieceType() == chess.ChessPiece.PieceType.PAWN;

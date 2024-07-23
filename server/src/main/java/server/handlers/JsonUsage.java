@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
  * Class for holding Gson data and implementing json-related functions
  */
 public class JsonUsage {
-    private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     /**
      * Translates the given json string into the given object
@@ -28,7 +28,7 @@ public class JsonUsage {
      * @return a json string representing the object
      */
     public static String getJson(Object obj) {
-        return gson.toJson(obj);
+        return GSON.toJson(obj);
     }
 
     /**
