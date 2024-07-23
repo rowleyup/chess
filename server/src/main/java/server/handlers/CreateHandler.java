@@ -1,5 +1,6 @@
 package server.handlers;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.GameData;
 import service.GameService;
@@ -24,7 +25,7 @@ public class CreateHandler implements Route{
 
         try {
             int gameID = gameService.createGame(auth, gameName);
-            message = JsonUsage.getJson(new GameData(gameID, null, null, null, null));
+            message = JsonUsage.getJson(new GameData(gameID, null, null, null, new ChessGame()));
         } catch (ResponseException e) {
             res.status(401);
             message = JsonUsage.fromError(e.getMessage());
