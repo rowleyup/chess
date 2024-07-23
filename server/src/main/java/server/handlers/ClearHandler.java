@@ -1,11 +1,13 @@
 package server.handlers;
 
 import dataaccess.DataAccessException;
-import model.AuthData;
 import service.GameService;
 import service.UserService;
 import spark.*;
 
+/**
+ * Handles the http request to clear the database
+ */
 public class ClearHandler implements Route {
     private final UserService userService;
     private final GameService gameService;
@@ -18,6 +20,10 @@ public class ClearHandler implements Route {
     public Object handle(Request req, Response res) {
         String message = null;
 
+        /*
+         * Run clear functions from UserService and GameService and check that operations were successful
+         * Set status 500 if unsuccessful or from DataAccessException
+         */
         try {
             boolean done = userService.clear();
             if (!done) {

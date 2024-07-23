@@ -5,6 +5,9 @@ import model.UserData;
 import service.UserService;
 import spark.*;
 
+/**
+ * Handles http request to register a new user
+ */
 public class RegisterHandler implements Route{
     private final UserService userService;
 
@@ -15,12 +18,21 @@ public class RegisterHandler implements Route{
     public Object handle(Request req, Response res) {
         var user = JsonUsage.fromJson(req.body(), UserData.class);
         String message;
+
+        /*
+         * Checks if Request contains a username, password, and email
+         */
         if (user.username() == null || user.username().isEmpty() || user.password() == null || user.password().isEmpty() || user.email() == null || user.email().isEmpty()) {
             res.status(400);
             message = JsonUsage.fromError("Error: bad request");
             return message;
         }
 
+        /*
+         * Run register function from UserService
+         * Set status 403 from ResponseException if user already taken
+         * Set status 500 from DataAccessException if database error
+         */
         try {
             var auth = userService.register(user);
             message = JsonUsage.getJson(auth);

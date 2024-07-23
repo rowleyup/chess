@@ -6,6 +6,9 @@ import dataaccess.UserDAO;
 import model.*;
 import server.handlers.ResponseException;
 
+/**
+ * Contains user-related functions called by handlers
+ */
 public class UserService {
     private final UserDAO userDao;
     private final AuthDAO authDao;
@@ -15,6 +18,14 @@ public class UserService {
         this.authDao = authDao;
     }
 
+    /**
+     * Checks if username is already taken, calls createUser from UserDAO and createAuth from AuthDAO
+     *
+     * @param user is a UserData object containing a username, password, and email
+     * @return an AuthData object containing the username and auth token
+     * @throws ResponseException if username is already taken
+     * @throws DataAccessException if createUser was unsuccessful
+     */
     public AuthData register(UserData user) throws ResponseException, DataAccessException {
         if (userDao.getUser(user.username()) != null) {
             throw new ResponseException("Error: already taken");
@@ -28,6 +39,14 @@ public class UserService {
         return authDao.createAuth(user.username());
     }
 
+    /**
+     * Checks if user exists, calls createAuth from AuthDAO
+     *
+     * @param user is a UserData object containing a username and password
+     * @return an AuthData object containing the username and auth token
+     * @throws ResponseException if username or password is incorrect
+     * @throws DataAccessException if thrown by createAuth
+     */
     public AuthData login(UserData user) throws ResponseException, DataAccessException {
         UserData dbUser = userDao.getUser(user.username());
         if (dbUser == null) {
@@ -40,6 +59,14 @@ public class UserService {
         return authDao.createAuth(user.username());
     }
 
+    /**
+     * Checks if user is logged in, calls removeAuth from AuthDAO
+     *
+     * @param authData is an AuthData object containing the auth token to be logged out
+     * @return true if successful
+     * @throws ResponseException if invalid auth token
+     * @throws DataAccessException if removeAuth was unsuccessful
+     */
     public boolean logout(AuthData authData) throws ResponseException, DataAccessException {
         AuthData user = authDao.getAuth(authData.authToken());
         if (user == null) {
@@ -53,6 +80,12 @@ public class UserService {
         return true;
     }
 
+    /**
+     * Calls clearUsers from UserDAO and clearAuth from AuthDAO, checks both for completion
+     *
+     * @return true if successful
+     * @throws DataAccessException if clearUsers and/or clearAuth fails
+     */
     public boolean clear() throws DataAccessException {
         boolean done = userDao.clearUsers();
         if (!done) {

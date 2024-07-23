@@ -5,9 +5,11 @@ import model.GameData;
 import server.RequestResponse.ListResponse;
 import service.GameService;
 import spark.*;
-
 import java.util.Collection;
 
+/**
+ * Handles the http request to list games
+ */
 public class ListHandler implements Route{
     private final GameService gameService;
 
@@ -18,12 +20,21 @@ public class ListHandler implements Route{
     public Object handle(Request req, Response res) {
         String auth = req.headers("authorization");
         String message;
+
+        /*
+         * Check if Request contains an auth token
+         */
         if (auth == null || auth.isEmpty()) {
             res.status(400);
             message = JsonUsage.fromError("Error: bad request");
             return message;
         }
 
+        /*
+         * Run listGames function from GameService
+         * Set status 401 from ResponseException if unauthorized
+         * Set status 500 from DataAccessException if database error
+         */
         try {
             Collection<GameData> games = gameService.listGames(auth);
             ListResponse gamesRes = new ListResponse(games);

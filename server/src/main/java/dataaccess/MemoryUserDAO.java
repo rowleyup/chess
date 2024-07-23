@@ -3,6 +3,9 @@ package dataaccess;
 import model.UserData;
 import java.util.HashMap;
 
+/**
+ * Implements UserDAO and stores data in memory
+ */
 public class MemoryUserDAO implements UserDAO {
     private final HashMap<String, String[]> users;
 

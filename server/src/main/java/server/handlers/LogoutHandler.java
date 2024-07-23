@@ -5,6 +5,9 @@ import model.AuthData;
 import service.UserService;
 import spark.*;
 
+/**
+ * Handles http request to logout
+ */
 public class LogoutHandler implements Route {
     private final UserService userService;
 
@@ -16,12 +19,21 @@ public class LogoutHandler implements Route {
         String auth = req.headers("authorization");
         var authToken = new AuthData(null, auth);
         String message;
+
+        /*
+         * Check if Request contains an auth token
+         */
         if (authToken.authToken() == null || authToken.authToken().isEmpty()) {
             res.status(400);
             message = JsonUsage.fromError("Error: bad request");
             return message;
         }
 
+        /*
+         * Run logout function from UserService and check that the operation was successful
+         * Set status 500 if unsuccessful or from DataAccessException
+         * Set status 401 from ResponseException if user was not logged in
+         */
         try {
             boolean done = userService.logout(authToken);
             if (done) {

@@ -3,10 +3,12 @@ package dataaccess;
 import chess.ChessGame;
 import model.GameData;
 import server.handlers.ResponseException;
-
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Implements GameDAO and stores data in memory
+ */
 public class MemoryGameDAO implements GameDAO {
     private final HashSet<GameData> games;
     private int nextID;
@@ -42,10 +44,10 @@ public class MemoryGameDAO implements GameDAO {
         return result;
     }
 
-    public GameData createGame(String gameName) throws DataAccessException {
+    public GameData createGame(String gameName) {
         GameData old = getGameByName(gameName);
         if (old != null) {
-            throw new DataAccessException("Error: game name already exists");
+            return null;
         }
 
         GameData game = new GameData(nextID, null, null, gameName, new ChessGame());

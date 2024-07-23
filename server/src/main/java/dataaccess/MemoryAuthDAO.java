@@ -4,6 +4,9 @@ import model.AuthData;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Implements AuthDAO and stores data in memory =
+ */
 public class MemoryAuthDAO implements AuthDAO {
     HashMap<String, String> authTokens;
 
