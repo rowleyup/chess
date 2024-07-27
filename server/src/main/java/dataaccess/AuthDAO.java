@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
+import server.handlers.ResponseException;
 
 public interface AuthDAO {
 
@@ -12,7 +13,7 @@ public interface AuthDAO {
      * @return AuthData object containing the username and the auth token
      * @throws DataAccessException if unable to update database
      */
-    AuthData createAuth(String username) throws DataAccessException;
+    AuthData createAuth(String username) throws DataAccessException, ResponseException;
 
     /**
      * Deletes an auth-token/username pair from the database, logging out the user

@@ -1,6 +1,8 @@
 package dataaccess;
 
 import model.AuthData;
+import server.handlers.ResponseException;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -14,7 +16,11 @@ public class MemoryAuthDAO implements AuthDAO {
         authTokens = new HashMap<String, String>();
     }
 
-    public AuthData createAuth(String username) {
+    public AuthData createAuth(String username) throws ResponseException{
+        if (authTokens.containsValue(username)) {
+            throw new ResponseException("Error: already taken");
+        }
+
         String token = UUID.randomUUID().toString();
         authTokens.put(token, username);
         return new AuthData(username, token);
