@@ -56,8 +56,13 @@ public class MemoryGameDAO implements GameDAO {
         return game;
     }
 
-    public boolean addPlayer(GameData game, chess.ChessGame.TeamColor color, String username) throws ResponseException {
+    public boolean addPlayer(GameData gameReq, chess.ChessGame.TeamColor color, String username) throws ResponseException {
         GameData result;
+
+        GameData game = getGameByID(gameReq.gameID());
+        if (game == null) {
+            throw new ResponseException("Game not found");
+        }
 
         if (color == chess.ChessGame.TeamColor.WHITE) {
             if (game.whiteUsername() != null) {
@@ -88,8 +93,7 @@ public class MemoryGameDAO implements GameDAO {
         int id = game.gameID();
         GameData old = getGameByID(id);
         if (old == null) {
-            games.add(game);
-            return true;
+            return false;
         }
         games.remove(old);
         games.add(game);
