@@ -1,22 +1,26 @@
 package dataaccess;
 
 import model.GameData;
+import model.UserData;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameDAOTest {
     private static GameDAO gd;
+    private static UserDAO ud;
     private static String name;
     private static int id;
     private static String username;
 
     @BeforeAll
     public static void setUp() throws Exception{
+        ud = new MySqlUserDAO();
         gd = new MySqlGameDAO();
         name = "fun game";
         id = 1111;
         username = "joe";
+        ud.createUser(new UserData(username, "password", "email@email.email"));
     }
 
     @BeforeEach
@@ -27,6 +31,7 @@ public class GameDAOTest {
     @AfterAll
     public static void cleanUp() throws Exception {
         gd.clearGames();
+        ud.clearUsers();
     }
 
     @Test

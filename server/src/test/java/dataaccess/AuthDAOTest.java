@@ -1,22 +1,23 @@
 package dataaccess;
 
 import model.AuthData;
+import model.UserData;
 import org.junit.jupiter.api.*;
 import server.handlers.ResponseException;
-
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthDAOTest {
     private static AuthDAO ad;
+    private static UserDAO ud;
     private static String username;
     private static AuthData auth;
 
     @BeforeAll
     static void setUp() throws Exception {
+        ud = new MySqlUserDAO();
         ad = new MySqlAuthDAO();
         username = "joe";
+        ud.createUser(new UserData(username, "password", "email@email.email"));
     }
 
     @BeforeEach
@@ -28,6 +29,7 @@ public class AuthDAOTest {
     @AfterAll
     static void cleanUp() throws Exception {
         ad.clearAuth();
+        ud.clearUsers();
     }
 
     @Test

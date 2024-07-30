@@ -30,7 +30,7 @@ public class TableCreator {
             `username` varchar(50) NOT NULL,
             `authToken` varchar(256) NOT NULL,
             PRIMARY KEY (`authToken`),
-            FOREIGN KEY (`username`) REFERENCES user(`username`)
+            FOREIGN KEY (`username`) REFERENCES user(`username`) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
             """
     };
@@ -64,9 +64,9 @@ public class TableCreator {
             `id` int NOT NULL,
             `white` varchar(50),
             `black` varchar(50),
-            FOREIGN KEY (`id`) REFERENCES game(`id`),
-            FOREIGN KEY (`white`) REFERENCES user(`username`),
-            FOREIGN KEY (`black`) REFERENCES user(`username`),
+            FOREIGN KEY (`id`) REFERENCES game(`id`) ON DELETE CASCADE,
+            FOREIGN KEY (`white`) REFERENCES user(`username`) ON DELETE CASCADE,
+            FOREIGN KEY (`black`) REFERENCES user(`username`) ON DELETE CASCADE,
             INDEX (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
             """

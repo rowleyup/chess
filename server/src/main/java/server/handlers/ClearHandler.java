@@ -25,13 +25,13 @@ public class ClearHandler implements Route {
          * Set status 500 if unsuccessful or from DataAccessException
          */
         try {
-            boolean done = userService.clear();
+            boolean done = gameService.clear();
             if (!done) {
                 res.status(500);
                 message = JsonUsage.fromError("Error: unable to clear user and authentication data");
             }
 
-            done = gameService.clear();
+            done = userService.clear();
             if (!done) {
                 res.status(500);
                 message = JsonUsage.fromError("Error: unable to clear game data");
