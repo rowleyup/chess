@@ -39,8 +39,7 @@ public class AuthDAOTest {
 
     @Test
     void createErrorTest() {
-        assertDoesNotThrow(() -> ad.createAuth(username));
-        assertThrows(ResponseException.class, () -> ad.createAuth(username));
+        assertThrows(ResponseException.class, () -> ad.createAuth(null));
     }
 
     @Test

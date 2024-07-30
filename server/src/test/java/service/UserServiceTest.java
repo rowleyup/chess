@@ -11,13 +11,18 @@ import server.handlers.ResponseException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
-    private UserService us;
-    private UserData user;
+    private static UserService us;
+    private static UserData user;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         us = new UserService(new MemoryUserDAO(), new MemoryAuthDAO());
         user = new UserData("joe schmo", "Sh0Tg[]n", "regular.joe@fakemail.com");
+    }
+
+    @BeforeEach
+    void reset() throws DataAccessException {
+        us.clear();
     }
 
     @Test
@@ -45,7 +50,8 @@ class UserServiceTest {
     @Test
     @DisplayName("Login Output Test")
     void loginOutputTest() throws ResponseException, DataAccessException {
-        us.register(user);
+        var auth = us.register(user);
+        us.logout(auth);
         var output = us.login(user);
         assertInstanceOf(AuthData.class, output);
         assertEquals(user.username(), output.username());

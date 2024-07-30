@@ -11,8 +11,8 @@ public class MySqlAuthDAO implements AuthDAO {
     }
 
     public AuthData createAuth(String username) throws DataAccessException, ResponseException {
-        if (checkLoggedIn(username)) {
-            throw new ResponseException("Error: User already logged in");
+        if (username == null || username.isEmpty()) {
+            throw new ResponseException("Username cannot be null or empty");
         }
 
         String token = UUID.randomUUID().toString();
