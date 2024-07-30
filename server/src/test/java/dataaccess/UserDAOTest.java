@@ -12,7 +12,7 @@ public class UserDAOTest {
     public static String email;
 
     @BeforeAll
-    public static void setUp() {
+    public static void setUp() throws Exception {
         ud = new MySqlUserDAO();
         username = "joe";
         password = "password";

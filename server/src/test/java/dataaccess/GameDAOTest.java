@@ -12,7 +12,7 @@ public class GameDAOTest {
     private static String username;
 
     @BeforeAll
-    public static void setUp() {
+    public static void setUp() throws Exception{
         gd = new MySqlGameDAO();
         name = "fun game";
         id = 1111;

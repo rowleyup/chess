@@ -8,6 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class MySqlGameDAO implements GameDAO {
+    public MySqlGameDAO() throws DataAccessException {
+        TableCreator.configureDatabase("game");
+        TableCreator.configureDatabase("gameUsers");
+    }
+
     public Collection<GameData> getGames() throws DataAccessException {
         return List.of();
     }

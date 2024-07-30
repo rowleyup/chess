@@ -4,6 +4,8 @@ import model.AuthData;
 import org.junit.jupiter.api.*;
 import server.handlers.ResponseException;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthDAOTest {
@@ -12,7 +14,7 @@ public class AuthDAOTest {
     private static AuthData auth;
 
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws Exception {
         ad = new MySqlAuthDAO();
         username = "joe";
     }

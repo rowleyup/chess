@@ -4,6 +4,10 @@ import model.AuthData;
 import server.handlers.ResponseException;
 
 public class MySqlAuthDAO implements AuthDAO {
+    public MySqlAuthDAO() throws DataAccessException {
+        TableCreator.configureDatabase("auth");
+    }
+
     public AuthData createAuth(String username) throws DataAccessException, ResponseException {
         return null;
     }
