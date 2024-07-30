@@ -1,20 +1,26 @@
 package server;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.MySqlAuthDAO;
+import dataaccess.MySqlGameDAO;
+import dataaccess.MySqlUserDAO;
 import server.handlers.*;
 import service.*;
 import spark.*;
+import static java.lang.System.exit;
 
 public class Server {
-    private final UserService userService;
-    private final GameService gameService;
+    private UserService userService;
+    private GameService gameService;
 
     public Server() {
-        MemoryAuthDAO mem = new MemoryAuthDAO();
-        userService = new UserService(new MemoryUserDAO(), mem);
-        gameService = new GameService(new MemoryGameDAO(), mem);
+        try {
+            var auth = new MySqlAuthDAO();
+            userService = new UserService(new MySqlUserDAO(), auth);
+            gameService = new GameService(new MySqlGameDAO(), auth);
+        } catch (Exception e) {
+            System.out.printf("Error: %s%n", e.getMessage());
+            exit(1);
+        }
     }
 
     public int run(int desiredPort) {
