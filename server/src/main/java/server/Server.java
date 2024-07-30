@@ -14,12 +14,12 @@ public class Server {
 
     public Server() {
         try {
+            var user = new MySqlUserDAO();
             var auth = new MySqlAuthDAO();
-            userService = new UserService(new MySqlUserDAO(), auth);
+            userService = new UserService(user, auth);
             gameService = new GameService(new MySqlGameDAO(), auth);
         } catch (Exception e) {
-            System.out.printf("Error: %s%n", e.getMessage());
-            exit(1);
+            throw new RuntimeException(e);
         }
     }
 
