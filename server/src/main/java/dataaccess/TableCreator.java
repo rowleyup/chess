@@ -6,10 +6,10 @@ public class TableCreator {
     static void configureDatabase(String table) throws DataAccessException {
         DatabaseManager.createDatabase();
         String[] createStatements = switch (table) {
-            case "auth" -> authStatements;
-            case "user" -> userStatements;
-            case "game" -> gameStatements;
-            case "gameUsers" -> usersInGameStatements;
+            case "auth" -> AUTHSTATEMENTS;
+            case "user" -> USERSTATEMENTS;
+            case "game" -> GAMESTATEMENTS;
+            case "gameUsers" -> PLAYERSTATEMENTS;
             default -> throw new DataAccessException(String.format("Error: Unknown table: %s", table));
         };
 
@@ -24,7 +24,7 @@ public class TableCreator {
         }
     }
 
-    private static final String[] authStatements = {
+    private static final String[] AUTHSTATEMENTS = {
             """
             CREATE TABLE IF NOT EXISTS auth (
             `username` varchar(50) NOT NULL,
@@ -35,7 +35,7 @@ public class TableCreator {
             """
     };
 
-    private static final String[] userStatements = {
+    private static final String[] USERSTATEMENTS = {
             """
             CREATE TABLE IF NOT EXISTS user (
             `username` varchar(50) NOT NULL,
@@ -46,7 +46,7 @@ public class TableCreator {
             """
     };
 
-    private static final String[] gameStatements = {
+    private static final String[] GAMESTATEMENTS = {
             """
             CREATE TABLE IF NOT EXISTS game (
             `id` int NOT NULL,
@@ -58,7 +58,7 @@ public class TableCreator {
             """
     };
 
-    private static final String[] usersInGameStatements = {
+    private static final String[] PLAYERSTATEMENTS = {
             """
             CREATE TABLE IF NOT EXISTS users_in_game (
             `id` int NOT NULL,
