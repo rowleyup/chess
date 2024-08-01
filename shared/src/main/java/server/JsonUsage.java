@@ -3,6 +3,8 @@ package server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.InputStreamReader;
+
 /**
  * Class for holding Gson data and implementing json-related functions
  */
@@ -19,6 +21,10 @@ public class JsonUsage {
      */
     public static <T> T fromJson(String json, Class<T> c) {
         return new Gson().fromJson(json, c);
+    }
+
+    public static <T> T fromJson(InputStreamReader reader, Class<T> c) {
+        return new Gson().fromJson(reader, c);
     }
 
     /**
