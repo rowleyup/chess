@@ -2,7 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
-import server.handlers.ResponseException;
+import server.ResponseException;
 import java.util.Collection;
 import java.util.HashSet;
 

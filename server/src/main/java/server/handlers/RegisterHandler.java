@@ -2,6 +2,8 @@ package server.handlers;
 
 import dataaccess.DataAccessException;
 import model.UserData;
+import server.JsonUsage;
+import server.ResponseException;
 import service.UserService;
 import spark.*;
 

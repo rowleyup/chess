@@ -1,7 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
-import server.handlers.ResponseException;
+import server.ResponseException;
 import java.sql.SQLException;
 import java.util.UUID;
 

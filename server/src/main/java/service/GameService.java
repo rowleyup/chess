@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.*;
-import server.handlers.ResponseException;
+import server.ResponseException;
 import java.util.Collection;
 
 /**

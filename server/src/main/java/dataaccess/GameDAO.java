@@ -1,7 +1,7 @@
 package dataaccess;
 
 import model.GameData;
-import server.handlers.ResponseException;
+import server.ResponseException;
 
 import java.util.Collection;
 

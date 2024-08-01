@@ -3,6 +3,8 @@ package server.handlers;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.GameData;
+import server.JsonUsage;
+import server.ResponseException;
 import service.GameService;
 import spark.*;
 

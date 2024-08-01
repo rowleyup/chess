@@ -2,6 +2,8 @@ package server.handlers;
 
 import dataaccess.DataAccessException;
 import model.GameData;
+import server.JsonUsage;
+import server.ResponseException;
 import server.request.ListResponse;
 import service.GameService;
 import spark.*;

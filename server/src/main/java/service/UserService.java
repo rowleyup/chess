@@ -5,7 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.*;
 import org.mindrot.jbcrypt.BCrypt;
-import server.handlers.ResponseException;
+import server.ResponseException;
 
 /**
  * Contains user-related functions called by handlers

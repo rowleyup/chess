@@ -2,8 +2,8 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
-import server.handlers.ResponseException;
-import server.handlers.JsonUsage;
+import server.ResponseException;
+import server.JsonUsage;
 import java.sql.*;
 import java.util.Collection;
 import java.util.HashSet;

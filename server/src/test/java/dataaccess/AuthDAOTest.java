@@ -3,7 +3,7 @@ package dataaccess;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import server.handlers.ResponseException;
+import server.ResponseException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthDAOTest {
