@@ -11,11 +11,20 @@ public class ServerFacade {
         this.url = url;
     }
 
-    public void register(UserData user) {}
+    public AuthData register(UserData user) throws ResponseException {
+        var path = "/user";
+        return makeRequest("POST", path, user, AuthData.class);
+    }
 
-    public void login(UserData user) {}
+    public AuthData login(UserData user) throws ResponseException {
+        var path = "/session";
+        return makeRequest("POST", path, user, AuthData.class);
+    }
 
-    public void logout(String authToken) {}
+    public void logout(String authToken) throws ResponseException {
+        var path = "/session";
+        makeRequest("DELETE", path, authToken, null, null);
+    }
 
     public void listGames(String authToken) {}
 
@@ -39,6 +48,8 @@ public class ServerFacade {
             throw new ResponseException(e.getMessage());
         }
     }
+
+    private <T> T makeRequest(String method, String path, String header, Object request, Class<T> resType) throws ResponseException {}
 
     private void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
