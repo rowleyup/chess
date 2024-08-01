@@ -1,6 +1,7 @@
 package server;
 
 import model.*;
+import request.ListResponse;
 import java.io.*;
 import java.net.*;
 
@@ -26,11 +27,20 @@ public class ServerFacade {
         makeRequest("DELETE", path, authToken, null, null);
     }
 
-    public void listGames(String authToken) {}
+    public ListResponse listGames(String authToken) throws ResponseException {
+        var path = "/game";
+        return makeRequest("GET", path, authToken, null, ListResponse.class);
+    }
 
-    public void createGame(String authToken, GameData game) {}
+    public GameData createGame(String authToken, GameData game) throws ResponseException {
+        var path = "/game";
+        return makeRequest("POST", path, authToken, game, GameData.class);
+    }
 
-    public void joinGame(String authToken, GameData game) {}
+    public void joinGame(String authToken, GameData game) throws ResponseException {
+        var path = "/game";
+        makeRequest("PUT", path, authToken, game, null);
+    }
 
     private <T> T makeRequest(String method, String path, String header, Object request, Class<T> resType) throws ResponseException {
         try {
@@ -73,7 +83,8 @@ public class ServerFacade {
     private void throwIfNotSuccessful(HttpURLConnection conn) throws IOException, ResponseException {
         var status = conn.getResponseCode();
         if (status != 200) {
-            throw new ResponseException(String.format("Failure: %s", status));
+            String message = JsonUsage.toError(readBody(conn, String.class));
+            throw new ResponseException(String.format("Failure: %s - %s", status, message));
         }
     }
 

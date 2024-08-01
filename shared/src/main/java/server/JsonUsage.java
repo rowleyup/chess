@@ -46,4 +46,10 @@ public class JsonUsage {
     public static String fromError(String message) {
         return String.format("{ \"message\": \"%s\" }", message);
     }
+
+    public static String toError(String message) {
+        String m = message.substring(13);
+        m = m.substring(0, m.length() - 2);
+        return m;
+    }
 }
