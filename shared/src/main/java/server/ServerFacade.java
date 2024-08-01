@@ -13,12 +13,12 @@ public class ServerFacade {
 
     public AuthData register(UserData user) throws ResponseException {
         var path = "/user";
-        return makeRequest("POST", path, user, AuthData.class);
+        return makeRequest("POST", path, null, user, AuthData.class);
     }
 
     public AuthData login(UserData user) throws ResponseException {
         var path = "/session";
-        return makeRequest("POST", path, user, AuthData.class);
+        return makeRequest("POST", path, null, user, AuthData.class);
     }
 
     public void logout(String authToken) throws ResponseException {
@@ -32,7 +32,7 @@ public class ServerFacade {
 
     public void joinGame(String authToken, GameData game) {}
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> resType) throws ResponseException {
+    private <T> T makeRequest(String method, String path, String header, Object request, Class<T> resType) throws ResponseException {
         try {
             URL u = (new URI(url + path)).toURL();
             HttpURLConnection conn = (HttpURLConnection) u.openConnection();
@@ -40,6 +40,11 @@ public class ServerFacade {
             conn.setDoOutput(true);
 
             writeBody(request, conn);
+
+            if (header != null) {
+                writeHeader(header, conn);
+            }
+
             conn.connect();
             throwIfNotSuccessful(conn);
 
@@ -49,8 +54,6 @@ public class ServerFacade {
         }
     }
 
-    private <T> T makeRequest(String method, String path, String header, Object request, Class<T> resType) throws ResponseException {}
-
     private void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
@@ -58,6 +61,12 @@ public class ServerFacade {
             try (OutputStream os = http.getOutputStream()) {
                 os.write(data.getBytes());
             }
+        }
+    }
+
+    private void writeHeader(String header, HttpURLConnection http) {
+        if (header != null) {
+            http.addRequestProperty("authorization", header);
         }
     }
 
