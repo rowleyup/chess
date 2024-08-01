@@ -1,7 +1,7 @@
 package server;
 
 import model.*;
-import request.ListResponse;
+import request.*;
 import java.io.*;
 import java.net.*;
 
@@ -37,7 +37,7 @@ public class ServerFacade {
         return makeRequest("POST", path, authToken, game, GameData.class);
     }
 
-    public void joinGame(String authToken, GameData game) throws ResponseException {
+    public void joinGame(String authToken, JoinRequest game) throws ResponseException {
         var path = "/game";
         makeRequest("PUT", path, authToken, game, null);
     }
