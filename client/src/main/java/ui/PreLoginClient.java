@@ -6,18 +6,17 @@ import server.ResponseException;
 import server.ServerFacade;
 import static ui.EscapeSequences.*;
 
-public class PreLoginClient implements ChessClient{
+public class PreLoginClient{
     private final String serverUrl;
     private final ServerFacade server;
-    private final ChessClient nextClient;
+    private final PostLoginClient nextClient;
 
-    public PreLoginClient(String serverUrl, ChessClient nextClient) {
+    public PreLoginClient(String serverUrl, PostLoginClient nextClient) {
         this.serverUrl = serverUrl;
         server = new ServerFacade(serverUrl);
         this.nextClient = nextClient;
     }
 
-    @Override
     public String eval(String input) {
         var inputs = input.toLowerCase().split(" ");
         var command = (inputs.length > 0) ? inputs[0] : "help";
@@ -30,7 +29,6 @@ public class PreLoginClient implements ChessClient{
         };
     }
 
-    @Override
     public String help() {
         String message = SET_TEXT_COLOR_BLUE + "\tquit " + SET_TEXT_COLOR_LIGHT_GREY + "- exit program\n";
         message = message + SET_TEXT_COLOR_BLUE + "\tregister " + SET_TEXT_COLOR_LIGHT_GREY + "- create and account\n";

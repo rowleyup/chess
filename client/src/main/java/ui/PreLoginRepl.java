@@ -1,23 +1,25 @@
 package ui;
 
+import server.ResponseException;
+
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class PreLoginRepl implements Repl{
-    private final ChessClient client;
+    private final PreLoginClient client;
     private final Repl postLogin;
+    private final Scanner scanner;
 
     public PreLoginRepl(String url) {
         postLogin = new PostLoginRepl(url);
         client = new PreLoginClient(url, postLogin.client());
+        scanner = new Scanner(System.in);
     }
 
     @Override
     public void run() {
         System.out.println(SET_TEXT_UNDERLINE + SET_TEXT_COLOR_MAGENTA + "Welcome to Chess! Sign in to start." + RESET_TEXT_UNDERLINE);
         System.out.println(client.help());
-
-        Scanner scanner = new Scanner(System.in);
         String result = "";
 
         while (!result.equals("quit")) {
@@ -51,7 +53,37 @@ public class PreLoginRepl implements Repl{
         System.out.print("\n" + RESET_TEXT_COLOR + "[logged out] >>> " + SET_TEXT_COLOR_BLUE);
     }
 
-    private String loginPrompt() {}
+    private String loginPrompt() throws ResponseException {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "USERNAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String username = scanner.nextLine();
+        if (username.contains(" ")) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid username";
+        }
 
-    private String registerPrompt() {}
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PASSWORD >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String password = scanner.nextLine();
+        client.login(username, password);
+
+        return "Logging in user: " + username;
+    }
+
+    private String registerPrompt() throws ResponseException {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "USERNAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String username = scanner.nextLine();
+        if (username.contains(" ")) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid username";
+        }
+
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PASSWORD >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String password = scanner.nextLine();
+
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "EMAIL >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String email = scanner.nextLine();
+        if (!email.contains("@")) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid email";
+        }
+
+        client.register(username, password, email);
+        return "Registering and logging in user: " + username;
+    }
 }
