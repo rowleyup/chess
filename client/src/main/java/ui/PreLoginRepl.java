@@ -5,7 +5,7 @@ import server.ResponseException;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
-public class PreLoginRepl implements Repl{
+public class PreLoginRepl {
     private final PreLoginClient client;
     private final PostLoginRepl postLogin;
     private final Scanner scanner;
@@ -16,7 +16,6 @@ public class PreLoginRepl implements Repl{
         scanner = new Scanner(System.in);
     }
 
-    @Override
     public void run() {
         System.out.println(SET_TEXT_UNDERLINE + SET_TEXT_COLOR_MAGENTA + "Welcome to Chess! Sign in to start." + RESET_TEXT_UNDERLINE);
         System.out.println(client.help());
@@ -48,34 +47,34 @@ public class PreLoginRepl implements Repl{
         }
     }
 
-    @Override
     public void printPrompt() {
         System.out.print("\n" + RESET_TEXT_COLOR + "[logged out] >>> " + SET_TEXT_COLOR_BLUE);
     }
 
     private String loginPrompt() throws ResponseException {
-        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "USERNAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
-        String username = scanner.nextLine();
-        if (username.contains(" ")) {
+        String username;
+        String password;
+        try {
+            username = usernamePrompt();
+            password = passwordPrompt();
+        } catch (ResponseException e) {
             return SET_TEXT_COLOR_RED + "ERROR: invalid username";
         }
 
-        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PASSWORD >>> " + SET_TEXT_COLOR_LIGHT_GREY);
-        String password = scanner.nextLine();
         client.login(username, password);
 
         return "Logging in user: " + username;
     }
 
     private String registerPrompt() throws ResponseException {
-        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "USERNAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
-        String username = scanner.nextLine();
-        if (username.contains(" ")) {
+        String username;
+        String password;
+        try {
+            username = usernamePrompt();
+            password = passwordPrompt();
+        } catch (ResponseException e) {
             return SET_TEXT_COLOR_RED + "ERROR: invalid username";
         }
-
-        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PASSWORD >>> " + SET_TEXT_COLOR_LIGHT_GREY);
-        String password = scanner.nextLine();
 
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "EMAIL >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String email = scanner.nextLine();
@@ -85,5 +84,19 @@ public class PreLoginRepl implements Repl{
 
         client.register(username, password, email);
         return "Registering and logging in user: " + username;
+    }
+
+    private String usernamePrompt() throws ResponseException {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "USERNAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String username = scanner.nextLine();
+        if (username.contains(" ")) {
+            throw new ResponseException("");
+        }
+        return username;
+    }
+
+    private String passwordPrompt() {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PASSWORD >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        return scanner.nextLine();
     }
 }

@@ -2,9 +2,9 @@ package ui;
 
 import java.util.Scanner;
 
-public class PostLoginRepl implements Repl{
+public class PostLoginRepl {
     private final PostLoginClient client;
-    private final Repl inGame;
+    private final InGameRepl inGame;
     private final Scanner scanner;
 
     public PostLoginRepl(String url) {
@@ -13,12 +13,10 @@ public class PostLoginRepl implements Repl{
         scanner = new Scanner(System.in);
     }
 
-    @Override
     public void run() {
 
     }
 
-    @Override
     public void printPrompt() {
 
     }
