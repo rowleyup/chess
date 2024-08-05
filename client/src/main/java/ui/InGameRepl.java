@@ -63,7 +63,16 @@ public class InGameRepl {
         return picture.toString();
     }
 
-    private String drawBlack() {}
+    private String drawBlack() {
+        String top = SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK + " h  g  f  e  d  c  b  a " + RESET_BG_COLOR + RESET_TEXT_COLOR + "\n";
+        StringBuilder picture = new StringBuilder(top);
+        for (int i = 1; i <= 8; i++) {
+            picture.append(boardTemplate(String.valueOf(i), 0));
+        }
+
+        picture.append(top);
+        return picture.toString();
+    }
 
     private String boardTemplate(String num, int direction) {
         chess.ChessBoard board = game.getBoard();
