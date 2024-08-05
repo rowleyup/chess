@@ -2,6 +2,7 @@ package ui;
 
 import server.ResponseException;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -71,16 +72,10 @@ public class PostLoginRepl {
     }
 
     private String observePrompt() {
-        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME ID >>> " + SET_TEXT_COLOR_LIGHT_GREY);
-        String input = scanner.nextLine();
-        if (input.equals("\n") || input.isEmpty()) {
-            return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
-        }
-
         int gameId;
         try {
-            gameId = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
+            gameId = getId();
+        } catch (ResponseException e) {
             return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
         }
 
@@ -88,5 +83,44 @@ public class PostLoginRepl {
         return String.format("Observing game: %s", gameId);
     }
 
-    private String joinPrompt() {}
+    private String joinPrompt() {
+        int gameId;
+        try {
+            gameId = getId();
+        } catch (ResponseException e) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
+        }
+
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PLAYER COLOR >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String color = scanner.nextLine().toLowerCase();
+
+        var possible = new ArrayList<String>();
+        possible.add("w");
+        possible.add("white");
+        possible.add("b");
+        possible.add("black");
+        if (!possible.contains(color)) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid color";
+        }
+        this.color = color;
+
+        game = client.join(gameId, color);
+        return String.format("Joining game: %s", gameId);
+    }
+
+    private int getId() throws ResponseException {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME ID >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String input = scanner.nextLine();
+        if (input.equals("\n") || input.isEmpty()) {
+            throw new ResponseException("");
+        }
+
+        int gameId;
+        try {
+            gameId = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new ResponseException("");
+        }
+        return gameId;
+    }
 }
