@@ -7,7 +7,7 @@ import static ui.EscapeSequences.*;
 
 public class PreLoginRepl implements Repl{
     private final PreLoginClient client;
-    private final Repl postLogin;
+    private final PostLoginRepl postLogin;
     private final Scanner scanner;
 
     public PreLoginRepl(String url) {

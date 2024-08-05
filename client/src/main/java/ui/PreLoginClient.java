@@ -7,12 +7,10 @@ import server.ServerFacade;
 import static ui.EscapeSequences.*;
 
 public class PreLoginClient{
-    private final String serverUrl;
     private final ServerFacade server;
     private final PostLoginClient nextClient;
 
     public PreLoginClient(String serverUrl, PostLoginClient nextClient) {
-        this.serverUrl = serverUrl;
         server = new ServerFacade(serverUrl);
         this.nextClient = nextClient;
     }
