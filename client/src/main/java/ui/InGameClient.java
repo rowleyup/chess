@@ -6,13 +6,11 @@ import server.ServerFacade;
 public class InGameClient {
     private AuthData userAuth;
     private final ServerFacade server;
-    private final int gameId;
-    private final String team;
+    private int gameId;
+    private String team;
 
-    public InGameClient(String url, int id, String color) {
+    public InGameClient(String url) {
         server = new ServerFacade(url);
-        gameId = id;
-        team = color;
     }
 
     public void setAuth(AuthData auth) {
