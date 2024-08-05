@@ -1,24 +1,22 @@
 package ui;
 
 import model.AuthData;
+import model.GameData;
 import server.ResponseException;
 import server.ServerFacade;
-
+import java.util.Collection;
 import java.util.HashMap;
-
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
-import static ui.EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
+import static ui.EscapeSequences.*;
 
 public class PostLoginClient {
     private final ServerFacade server;
     private final InGameClient nextClient;
     private AuthData userAuth;
-    private HashMap<String, String[]> gameList;
+    private HashMap<String, GameData> gameList;
 
     public PostLoginClient(String url, InGameClient client) {
         server = new ServerFacade(url);
         nextClient = client;
-        gameList = new HashMap<>();
     }
 
     public String help() {
@@ -40,7 +38,16 @@ public class PostLoginClient {
         return "Logged out successfully";
     }
 
-    public String list() {}
+    public String list() {
+        StringBuilder table = new StringBuilder(SET_TEXT_UNDERLINE + "  ID  NAME          PLAYER_WHITE  PLAYER_BLACK");
+        table.append(RESET_TEXT_UNDERLINE + "\n");
+        var keys = gameList.keySet();
+        for (String key : keys) {
+            table.append(tableTemplate(key, gameList.get(key)));
+        }
+
+        return table.toString();
+    }
 
     public void create(String name) {}
 
@@ -52,5 +59,22 @@ public class PostLoginClient {
         userAuth = auth;
     }
 
-    private void updateList() {}
+    private void updateList() throws ResponseException {
+        request.ListResponse res = server.listGames(userAuth.authToken());
+        Collection<GameData> games = res.games();
+        int i = 1;
+        for (GameData g: games) {
+            gameList.put(Integer.toString(i), g);
+            i++;
+        }
+    }
+
+    private String tableTemplate(String id, GameData g) {
+        return "  " + id + "  " + g.gameName() + " ".repeat(Math.max(0, 14 - g.gameName().length())) +
+                g.whiteUsername() +
+                " ".repeat(Math.max(0, 14 - g.whiteUsername().length())) +
+                g.blackUsername() +
+                " ".repeat(Math.max(0, 12 - g.blackUsername().length())) +
+                "\n";
+    }
 }

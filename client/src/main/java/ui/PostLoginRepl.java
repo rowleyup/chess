@@ -68,6 +68,10 @@ public class PostLoginRepl {
     private String createPrompt() {
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME NAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String name = scanner.nextLine();
+        if (name.length() > 12) {
+            return SET_TEXT_COLOR_RED + "ERROR: game name must be less than 12 characters";
+        }
+
         client.create(name);
         return String.format("Created game: %s", name);
     }
