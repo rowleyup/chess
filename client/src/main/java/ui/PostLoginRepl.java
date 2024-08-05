@@ -27,19 +27,20 @@ public class PostLoginRepl {
 
         while (!result.equals("logout")) {
             printPrompt();
-            String inLine = scanner.nextLine();
+            String input = scanner.nextLine();
+            var inputs = input.toLowerCase().split(" ");
+            result = (inputs.length > 0) ? inputs[0] : "help";
+
             String response;
 
             try {
-                result = client.eval(inLine);
-
                 switch (result) {
                     case "logout" -> response = client.logout();
                     case "create" -> response = createPrompt();
                     case "list" -> response = client.list();
                     case "join" -> response = joinPrompt();
                     case "observe" -> response = observePrompt();
-                    default -> response = result;
+                    default -> response = client.help();
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
 
