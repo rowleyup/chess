@@ -1,11 +1,18 @@
 package ui;
 
+import server.ResponseException;
+
 import java.util.Scanner;
+
+import static ui.EscapeSequences.*;
+import static ui.EscapeSequences.RESET_TEXT_BLINKING;
 
 public class PostLoginRepl {
     private final PostLoginClient client;
     private final InGameRepl inGame;
     private final Scanner scanner;
+    private int game = 0;
+    private String color;
 
     public PostLoginRepl(String url) {
         inGame = new InGameRepl(url);
@@ -14,14 +21,72 @@ public class PostLoginRepl {
     }
 
     public void run() {
+        System.out.println(client.help());
+        String result = "";
 
+        while (!result.equals("logout")) {
+            printPrompt();
+            String inLine = scanner.nextLine();
+            String response;
+
+            try {
+                result = client.eval(inLine);
+
+                switch (result) {
+                    case "logout" -> response = client.logout();
+                    case "create" -> response = createPrompt();
+                    case "list" -> response = client.list();
+                    case "join" -> response = joinPrompt();
+                    case "observe" -> response = observePrompt();
+                    default -> response = result;
+                }
+                System.out.print(SET_TEXT_COLOR_GREEN + response);
+
+                if (result.equals("join")) {
+                    inGame.run(game, color);
+                }
+                else if (result.equals("observe")) {
+                    inGame.run(game, null);
+                }
+            } catch (Throwable e) {
+                String message = e.toString();
+                System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
+            }
+        }
     }
 
     public void printPrompt() {
-
+        System.out.print("\n" + RESET_TEXT_COLOR + "[logged in] >>> " + SET_TEXT_COLOR_BLUE);
     }
 
     public PostLoginClient client() {
         return client;
     }
+
+    private String createPrompt() {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME NAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String name = scanner.nextLine();
+        client.create(name);
+        return String.format("Created game: %s", name);
+    }
+
+    private String observePrompt() {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME ID >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String input = scanner.nextLine();
+        if (input.equals("\n") || input.isEmpty()) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
+        }
+
+        int gameId;
+        try {
+            gameId = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
+        }
+
+        game = client.observe(gameId);
+        return String.format("Observing game: %s", gameId);
+    }
+
+    private String joinPrompt() {}
 }
