@@ -1,10 +1,8 @@
 package ui;
 
 import server.ResponseException;
-
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import static ui.EscapeSequences.*;
 import static ui.EscapeSequences.RESET_TEXT_BLINKING;
 

@@ -18,6 +18,7 @@ public class PostLoginClient {
     public PostLoginClient(String url, InGameClient client) {
         server = new ServerFacade(url);
         nextClient = client;
+        gameList = new HashMap<>();
     }
 
     public String help() {
@@ -79,6 +80,7 @@ public class PostLoginClient {
 
         server.joinGame(userAuth.authToken(), req);
         nextClient.setAuth(userAuth);
+        updateList();
         return gameId;
     }
 
@@ -87,6 +89,7 @@ public class PostLoginClient {
     }
 
     private void updateList() throws ResponseException {
+        gameList = new HashMap<>();
         ListResponse res = server.listGames(userAuth.authToken());
         Collection<GameData> games = res.games();
         int i = 1;
