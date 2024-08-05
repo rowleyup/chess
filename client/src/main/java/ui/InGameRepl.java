@@ -48,7 +48,7 @@ public class InGameRepl {
     }
 
     public void printPrompt() {
-        System.out.print("\n" + RESET_TEXT_COLOR + "[in game] >>> " + SET_TEXT_COLOR_BLUE)
+        System.out.print("\n" + RESET_TEXT_COLOR + "[in game] >>> " + SET_TEXT_COLOR_BLUE);
     }
 
     private String drawWhite() {}
