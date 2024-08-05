@@ -65,7 +65,7 @@ public class PostLoginRepl {
         return client;
     }
 
-    private String createPrompt() {
+    private String createPrompt() throws ResponseException {
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME NAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String name = scanner.nextLine();
         if (name.length() > 12) {
@@ -88,7 +88,7 @@ public class PostLoginRepl {
         return String.format("Observing game: %s", gameId);
     }
 
-    private String joinPrompt() {
+    private String joinPrompt() throws ResponseException {
         int gameId;
         try {
             gameId = getId();
