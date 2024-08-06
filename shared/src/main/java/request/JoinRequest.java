@@ -1,3 +1,5 @@
 package request;
 
-public record JoinRequest(chess.ChessGame.TeamColor playerColor, int gameID) {}
+import com.google.gson.annotations.Expose;
+
+public record JoinRequest(@Expose chess.ChessGame.TeamColor playerColor, @Expose int gameID) {}

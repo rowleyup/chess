@@ -62,8 +62,7 @@ public class PostLoginClient {
         server.createGame(userAuth.authToken(), new GameData(0, null, null, name, null));
     }
 
-    public GameData observe(int id) throws ResponseException {
-        updateList();
+    public GameData observe(int id) {
         return gameList.get(Integer.toString(id));
     }
 
