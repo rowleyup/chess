@@ -11,7 +11,7 @@ import static ui.EscapeSequences.*;
 
 public class PostLoginClient {
     private final ServerFacade server;
-    private AuthData userAuth;
+    private final AuthData userAuth;
     private HashMap<String, GameData> gameList;
 
     public PostLoginClient(ServerFacade server, AuthData auth) {
@@ -39,7 +39,8 @@ public class PostLoginClient {
         return "Logged out successfully";
     }
 
-    public String list() {
+    public String list() throws ResponseException {
+        updateList();
         StringBuilder table = new StringBuilder(SET_TEXT_UNDERLINE + "  ID  NAME          PLAYER_WHITE  PLAYER_BLACK");
         table.append(RESET_TEXT_UNDERLINE + "\n");
         var keys = gameList.keySet();
