@@ -42,6 +42,11 @@ public class ServerFacade {
         makeRequest("PUT", path, authToken, game, null);
     }
 
+    public void clear() throws ResponseException {
+        var path = "/db";
+        makeRequest("DELETE", path, null, null, null);
+    }
+
     private <T> T makeRequest(String method, String path, String header, Object request, Class<T> resType) throws ResponseException {
         try {
             URL u = (new URI(url + path)).toURL();
@@ -49,10 +54,11 @@ public class ServerFacade {
             conn.setRequestMethod(method);
             conn.setDoOutput(true);
 
-            writeBody(request, conn);
-
             if (header != null) {
-                writeHeader(header, conn);
+                writeHeader(request, header, conn);
+            }
+            else {
+                writeBody(request, conn);
             }
 
             conn.connect();
@@ -74,9 +80,14 @@ public class ServerFacade {
         }
     }
 
-    private void writeHeader(String header, HttpURLConnection http) {
-        if (header != null) {
+    private void writeHeader(Object request, String header, HttpURLConnection http) throws IOException {
+        if (request != null) {
+            http.addRequestProperty("Content-Type", "application/json");
             http.addRequestProperty("authorization", header);
+            String data = JsonUsage.getJson(request);
+            try (OutputStream os = http.getOutputStream()) {
+                os.write(data.getBytes());
+            }
         }
     }
 
@@ -98,6 +109,8 @@ public class ServerFacade {
                 }
             }
         }
+
+        conn.disconnect();
         return res;
     }
 }

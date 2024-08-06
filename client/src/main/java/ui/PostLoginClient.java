@@ -15,14 +15,14 @@ public class PostLoginClient {
     private AuthData userAuth;
     private HashMap<String, GameData> gameList;
 
-    public PostLoginClient(String url, InGameClient client) {
-        server = new ServerFacade(url);
+    public PostLoginClient(ServerFacade server, InGameClient client) {
+        this.server = server;
         nextClient = client;
         gameList = new HashMap<>();
     }
 
     public String help() {
-        String message = SET_TEXT_COLOR_BLUE + "\tlogout " + SET_TEXT_COLOR_LIGHT_GREY + "- logout user\n";
+        String message = SET_TEXT_COLOR_BLUE + "\n\tlogout " + SET_TEXT_COLOR_LIGHT_GREY + "- logout user\n";
         message = message + SET_TEXT_COLOR_BLUE + "\tcreate " + SET_TEXT_COLOR_LIGHT_GREY + "- create a chess game\n";
         message = message + SET_TEXT_COLOR_BLUE + "\tlist " + SET_TEXT_COLOR_LIGHT_GREY + "- list all existing chess games\n";
         message = message + SET_TEXT_COLOR_BLUE + "\tplay " + SET_TEXT_COLOR_LIGHT_GREY + "- join a chess game as a player\n";

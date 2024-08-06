@@ -12,8 +12,8 @@ public class InGameClient {
     private int gameId;
     private String team;
 
-    public InGameClient(String url) {
-        server = new ServerFacade(url);
+    public InGameClient(ServerFacade server) {
+        this.server = server;
     }
 
     public void setAuth(AuthData auth) {

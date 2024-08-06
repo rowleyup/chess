@@ -1,6 +1,7 @@
 package ui;
 
 import server.ResponseException;
+import server.ServerFacade;
 
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
@@ -11,8 +12,9 @@ public class PreLoginRepl {
     private final Scanner scanner;
 
     public PreLoginRepl(String url) {
-        postLogin = new PostLoginRepl(url);
-        client = new PreLoginClient(url, postLogin.client());
+        ServerFacade server = new ServerFacade(url);
+        postLogin = new PostLoginRepl(server);
+        client = new PreLoginClient(server, postLogin.client());
         scanner = new Scanner(System.in);
     }
 
@@ -35,13 +37,13 @@ public class PreLoginRepl {
                     case "register" -> response = registerPrompt();
                     default -> response = result;
                 }
-                System.out.print(SET_TEXT_COLOR_GREEN + response);
+                System.out.print(SET_TEXT_COLOR_GREEN + response + "\n");
 
                 if (result.equals("login") || result.equals("register")) {
                     postLogin.run();
                 }
             } catch (Throwable e) {
-                String message = e.toString();
+                String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
             }
         }

@@ -1,5 +1,6 @@
 package ui;
 
+import server.ServerFacade;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
@@ -8,8 +9,8 @@ public class InGameRepl {
     private final Scanner scanner;
     private final chess.ChessGame gameData;
 
-    public InGameRepl(String url) {
-        client = new InGameClient(url);
+    public InGameRepl(ServerFacade server) {
+        client = new InGameClient(server);
         scanner = new Scanner(System.in);
         gameData = new chess.ChessGame();
     }
@@ -42,7 +43,7 @@ public class InGameRepl {
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
             } catch (Throwable e) {
-                String message = e.toString();
+                String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
             }
         }

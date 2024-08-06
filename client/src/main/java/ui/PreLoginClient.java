@@ -10,8 +10,8 @@ public class PreLoginClient{
     private final ServerFacade server;
     private final PostLoginClient nextClient;
 
-    public PreLoginClient(String serverUrl, PostLoginClient nextClient) {
-        server = new ServerFacade(serverUrl);
+    public PreLoginClient(ServerFacade server, PostLoginClient nextClient) {
+        this.server = server;
         this.nextClient = nextClient;
     }
 

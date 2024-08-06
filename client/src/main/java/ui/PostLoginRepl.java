@@ -1,6 +1,7 @@
 package ui;
 
 import server.ResponseException;
+import server.ServerFacade;
 import java.util.ArrayList;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
@@ -13,9 +14,9 @@ public class PostLoginRepl {
     private int game = 0;
     private String color;
 
-    public PostLoginRepl(String url) {
-        inGame = new InGameRepl(url);
-        client = new PostLoginClient(url, inGame.client());
+    public PostLoginRepl(ServerFacade server) {
+        inGame = new InGameRepl(server);
+        client = new PostLoginClient(server, inGame.client());
         scanner = new Scanner(System.in);
     }
 
@@ -49,7 +50,7 @@ public class PostLoginRepl {
                     inGame.run(game, null);
                 }
             } catch (Throwable e) {
-                String message = e.toString();
+                String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
             }
         }
