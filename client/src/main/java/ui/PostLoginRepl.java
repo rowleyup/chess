@@ -112,6 +112,7 @@ public class PostLoginRepl {
         possible.add("b");
         possible.add("black");
         if (!possible.contains(color)) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid color";
         }
         this.color = color;

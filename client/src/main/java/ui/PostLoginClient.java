@@ -40,7 +40,6 @@ public class PostLoginClient {
     }
 
     public String list() throws ResponseException {
-        updateList();
         StringBuilder table = new StringBuilder(SET_TEXT_UNDERLINE + "  ID  NAME          PLAYER_WHITE  PLAYER_BLACK");
         table.append(RESET_TEXT_UNDERLINE + "\n");
         var keys = gameList.keySet();
@@ -52,7 +51,6 @@ public class PostLoginClient {
     }
 
     public void create(String name) throws ResponseException {
-        updateList();
         if (name == null || name.isEmpty()) {
             throw new ResponseException("Error: no game name given");
         }
@@ -69,7 +67,6 @@ public class PostLoginClient {
     }
 
     public GameData join(int id, String color) throws ResponseException {
-        updateList();
         JoinRequest req;
         GameData game = gameList.get(Integer.toString(id));
         int gameId = game.gameID();
