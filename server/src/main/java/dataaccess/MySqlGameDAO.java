@@ -9,12 +9,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class MySqlGameDAO implements GameDAO {
-    private int nextID;
-
     public MySqlGameDAO() throws DataAccessException {
         TableCreator.configureDatabase("game");
         TableCreator.configureDatabase("gameUsers");
-        nextID = 1111;
     }
 
     public Collection<GameData> getGames() throws DataAccessException {
@@ -76,15 +73,24 @@ public class MySqlGameDAO implements GameDAO {
         }
 
         chess.ChessGame game = new chess.ChessGame();
-        int id = nextID;
+        int id = 0;
 
         try (var connection = DatabaseManager.getConnection()) {
-            var statement = "INSERT INTO game(id, name, game) VALUES (?, ?, ?)";
+            var statement = "INSERT INTO game(name, game) VALUES (?, ?)";
             try (var ps = connection.prepareStatement(statement)) {
-                ps.setInt(1, id);
-                ps.setString(2, gameName);
-                ps.setString(3, JsonUsage.getJson(game));
+                ps.setString(1, gameName);
+                ps.setString(2, JsonUsage.getJson(game));
                 ps.executeUpdate();
+            }
+
+            statement = "SELECT id FROM game WHERE name=?";
+            try (var ps = connection.prepareStatement(statement)) {
+                ps.setString(1, gameName);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        id = rs.getInt(1);
+                    }
+                }
             }
 
             statement = "INSERT INTO users_in_game(id, white, black) VALUES (?, ?, ?)";
@@ -98,7 +104,6 @@ public class MySqlGameDAO implements GameDAO {
             throw new DataAccessException(String.format("Error: Unable to access database: %s", e.getMessage()));
         }
 
-        nextID = nextID + 1111;
         return new GameData(id, null, null, gameName, game);
     }
 
@@ -141,8 +146,6 @@ public class MySqlGameDAO implements GameDAO {
         } catch (SQLException e) {
             throw new DataAccessException(String.format("Error: Unable to access database: %s", e.getMessage()));
         }
-
-        nextID = 1111;
 
         return true;
     }

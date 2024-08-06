@@ -49,7 +49,7 @@ public class TableCreator {
     private static final String[] GAMESTATEMENTS = {
             """
             CREATE TABLE IF NOT EXISTS game (
-            `id` int NOT NULL,
+            `id` int NOT NULL AUTO_INCREMENT,
             `name` varchar(256) NOT NULL,
             `game` TEXT DEFAULT NULL,
             PRIMARY KEY (`id`),

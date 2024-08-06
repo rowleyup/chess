@@ -83,7 +83,7 @@ public class ServerFacadeTests {
     public void createTest() throws ResponseException {
         var authData = facade.register(new UserData("player1", "password", "p1@email.com"));
         GameData game = new GameData(0, null, null, "game", null);
-        assertEquals(1111, facade.createGame(authData.authToken(), game).gameID());
+        assertDoesNotThrow(() -> facade.createGame(authData.authToken(), game).gameID());
     }
 
     @Test
