@@ -1,6 +1,7 @@
 package ui;
 
 import model.AuthData;
+import model.GameData;
 import server.ResponseException;
 import server.ServerFacade;
 import java.util.ArrayList;
@@ -11,10 +12,11 @@ import static ui.EscapeSequences.RESET_TEXT_BLINKING;
 public class PostLoginRepl {
     private final PostLoginClient client;
     private final Scanner scanner;
-    private int game = 0;
+    private GameData game;
     private String color;
     private final AuthData userAuth;
     private final ServerFacade server;
+    private boolean success;
 
     public PostLoginRepl(ServerFacade server, AuthData auth) {
         userAuth = auth;
@@ -28,6 +30,7 @@ public class PostLoginRepl {
         String result = "";
 
         while (!result.equals("logout")) {
+            success = true;
             printPrompt();
             String input = scanner.nextLine();
             var inputs = input.toLowerCase().split(" ");
@@ -45,18 +48,19 @@ public class PostLoginRepl {
                     default -> response = client.help();
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
-
-                if (result.equals("join")) {
-                    var inGame = new InGameRepl(server, userAuth);
-                    inGame.run(game, color);
-                }
-                else if (result.equals("observe")) {
-                    var inGame = new InGameRepl(server, userAuth);
-                    inGame.run(game, null);
-                }
             } catch (Throwable e) {
                 String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
+                success = false;
+            }
+
+            if (success && result.equals("join")) {
+                var inGame = new InGameRepl(server, userAuth);
+                inGame.run(game.gameID(), color);
+            }
+            else if (success && result.equals("observe")) {
+                var inGame = new InGameRepl(server, userAuth);
+                inGame.run(game.gameID(), null);
             }
         }
     }
@@ -69,6 +73,7 @@ public class PostLoginRepl {
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME NAME >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String name = scanner.nextLine();
         if (name.length() > 12) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: game name must be less than 12 characters";
         }
 
@@ -81,11 +86,12 @@ public class PostLoginRepl {
         try {
             gameId = getId();
         } catch (ResponseException e) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
         }
 
         game = client.observe(gameId);
-        return String.format("Observing game: %s", gameId);
+        return String.format("Observing game: %s", game.gameName());
     }
 
     private String joinPrompt() throws ResponseException {
@@ -93,6 +99,7 @@ public class PostLoginRepl {
         try {
             gameId = getId();
         } catch (ResponseException e) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
         }
 
@@ -110,7 +117,7 @@ public class PostLoginRepl {
         this.color = color;
 
         game = client.join(gameId, color);
-        return String.format("Joining game: %s", gameId);
+        return String.format("Joining game: %s", game.gameName());
     }
 
     private int getId() throws ResponseException {

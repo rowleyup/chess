@@ -3,19 +3,17 @@ package ui;
 import model.AuthData;
 import server.ResponseException;
 import server.ServerFacade;
-
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class PreLoginRepl {
     private final PreLoginClient client;
-    private final String url;
     private final Scanner scanner;
     private AuthData userAuth;
     private final ServerFacade server;
+    private boolean success;
 
     public PreLoginRepl(String url) {
-        this.url = url;
         server = new ServerFacade(url);
         client = new PreLoginClient(server);
         scanner = new Scanner(System.in);
@@ -27,6 +25,7 @@ public class PreLoginRepl {
         String result = "";
 
         while (!result.equals("quit")) {
+            success = true;
             printPrompt();
             String inLine = scanner.nextLine();
             String response;
@@ -41,14 +40,15 @@ public class PreLoginRepl {
                     default -> response = result;
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response + "\n");
-
-                if (result.equals("login") || result.equals("register")) {
-                    PostLoginRepl postLogin = new PostLoginRepl(server, userAuth);
-                    postLogin.run();
-                }
             } catch (Throwable e) {
                 String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
+                success = false;
+            }
+
+            if (success && (result.equals("login") || result.equals("register"))) {
+                PostLoginRepl postLogin = new PostLoginRepl(server, userAuth);
+                postLogin.run();
             }
         }
     }
@@ -64,6 +64,7 @@ public class PreLoginRepl {
             username = usernamePrompt();
             password = passwordPrompt();
         } catch (ResponseException e) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid username";
         }
 
@@ -79,12 +80,14 @@ public class PreLoginRepl {
             username = usernamePrompt();
             password = passwordPrompt();
         } catch (ResponseException e) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid username";
         }
 
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "EMAIL >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String email = scanner.nextLine();
         if (!email.contains("@")) {
+            success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid email";
         }
 

@@ -63,15 +63,16 @@ public class PostLoginClient {
         server.createGame(userAuth.authToken(), new GameData(0, null, null, name, null));
     }
 
-    public int observe(int id) throws ResponseException {
+    public GameData observe(int id) throws ResponseException {
         updateList();
-        return gameList.get(Integer.toString(id)).gameID();
+        return gameList.get(Integer.toString(id));
     }
 
-    public int join(int id, String color) throws ResponseException {
+    public GameData join(int id, String color) throws ResponseException {
         updateList();
         JoinRequest req;
-        int gameId = gameList.get(Integer.toString(id)).gameID();
+        GameData game = gameList.get(Integer.toString(id));
+        int gameId = game.gameID();
         if (color.equals("w") || color.equals("white")) {
             req = new JoinRequest(chess.ChessGame.TeamColor.WHITE, gameId);
         }
@@ -80,7 +81,7 @@ public class PostLoginClient {
         }
 
         server.joinGame(userAuth.authToken(), req);
-        return gameId;
+        return game;
     }
 
     private void updateList() throws ResponseException {
