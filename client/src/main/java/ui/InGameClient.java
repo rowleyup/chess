@@ -26,7 +26,7 @@ public class InGameClient {
     }
 
     public String help() {
-        String message = SET_TEXT_COLOR_BLUE + "\tquit " + SET_TEXT_COLOR_LIGHT_GREY + "- leave game\n";
+        String message = SET_TEXT_COLOR_BLUE + "\n\tquit " + SET_TEXT_COLOR_LIGHT_GREY + "- leave game\n";
         message = message + SET_TEXT_COLOR_BLUE + "\twhite " + SET_TEXT_COLOR_LIGHT_GREY + "- print chess board from white perspective\n";
         message = message + SET_TEXT_COLOR_BLUE + "\tblack " + SET_TEXT_COLOR_LIGHT_GREY + "- print chess board from black perspective\n";
         message = message + SET_TEXT_COLOR_BLUE + "\thelp " + SET_TEXT_COLOR_LIGHT_GREY + "- display this message again\n";

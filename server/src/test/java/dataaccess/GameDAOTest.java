@@ -18,7 +18,6 @@ public class GameDAOTest {
         ud = new MySqlUserDAO();
         gd = new MySqlGameDAO();
         name = "fun game";
-        id = 1111;
         username = "joe";
         ud.createUser(new UserData(username, "password", "email@email.email"));
     }
@@ -36,7 +35,7 @@ public class GameDAOTest {
 
     @Test
     void getNameOutputTest() throws Exception {
-        gd.createGame(name);
+        id = gd.createGame(name).gameID();
         assertInstanceOf(GameData.class, gd.getGameByName(name));
         assertEquals(id, gd.getGameByName(name).gameID());
     }
@@ -48,7 +47,7 @@ public class GameDAOTest {
 
     @Test
     void getIdOutputTest() throws Exception {
-        gd.createGame(name);
+        id = gd.createGame(name).gameID();
         assertInstanceOf(GameData.class, gd.getGameByID(id));
         assertEquals(name, gd.getGameByID(id).gameName());
     }
