@@ -39,7 +39,7 @@ public class PostLoginClient {
         return "Logged out successfully";
     }
 
-    public String list() throws ResponseException {
+    public String list() {
         StringBuilder table = new StringBuilder(SET_TEXT_UNDERLINE + "  ID  NAME          PLAYER_WHITE  PLAYER_BLACK");
         table.append(RESET_TEXT_UNDERLINE + "\n");
         var keys = gameList.keySet();
