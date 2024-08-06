@@ -42,8 +42,8 @@ public class ServerFacade {
         makeRequest("PUT", path, authToken, game, null);
     }
 
-    public void clear() throws ResponseException {
-        var path = "/db";
+    public void clear(String path) throws ResponseException {
+        //var path = "/db";
         makeRequest("DELETE", path, null, null, null);
     }
 

@@ -24,7 +24,7 @@ public class ServerFacadeTests {
 
     @BeforeEach
     public void clear() throws ResponseException {
-        facade.clear();
+        facade.clear("/db");
     }
 
     @AfterAll
@@ -103,5 +103,15 @@ public class ServerFacadeTests {
     @Test
     public void joinError() {
         assertThrows(ResponseException.class, () -> {facade.joinGame(null, null);});
+    }
+
+    @Test
+    public void clearTest() {
+        assertDoesNotThrow(() -> {facade.clear("/db");});
+    }
+
+    @Test
+    public void clearError() {
+        assertThrows(ResponseException.class, () -> {facade.clear("/df");});
     }
 }
