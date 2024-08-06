@@ -44,16 +44,27 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void loginTest() throws ResponseException {}
+    public void loginTest() throws ResponseException {
+        facade.logout(facade.register(new UserData("player1", "password", "p1@email.com")).authToken());
+        var authData = facade.login(new UserData("player1", "password", null));
+        assertTrue(authData.authToken().length() > 10);
+    }
 
     @Test
-    public void loginError() throws ResponseException {}
+    public void loginError() {
+        assertThrows(ResponseException.class, () -> {facade.login(null);});
+    }
 
     @Test
-    public void logoutTest() throws ResponseException {}
+    public void logoutTest() throws ResponseException {
+        var authData = facade.register(new UserData("player1", "password", "p1@email.com"));
+        assertDoesNotThrow(() -> {facade.logout(authData.authToken());});
+    }
 
     @Test
-    public void logoutError() throws ResponseException {}
+    public void logoutError() {
+        assertThrows(ResponseException.class, () -> {facade.logout(null);});
+    }
 
     @Test
     public void listTest() throws ResponseException {}
