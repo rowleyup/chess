@@ -24,6 +24,11 @@ public class RegisterHandler implements Route{
         /*
          * Checks if Request contains a username, password, and email
          */
+        if (user == null) {
+            res.status(400);
+            message = JsonUsage.fromError("Error: bad request");
+            return message;
+        }
         if (user.username() == null || user.username().isEmpty() || user.password() == null || user.password().isEmpty() ||
                 user.email() == null || user.email().isEmpty()) {
             res.status(400);

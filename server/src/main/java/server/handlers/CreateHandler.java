@@ -20,12 +20,18 @@ public class CreateHandler implements Route{
 
     public Object handle(Request req, Response res) {
         String auth = req.headers("authorization");
-        String gameName = JsonUsage.fromJson(req.body(), GameData.class).gameName();
+        GameData gameData = JsonUsage.fromJson(req.body(), GameData.class);
         String message;
 
         /*
          * Check if Request contains an auth token and a game name
          */
+        if (gameData == null) {
+            res.status(400);
+            message = JsonUsage.fromError("Error: bad request");
+            return message;
+        }
+        String gameName = gameData.gameName();
         if (auth == null || auth.isEmpty() || gameName == null || gameName.isEmpty()) {
             res.status(400);
             message = JsonUsage.fromError("Error: bad request");

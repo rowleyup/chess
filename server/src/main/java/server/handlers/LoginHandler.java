@@ -24,6 +24,11 @@ public class LoginHandler implements Route {
         /*
          * Check if Request contains a username and password
          */
+        if (user == null) {
+            res.status(400);
+            message = JsonUsage.fromError("Error: bad request");
+            return message;
+        }
         if (user.username() == null || user.username().isEmpty() || user.password() == null || user.password().isEmpty()) {
             res.status(400);
             message = JsonUsage.fromError("Error: bad request");
