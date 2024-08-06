@@ -93,11 +93,23 @@ public class PostLoginClient {
     }
 
     private String tableTemplate(String id, GameData g) {
-        return "  " + id + "  " + g.gameName() + " ".repeat(Math.max(0, 14 - g.gameName().length())) +
-                g.whiteUsername() +
-                " ".repeat(Math.max(0, 14 - g.whiteUsername().length())) +
-                g.blackUsername() +
-                " ".repeat(Math.max(0, 12 - g.blackUsername().length())) +
-                "\n";
+        String m = "  " + id + " ".repeat(Math.max(0, 4 - id.length())) + g.gameName();
+        m = m + " ".repeat(Math.max(0, 14 - g.gameName().length()));
+
+        if (g.whiteUsername() != null) {
+            m = m + g.whiteUsername() + " ".repeat(Math.max(0, 14 - g.whiteUsername().length()));
+        }
+        else {
+            m = m + "none" + " ".repeat(10);
+        }
+
+        if (g.blackUsername() != null) {
+            m = m + g.blackUsername() + " ".repeat(Math.max(0, 12 - g.blackUsername().length())) + "\n";
+        }
+        else {
+            m = m + "none" + " ".repeat(10);
+        }
+
+        return m;
     }
 }
