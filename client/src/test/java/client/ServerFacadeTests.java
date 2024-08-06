@@ -2,6 +2,7 @@ package client;
 
 import model.*;
 import org.junit.jupiter.api.*;
+import request.JoinRequest;
 import server.ResponseException;
 import server.Server;
 import server.ServerFacade;
@@ -67,20 +68,39 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void listTest() throws ResponseException {}
+    public void listTest() throws ResponseException {
+        var authData = facade.register(new UserData("player1", "password", "p1@email.com"));
+        assertDoesNotThrow(() -> facade.listGames(authData.authToken()));
+    }
 
     @Test
-    public void listError() throws ResponseException {}
+    public void listError() {
+        assertThrows(ResponseException.class, () -> {facade.listGames(null);});
+    }
 
     @Test
-    public void createTest() throws ResponseException {}
+    public void createTest() throws ResponseException {
+        var authData = facade.register(new UserData("player1", "password", "p1@email.com"));
+        GameData game = new GameData(0, null, null, "game", null);
+        assertEquals(1111, facade.createGame(authData.authToken(), game).gameID());
+    }
 
     @Test
-    public void createError() throws ResponseException {}
+    public void createError() {
+        assertThrows(ResponseException.class, () -> {facade.createGame(null, null);});
+    }
 
     @Test
-    public void joinTest() throws ResponseException {}
+    public void joinTest() throws ResponseException {
+        var authData = facade.register(new UserData("player1", "password", "p1@email.com"));
+        GameData game = new GameData(0, null, null, "game", null);
+        GameData createdGame = facade.createGame(authData.authToken(), game);
+        JoinRequest req = new JoinRequest(chess.ChessGame.TeamColor.WHITE, createdGame.gameID());
+        assertDoesNotThrow(() -> facade.joinGame(authData.authToken(), req));
+    }
 
     @Test
-    public void joinError() throws ResponseException {}
+    public void joinError() {
+        assertThrows(ResponseException.class, () -> {facade.joinGame(null, null);});
+    }
 }
