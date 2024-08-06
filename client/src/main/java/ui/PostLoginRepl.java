@@ -1,5 +1,6 @@
 package ui;
 
+import model.AuthData;
 import server.ResponseException;
 import server.ServerFacade;
 import java.util.ArrayList;
@@ -9,14 +10,16 @@ import static ui.EscapeSequences.RESET_TEXT_BLINKING;
 
 public class PostLoginRepl {
     private final PostLoginClient client;
-    private final InGameRepl inGame;
     private final Scanner scanner;
     private int game = 0;
     private String color;
+    private final AuthData userAuth;
+    private final ServerFacade server;
 
-    public PostLoginRepl(ServerFacade server) {
-        inGame = new InGameRepl(server);
-        client = new PostLoginClient(server, inGame.client());
+    public PostLoginRepl(ServerFacade server, AuthData auth) {
+        userAuth = auth;
+        this.server = server;
+        client = new PostLoginClient(server, userAuth);
         scanner = new Scanner(System.in);
     }
 
@@ -44,9 +47,11 @@ public class PostLoginRepl {
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
 
                 if (result.equals("join")) {
+                    var inGame = new InGameRepl(server, userAuth);
                     inGame.run(game, color);
                 }
                 else if (result.equals("observe")) {
+                    var inGame = new InGameRepl(server, userAuth);
                     inGame.run(game, null);
                 }
             } catch (Throwable e) {
@@ -58,10 +63,6 @@ public class PostLoginRepl {
 
     public void printPrompt() {
         System.out.print("\n" + RESET_TEXT_COLOR + "[logged in] >>> " + SET_TEXT_COLOR_BLUE);
-    }
-
-    public PostLoginClient client() {
-        return client;
     }
 
     private String createPrompt() throws ResponseException {

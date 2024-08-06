@@ -8,11 +8,9 @@ import static ui.EscapeSequences.*;
 
 public class PreLoginClient{
     private final ServerFacade server;
-    private final PostLoginClient nextClient;
 
-    public PreLoginClient(ServerFacade server, PostLoginClient nextClient) {
+    public PreLoginClient(ServerFacade server) {
         this.server = server;
-        this.nextClient = nextClient;
     }
 
     public String eval(String input) {
@@ -35,13 +33,11 @@ public class PreLoginClient{
         return message;
     }
 
-    public void login(String username, String password) throws ResponseException {
-        AuthData auth = server.login(new UserData(username, password, null));
-        nextClient.setAuth(auth);
+    public AuthData login(String username, String password) throws ResponseException {
+        return server.login(new UserData(username, password, null));
     }
 
-    public void register(String username, String password, String email) throws ResponseException {
-        AuthData auth = server.register(new UserData(username, password, email));
-        nextClient.setAuth(auth);
+    public AuthData register(String username, String password, String email) throws ResponseException {
+        return server.register(new UserData(username, password, email));
     }
 }

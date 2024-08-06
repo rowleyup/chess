@@ -1,5 +1,6 @@
 package ui;
 
+import model.AuthData;
 import server.ServerFacade;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
@@ -9,14 +10,10 @@ public class InGameRepl {
     private final Scanner scanner;
     private final chess.ChessGame gameData;
 
-    public InGameRepl(ServerFacade server) {
-        client = new InGameClient(server);
+    public InGameRepl(ServerFacade server, AuthData auth) {
+        client = new InGameClient(server, auth);
         scanner = new Scanner(System.in);
         gameData = new chess.ChessGame();
-    }
-
-    public InGameClient client() {
-        return client;
     }
 
     public void run(int game, String color) {

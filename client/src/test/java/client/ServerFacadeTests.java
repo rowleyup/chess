@@ -46,7 +46,8 @@ public class ServerFacadeTests {
 
     @Test
     public void loginTest() throws ResponseException {
-        facade.logout(facade.register(new UserData("player1", "password", "p1@email.com")).authToken());
+        AuthData auth = facade.register(new UserData("player1", "password", "p1@email.com"));
+        facade.logout(auth.authToken());
         var authData = facade.login(new UserData("player1", "password", null));
         assertTrue(authData.authToken().length() > 10);
     }

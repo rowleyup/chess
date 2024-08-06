@@ -12,12 +12,9 @@ public class InGameClient {
     private int gameId;
     private String team;
 
-    public InGameClient(ServerFacade server) {
+    public InGameClient(ServerFacade server, AuthData auth) {
         this.server = server;
-    }
-
-    public void setAuth(AuthData auth) {
-        userAuth = auth;
+        this.userAuth = auth;
     }
 
     public void setId(int id) {

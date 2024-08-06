@@ -1,5 +1,6 @@
 package ui;
 
+import model.AuthData;
 import server.ResponseException;
 import server.ServerFacade;
 
@@ -8,13 +9,15 @@ import static ui.EscapeSequences.*;
 
 public class PreLoginRepl {
     private final PreLoginClient client;
-    private final PostLoginRepl postLogin;
+    private final String url;
     private final Scanner scanner;
+    private AuthData userAuth;
+    private final ServerFacade server;
 
     public PreLoginRepl(String url) {
-        ServerFacade server = new ServerFacade(url);
-        postLogin = new PostLoginRepl(server);
-        client = new PreLoginClient(server, postLogin.client());
+        this.url = url;
+        server = new ServerFacade(url);
+        client = new PreLoginClient(server);
         scanner = new Scanner(System.in);
     }
 
@@ -40,6 +43,7 @@ public class PreLoginRepl {
                 System.out.print(SET_TEXT_COLOR_GREEN + response + "\n");
 
                 if (result.equals("login") || result.equals("register")) {
+                    PostLoginRepl postLogin = new PostLoginRepl(server, userAuth);
                     postLogin.run();
                 }
             } catch (Throwable e) {
@@ -63,7 +67,7 @@ public class PreLoginRepl {
             return SET_TEXT_COLOR_RED + "ERROR: invalid username";
         }
 
-        client.login(username, password);
+        userAuth = client.login(username, password);
 
         return "Logging in user: " + username;
     }
@@ -84,7 +88,7 @@ public class PreLoginRepl {
             return SET_TEXT_COLOR_RED + "ERROR: invalid email";
         }
 
-        client.register(username, password, email);
+        userAuth = client.register(username, password, email);
         return "Registering and logging in user: " + username;
     }
 

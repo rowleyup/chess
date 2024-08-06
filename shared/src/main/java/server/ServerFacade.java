@@ -81,9 +81,9 @@ public class ServerFacade {
     }
 
     private void writeHeader(Object request, String header, HttpURLConnection http) throws IOException {
+        http.addRequestProperty("Content-Type", "application/json");
+        http.addRequestProperty("authorization", header);
         if (request != null) {
-            http.addRequestProperty("Content-Type", "application/json");
-            http.addRequestProperty("authorization", header);
             String data = JsonUsage.getJson(request);
             try (OutputStream os = http.getOutputStream()) {
                 os.write(data.getBytes());
@@ -101,16 +101,14 @@ public class ServerFacade {
 
     private <T> T readBody(HttpURLConnection conn, Class<T> resType) throws IOException {
         T res = null;
-        if (conn.getContentLength() < 0) {
-            try (InputStream resBody = conn.getInputStream()) {
-                InputStreamReader reader = new InputStreamReader(resBody);
-                if (resType != null) {
+        if (resType != null) {
+            if (conn.getContentLength() < 0) {
+                try (InputStream resBody = conn.getInputStream()) {
+                    InputStreamReader reader = new InputStreamReader(resBody);
                     res = JsonUsage.fromJson(reader, resType);
                 }
             }
         }
-
-        conn.disconnect();
         return res;
     }
 }

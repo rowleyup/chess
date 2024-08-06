@@ -11,14 +11,13 @@ import static ui.EscapeSequences.*;
 
 public class PostLoginClient {
     private final ServerFacade server;
-    private final InGameClient nextClient;
     private AuthData userAuth;
     private HashMap<String, GameData> gameList;
 
-    public PostLoginClient(ServerFacade server, InGameClient client) {
+    public PostLoginClient(ServerFacade server, AuthData auth) {
         this.server = server;
-        nextClient = client;
         gameList = new HashMap<>();
+        userAuth = auth;
     }
 
     public String help() {
@@ -64,7 +63,6 @@ public class PostLoginClient {
     }
 
     public int observe(int id) {
-        nextClient.setAuth(userAuth);
         return gameList.get(Integer.toString(id)).gameID();
     }
 
@@ -79,13 +77,8 @@ public class PostLoginClient {
         }
 
         server.joinGame(userAuth.authToken(), req);
-        nextClient.setAuth(userAuth);
         updateList();
         return gameId;
-    }
-
-    public void setAuth(AuthData auth) {
-        userAuth = auth;
     }
 
     private void updateList() throws ResponseException {
