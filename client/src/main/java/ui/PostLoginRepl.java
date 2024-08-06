@@ -76,7 +76,7 @@ public class PostLoginRepl {
         return String.format("Created game: %s", name);
     }
 
-    private String observePrompt() {
+    private String observePrompt() throws ResponseException {
         int gameId;
         try {
             gameId = getId();

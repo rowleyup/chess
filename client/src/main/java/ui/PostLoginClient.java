@@ -52,6 +52,7 @@ public class PostLoginClient {
     }
 
     public void create(String name) throws ResponseException {
+        updateList();
         if (name == null || name.isEmpty()) {
             throw new ResponseException("Error: no game name given");
         }
@@ -60,14 +61,15 @@ public class PostLoginClient {
         }
 
         server.createGame(userAuth.authToken(), new GameData(0, null, null, name, null));
-        updateList();
     }
 
-    public int observe(int id) {
+    public int observe(int id) throws ResponseException {
+        updateList();
         return gameList.get(Integer.toString(id)).gameID();
     }
 
     public int join(int id, String color) throws ResponseException {
+        updateList();
         JoinRequest req;
         int gameId = gameList.get(Integer.toString(id)).gameID();
         if (color.equals("w") || color.equals("white")) {
@@ -78,7 +80,6 @@ public class PostLoginClient {
         }
 
         server.joinGame(userAuth.authToken(), req);
-        updateList();
         return gameId;
     }
 
@@ -110,6 +111,7 @@ public class PostLoginClient {
         else {
             m = m + "none" + " ".repeat(10);
         }
+        m = m + "\n";
 
         return m;
     }
