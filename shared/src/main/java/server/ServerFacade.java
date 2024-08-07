@@ -64,7 +64,9 @@ public class ServerFacade {
             conn.connect();
             throwIfNotSuccessful(conn);
 
-            return readBody(conn, resType);
+            InputStream body = conn.getInputStream();
+
+            return readBody(body, resType);
         } catch (Exception e) {
             throw new ResponseException(e.getMessage());
         }
@@ -94,20 +96,17 @@ public class ServerFacade {
     private void throwIfNotSuccessful(HttpURLConnection conn) throws IOException, ResponseException {
         var status = conn.getResponseCode();
         if (status != 200) {
-            String message = JsonUsage.toError(readBody(conn, String.class));
-            throw new ResponseException(String.format("Failure: %s - %s", status, message));
+            InputStream err = conn.getErrorStream();
+            String message = JsonUsage.toError(readBody(err, String.class));
+            throw new ResponseException(String.format("Failure: %s", message));
         }
     }
 
-    private <T> T readBody(HttpURLConnection conn, Class<T> resType) throws IOException {
+    private <T> T readBody(InputStream resBody, Class<T> resType) {
         T res = null;
         if (resType != null) {
-            if (conn.getContentLength() < 0) {
-                try (InputStream resBody = conn.getInputStream()) {
-                    InputStreamReader reader = new InputStreamReader(resBody);
-                    res = JsonUsage.fromJson(reader, resType);
-                }
-            }
+            InputStreamReader reader = new InputStreamReader(resBody);
+            res = JsonUsage.fromJson(reader, resType);
         }
         return res;
     }
