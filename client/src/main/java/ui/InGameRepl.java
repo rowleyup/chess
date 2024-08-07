@@ -29,7 +29,7 @@ public class InGameRepl implements NotificationHandler {
         System.out.println(client.help());
         String result = "";
 
-        while (!result.equals("quit") && !over) {
+        while (!result.equals("leave") && !over) {
             printPrompt();
             String input = scanner.nextLine();
             var inputs = input.toLowerCase().split(" ");
@@ -39,15 +39,49 @@ public class InGameRepl implements NotificationHandler {
 
             try {
                 switch (result) {
-                    case "quit" -> response = "";
-                    case "white" -> response = new BoardDrawer(gameData).drawWhite();
-                    case "black" -> response = new BoardDrawer(gameData).drawBlack();
+                    case "leave" -> response = client.leave();
+                    case "redraw" -> response = drawBoard();
+                    case "move" -> {
+                        if (!over) {response = client.move();}
+                        else {response = client.overHelp();}
+                    }
+                    case "highlight" -> {
+                        if (!over) {response = highlightMoves();}
+                        else {response = client.overHelp();}
+                    }
+                    case "resign" -> {
+                        if (!over) {response = resign();}
+                        else {response = client.overHelp();}
+                    }
                     default -> response = client.help();
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
             } catch (Throwable e) {
                 String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
+            }
+        }
+
+        if (over) {
+            while (!result.equals("leave")) {
+                printPrompt();
+                String input = scanner.nextLine();
+                var inputs = input.toLowerCase().split(" ");
+                result = (inputs.length > 0) ? inputs[0] : "help";
+
+                String response;
+
+                try {
+                    switch (result) {
+                        case "leave" -> response = client.leave();
+                        case "redraw" -> response = drawBoard();
+                        default -> response = client.overHelp();
+                    }
+                    System.out.print(SET_TEXT_COLOR_GREEN + response);
+                } catch (Throwable e) {
+                    String message = e.getMessage();
+                    System.out.print(SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message);
+                }
             }
         }
     }
@@ -77,16 +111,7 @@ public class InGameRepl implements NotificationHandler {
             System.out.print("\n" + SET_TEXT_COLOR_YELLOW + "WARNING: You are in check");
         }
 
-        if (team == null) {
-            new BoardDrawer(gameData).drawWhite();
-        }
-        else if (team.equals("white")) {
-            new BoardDrawer(gameData).drawWhite();
-        }
-        else {
-            new BoardDrawer(gameData).drawBlack();
-        }
-
+        System.out.print(SET_TEXT_COLOR_GREEN + drawBoard());
         printPrompt();
     }
 
@@ -105,5 +130,17 @@ public class InGameRepl implements NotificationHandler {
         ServerErrorMessage note = (ServerErrorMessage) notification;
         System.out.print("\n" + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + note.getErrorMessage());
         printPrompt();
+    }
+
+    private String drawBoard() {
+        if (team == null) {
+            return new BoardDrawer(gameData).drawWhite();
+        }
+        else if (team.equals("white")) {
+            return new BoardDrawer(gameData).drawWhite();
+        }
+        else {
+            return new BoardDrawer(gameData).drawBlack();
+        }
     }
 }
