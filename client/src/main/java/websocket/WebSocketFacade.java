@@ -2,7 +2,7 @@ package websocket;
 
 import server.JsonUsage;
 import server.ResponseException;
-import websocket.commands.UserConnectCommand;
+import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
@@ -43,6 +43,34 @@ public class WebSocketFacade extends Endpoint {
             var userRole = UserConnectCommand.UserRole.valueOf(role);
             var command = new UserConnectCommand(authToken, gameId, userRole);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void move(String authToken, Integer gameId, chess.ChessMove move) throws ResponseException {
+        try {
+            var command = new UserMoveCommand(authToken, gameId, move);
+            this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void resign(String authToken, Integer gameId) throws ResponseException {
+        try {
+            var command = new UserResignCommand(authToken, gameId);
+            this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+    }
+
+    public void leave(String authToken, Integer gameId) throws ResponseException {
+        try {
+            var command = new UserLeaveCommand(authToken, gameId);
+            this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+            this.session.close();
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
         }
