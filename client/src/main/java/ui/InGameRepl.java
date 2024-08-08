@@ -6,9 +6,8 @@ import server.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.messages.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 import static ui.EscapeSequences.*;
 
 public class InGameRepl implements NotificationHandler {
@@ -56,7 +55,7 @@ public class InGameRepl implements NotificationHandler {
                         else {response = client.overHelp();}
                     }
                     case "highlight" -> {
-                        if (!over) {response = client.highlightMove(getSquare());}
+                        if (!over) {response = highlightMove(getSquare());}
                         else {response = client.overHelp();}
                     }
                     case "resign" -> {
@@ -144,13 +143,13 @@ public class InGameRepl implements NotificationHandler {
 
     private String drawBoard() {
         if (team == null) {
-            return new BoardDrawer(gameData).drawWhite();
+            return new BoardDrawer(gameData).drawWhite(new HashSet<>());
         }
         else if (team.equals("white")) {
-            return new BoardDrawer(gameData).drawWhite();
+            return new BoardDrawer(gameData).drawWhite(new HashSet<>());
         }
         else {
-            return new BoardDrawer(gameData).drawBlack();
+            return new BoardDrawer(gameData).drawBlack(new HashSet<>());
         }
     }
 
@@ -246,6 +245,20 @@ public class InGameRepl implements NotificationHandler {
                 System.out.print(SET_TEXT_COLOR_RED + "Options: queen, bishop, rook, knight");
                 return getPromote();
             }
+        }
+    }
+
+    private String highlightMove(chess.ChessPosition pos) {
+        Collection<chess.ChessMove> moves = gameData.validMoves(pos);
+
+        if (team.equals("white")) {
+            return new BoardDrawer(gameData).drawWhite(moves);
+        }
+        else if (team.equals("black")) {
+            return new BoardDrawer(gameData).drawBlack(moves);
+        }
+        else {
+            return new BoardDrawer(gameData).drawWhite(moves);
         }
     }
 }

@@ -5,6 +5,7 @@ import server.ResponseException;
 import server.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
+import calculator.*;
 
 import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
 import static ui.EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
@@ -66,8 +67,6 @@ public class InGameClient {
     public void move(chess.ChessPosition from, chess.ChessPosition to, chess.ChessPiece.PieceType promote) throws ResponseException {
         ws.move(userAuth.authToken(), gameId, new chess.ChessMove(from, to, promote));
     }
-
-    public String highlightMove(chess.ChessPosition pos) {}
 
     public String resign() throws ResponseException {
         ws.resign(userAuth.authToken(), gameId);
