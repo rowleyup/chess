@@ -63,7 +63,8 @@ public class InGameClient {
         return "Leaving game";
     }
 
-    public String move(chess.ChessPosition from, chess.ChessPosition to) {
+    public void move(chess.ChessPosition from, chess.ChessPosition to, chess.ChessPiece.PieceType promote) throws ResponseException {
+        ws.move(userAuth.authToken(), gameId, new chess.ChessMove(from, to, promote));
     }
 
     public String highlightMove(chess.ChessPosition pos) {}

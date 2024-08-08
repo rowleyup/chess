@@ -179,7 +179,23 @@ public class InGameRepl implements NotificationHandler {
         System.out.print(SET_TEXT_COLOR_BLUE + "Move to ");
         var to = getSquare();
 
-        return client.move(from, to);
+        var piece = gameData.getBoard().getPiece(from);
+        if (piece != null) {
+            if (piece.getTeamColor() != chess.ChessGame.TeamColor.valueOf(team)) {
+                throw new ResponseException("Error: Not your piece");
+            }
+            if (piece.getPieceType() == chess.ChessPiece.PieceType.PAWN) {
+                if (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && from.getRow() == 2) {
+                    client.move(from, to, getPromote());
+                }
+                else if (piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && from.getRow() == 7) {
+                    client.move(from, to, getPromote());
+                }
+            }
+        }
+
+        client.move(from, to, null);
+        return "";
     }
 
     private chess.ChessPosition getSquare() throws ResponseException {
@@ -207,5 +223,29 @@ public class InGameRepl implements NotificationHandler {
         }
 
         return new chess.ChessPosition(firstNum, secondNum);
+    }
+
+    private chess.ChessPiece.PieceType getPromote() {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "Promote to >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String input = scanner.nextLine().toLowerCase();
+
+        switch (input) {
+            case "queen" -> {
+                return chess.ChessPiece.PieceType.QUEEN;
+            }
+            case "bishop" -> {
+                return chess.ChessPiece.PieceType.BISHOP;
+            }
+            case "rook" -> {
+                return chess.ChessPiece.PieceType.ROOK;
+            }
+            case "knight" -> {
+                return chess.ChessPiece.PieceType.KNIGHT;
+            }
+            default -> {
+                System.out.print(SET_TEXT_COLOR_RED + "Options: queen, bishop, rook, knight");
+                return getPromote();
+            }
+        }
     }
 }
