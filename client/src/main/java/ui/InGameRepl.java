@@ -29,6 +29,13 @@ public class InGameRepl implements NotificationHandler {
         client.setId(game);
         client.setTeam(color);
 
+        try {
+            client.connect();
+        } catch (ResponseException e) {
+            String message = e.getMessage();
+            System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
+        }
+
         System.out.println(client.help());
         String result = "";
 
@@ -147,7 +154,7 @@ public class InGameRepl implements NotificationHandler {
         }
     }
 
-    private String resignPrompt() {
+    private String resignPrompt() throws ResponseException {
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "Are you sure you want to resign? (Y/N) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine();
         input = input.toUpperCase();

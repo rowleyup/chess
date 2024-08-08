@@ -15,12 +15,10 @@ public class InGameClient {
     private int gameId;
     private String team;
     private final WebSocketFacade ws;
-    private final NotificationHandler notificationHandler;
 
     public InGameClient(ServerFacade server, AuthData auth, NotificationHandler notificationHandler, String url) {
         this.server = server;
         this.userAuth = auth;
-        this.notificationHandler = notificationHandler;
         try {
             ws = new WebSocketFacade(url, notificationHandler);
         } catch (ResponseException e) {
@@ -56,14 +54,22 @@ public class InGameClient {
         return message;
     }
 
-    public String leave() {
+    public void connect() throws ResponseException {
+        ws.connect(userAuth.authToken(), gameId, team);
     }
 
-    public String move(chess.ChessPosition from, chess.ChessPosition to) {}
+    public String leave() throws ResponseException {
+        ws.leave(userAuth.authToken(), gameId);
+        return "Leaving game";
+    }
+
+    public String move(chess.ChessPosition from, chess.ChessPosition to) {
+    }
 
     public String highlightMove(chess.ChessPosition pos) {}
 
-    public String resign() {
+    public String resign() throws ResponseException {
+        ws.resign(userAuth.authToken(), gameId);
         return "GAME OVER: You have resigned";
     }
 }
