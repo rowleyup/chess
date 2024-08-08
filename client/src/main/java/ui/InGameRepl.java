@@ -1,10 +1,13 @@
 package ui;
 
 import model.AuthData;
+import server.ResponseException;
 import server.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.messages.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
@@ -42,15 +45,15 @@ public class InGameRepl implements NotificationHandler {
                     case "leave" -> response = client.leave();
                     case "redraw" -> response = drawBoard();
                     case "move" -> {
-                        if (!over) {response = client.move();}
+                        if (!over) {response = movePrompt();}
                         else {response = client.overHelp();}
                     }
                     case "highlight" -> {
-                        if (!over) {response = highlightMoves();}
+                        if (!over) {response = client.highlightMove(getSquare());}
                         else {response = client.overHelp();}
                     }
                     case "resign" -> {
-                        if (!over) {response = resign();}
+                        if (!over) {response = resignPrompt();}
                         else {response = client.overHelp();}
                     }
                     default -> response = client.help();
@@ -142,5 +145,60 @@ public class InGameRepl implements NotificationHandler {
         else {
             return new BoardDrawer(gameData).drawBlack();
         }
+    }
+
+    private String resignPrompt() {
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "Are you sure you want to resign? (Y/N) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String input = scanner.nextLine();
+        input = input.toUpperCase();
+        switch (input) {
+            case "Y", "YES" -> {
+                String m = client.resign();
+                over = true;
+                return m;
+            }
+            case "NO", "N" -> {
+                return "Resignation canceled";
+            }
+            default -> {
+                return resignPrompt();
+            }
+        }
+    }
+
+    private String movePrompt() throws ResponseException {
+        System.out.print(SET_TEXT_COLOR_BLUE + "Move from ");
+        var from = getSquare();
+        System.out.print(SET_TEXT_COLOR_BLUE + "Move to ");
+        var to = getSquare();
+
+        return client.move(from, to);
+    }
+
+    private chess.ChessPosition getSquare() throws ResponseException {
+        var numbers = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8));
+
+        System.out.print(SET_TEXT_COLOR_BLUE + "Square (e.g. a1) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        String input = scanner.nextLine();
+        var inputs = input.toLowerCase().split("");
+        int secondNum = Integer.parseInt(inputs[1]);
+        if (!numbers.contains(secondNum)) {
+            throw new ResponseException("Error: Invalid coordinates");
+        }
+
+        int firstNum;
+        switch (inputs[0]) {
+            case "a" -> firstNum = 1;
+            case "b" -> firstNum = 2;
+            case "c" -> firstNum = 3;
+            case "d" -> firstNum = 4;
+            case "e" -> firstNum = 5;
+            case "f" -> firstNum = 6;
+            case "g" -> firstNum = 7;
+            case "h" -> firstNum = 8;
+            default -> throw new ResponseException("Error: Invalid coordinates");
+        }
+
+        return new chess.ChessPosition(firstNum, secondNum);
     }
 }
