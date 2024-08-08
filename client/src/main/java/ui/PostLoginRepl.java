@@ -15,14 +15,12 @@ public class PostLoginRepl {
     private GameData game;
     private String color;
     private final AuthData userAuth;
-    private final ServerFacade server;
     private boolean success;
     private final String url;
 
     public PostLoginRepl(ServerFacade server, AuthData auth, String url) {
         this.url = url;
         userAuth = auth;
-        this.server = server;
         client = new PostLoginClient(server, userAuth);
         scanner = new Scanner(System.in);
     }
@@ -57,12 +55,12 @@ public class PostLoginRepl {
             }
 
             if (success && result.equals("join")) {
-                var inGame = new InGameRepl(server, userAuth, url);
+                var inGame = new InGameRepl(userAuth, url);
                 inGame.run(game.gameID(), color);
             }
             else if (success && result.equals("observe")) {
-                var inGame = new InGameRepl(server, userAuth, url);
-                inGame.run(game.gameID(), null);
+                var inGame = new ObserveGameRepl(userAuth, url);
+                inGame.run(game.gameID(), "OBSERVER");
             }
         }
     }
@@ -83,7 +81,7 @@ public class PostLoginRepl {
         return String.format("Created game: %s", name);
     }
 
-    private String observePrompt() throws ResponseException {
+    private String observePrompt() {
         int gameId;
         try {
             gameId = getId();
@@ -117,7 +115,11 @@ public class PostLoginRepl {
             success = false;
             return SET_TEXT_COLOR_RED + "ERROR: invalid color";
         }
-        this.color = color;
+
+        switch (color) {
+            case "w", "white": this.color = "WHITE";
+            case "b", "black": this.color = "BLACK";
+        }
 
         game = client.join(gameId, color);
         return String.format("Joining game: %s", game.gameName());

@@ -9,7 +9,8 @@ public class UserConnectCommand extends UserGameCommand{
     }
 
     public enum UserRole {
-        PLAYER,
+        WHITE,
+        BLACK,
         OBSERVER
     }
 

@@ -2,23 +2,20 @@ package ui;
 
 import model.AuthData;
 import server.ResponseException;
-import server.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.messages.*;
-
 import java.util.*;
-
 import static ui.EscapeSequences.*;
 
 public class InGameRepl implements NotificationHandler {
-    private final InGameClient client;
-    private final Scanner scanner;
-    private chess.ChessGame gameData;
-    private String team;
-    private boolean over;
+    protected final InGameClient client;
+    protected final Scanner scanner;
+    protected chess.ChessGame gameData;
+    protected String team;
+    protected boolean over;
 
-    public InGameRepl(ServerFacade server, AuthData auth, String url) {
-        client = new InGameClient(server, auth, this, url);
+    public InGameRepl(AuthData auth, String url) {
+        client = new InGameClient(auth, this, url);
         scanner = new Scanner(System.in);
         over = false;
     }
@@ -109,7 +106,7 @@ public class InGameRepl implements NotificationHandler {
         }
     }
 
-    private void printBoard(ServerMessage notification) {
+    protected void printBoard(ServerMessage notification) {
         ServerLoadMessage note = (ServerLoadMessage) notification;
         this.gameData = note.getGame();
         if (note.isCheckMate()) {
@@ -124,7 +121,7 @@ public class InGameRepl implements NotificationHandler {
         printPrompt();
     }
 
-    private void printUpdate(ServerMessage notification) {
+    protected void printUpdate(ServerMessage notification) {
         ServerMoveMessage note = (ServerMoveMessage) notification;
         String message = note.getMessage();
 
@@ -135,13 +132,13 @@ public class InGameRepl implements NotificationHandler {
         printPrompt();
     }
 
-    private void printError(ServerMessage notification) {
+    protected void printError(ServerMessage notification) {
         ServerErrorMessage note = (ServerErrorMessage) notification;
         System.out.print("\n" + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + note.getErrorMessage());
         printPrompt();
     }
 
-    private String drawBoard() {
+    protected String drawBoard() {
         if (team == null) {
             return new BoardDrawer(gameData).drawWhite(new HashSet<>());
         }
@@ -153,7 +150,7 @@ public class InGameRepl implements NotificationHandler {
         }
     }
 
-    private String resignPrompt() throws ResponseException {
+    protected String resignPrompt() throws ResponseException {
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "Are you sure you want to resign? (Y/N) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine();
         input = input.toUpperCase();
@@ -172,7 +169,7 @@ public class InGameRepl implements NotificationHandler {
         }
     }
 
-    private String movePrompt() throws ResponseException {
+    protected String movePrompt() throws ResponseException {
         System.out.print(SET_TEXT_COLOR_BLUE + "Move from ");
         var from = getSquare();
         System.out.print(SET_TEXT_COLOR_BLUE + "Move to ");
@@ -197,7 +194,7 @@ public class InGameRepl implements NotificationHandler {
         return "";
     }
 
-    private chess.ChessPosition getSquare() throws ResponseException {
+    protected chess.ChessPosition getSquare() throws ResponseException {
         var numbers = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8));
 
         System.out.print(SET_TEXT_COLOR_BLUE + "Square (e.g. a1) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
@@ -224,7 +221,7 @@ public class InGameRepl implements NotificationHandler {
         return new chess.ChessPosition(firstNum, secondNum);
     }
 
-    private chess.ChessPiece.PieceType getPromote() {
+    protected chess.ChessPiece.PieceType getPromote() {
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "Promote to >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine().toLowerCase();
 
@@ -248,7 +245,7 @@ public class InGameRepl implements NotificationHandler {
         }
     }
 
-    private String highlightMove(chess.ChessPosition pos) {
+    protected String highlightMove(chess.ChessPosition pos) {
         Collection<chess.ChessMove> moves = gameData.validMoves(pos);
 
         if (team.equals("white")) {

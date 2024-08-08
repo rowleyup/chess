@@ -2,23 +2,18 @@ package ui;
 
 import model.AuthData;
 import server.ResponseException;
-import server.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
-import calculator.*;
-
 import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
 import static ui.EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
 
 public class InGameClient {
     private final AuthData userAuth;
-    private final ServerFacade server;
     private int gameId;
     private String team;
     private final WebSocketFacade ws;
 
-    public InGameClient(ServerFacade server, AuthData auth, NotificationHandler notificationHandler, String url) {
-        this.server = server;
+    public InGameClient(AuthData auth, NotificationHandler notificationHandler, String url) {
         this.userAuth = auth;
         try {
             ws = new WebSocketFacade(url, notificationHandler);
@@ -49,6 +44,16 @@ public class InGameClient {
         String message = SET_TEXT_COLOR_BLUE + "\n\tredraw " + SET_TEXT_COLOR_LIGHT_GREY + "- redraw chess board\n";
         message = message + SET_TEXT_COLOR_LIGHT_GREY + "\tmove - move a chess piece\n";
         message = message + SET_TEXT_COLOR_LIGHT_GREY + "\thighlight - highlight legal moves for a piece\n";
+        message = message + SET_TEXT_COLOR_LIGHT_GREY + "\tresign - resign from the game\n";
+        message = message + SET_TEXT_COLOR_BLUE + "\tleave " + SET_TEXT_COLOR_LIGHT_GREY + "- leave game\n";
+        message = message + SET_TEXT_COLOR_BLUE + "\thelp " + SET_TEXT_COLOR_LIGHT_GREY + "- display this message again\n";
+        return message;
+    }
+
+    public String observeHelp() {
+        String message = SET_TEXT_COLOR_BLUE + "\n\tredraw " + SET_TEXT_COLOR_LIGHT_GREY + "- redraw chess board\n";
+        message = message + SET_TEXT_COLOR_BLUE + "\thighlight - highlight legal moves for a piece\n";
+        message = message + SET_TEXT_COLOR_LIGHT_GREY + "\tmove - move a chess piece\n";
         message = message + SET_TEXT_COLOR_LIGHT_GREY + "\tresign - resign from the game\n";
         message = message + SET_TEXT_COLOR_BLUE + "\tleave " + SET_TEXT_COLOR_LIGHT_GREY + "- leave game\n";
         message = message + SET_TEXT_COLOR_BLUE + "\thelp " + SET_TEXT_COLOR_LIGHT_GREY + "- display this message again\n";
