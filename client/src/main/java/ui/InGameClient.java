@@ -1,20 +1,31 @@
 package ui;
 
 import model.AuthData;
+import server.ResponseException;
 import server.ServerFacade;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
 
 import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
 import static ui.EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
 
 public class InGameClient {
-    private AuthData userAuth;
+    private final AuthData userAuth;
     private final ServerFacade server;
     private int gameId;
     private String team;
+    private final WebSocketFacade ws;
+    private final NotificationHandler notificationHandler;
 
-    public InGameClient(ServerFacade server, AuthData auth) {
+    public InGameClient(ServerFacade server, AuthData auth, NotificationHandler notificationHandler, String url) {
         this.server = server;
         this.userAuth = auth;
+        this.notificationHandler = notificationHandler;
+        try {
+            ws = new WebSocketFacade(url, notificationHandler);
+        } catch (ResponseException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public void setId(int id) {
@@ -45,7 +56,14 @@ public class InGameClient {
         return message;
     }
 
-    public String leave() {}
+    public String leave() {
+    }
 
-    public String move() {}
+    public String move(chess.ChessPosition from, chess.ChessPosition to) {}
+
+    public String highlightMove(chess.ChessPosition pos) {}
+
+    public String resign() {
+        return "GAME OVER: You have resigned";
+    }
 }

@@ -12,8 +12,10 @@ public class PreLoginRepl {
     private AuthData userAuth;
     private final ServerFacade server;
     private boolean success;
+    private final String url;
 
     public PreLoginRepl(String url) {
+        this.url = url;
         server = new ServerFacade(url);
         client = new PreLoginClient(server);
         scanner = new Scanner(System.in);
@@ -47,7 +49,7 @@ public class PreLoginRepl {
             }
 
             if (success && (result.equals("login") || result.equals("register"))) {
-                PostLoginRepl postLogin = new PostLoginRepl(server, userAuth);
+                PostLoginRepl postLogin = new PostLoginRepl(server, userAuth, url);
                 postLogin.run();
             }
         }

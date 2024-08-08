@@ -17,8 +17,10 @@ public class PostLoginRepl {
     private final AuthData userAuth;
     private final ServerFacade server;
     private boolean success;
+    private final String url;
 
-    public PostLoginRepl(ServerFacade server, AuthData auth) {
+    public PostLoginRepl(ServerFacade server, AuthData auth, String url) {
+        this.url = url;
         userAuth = auth;
         this.server = server;
         client = new PostLoginClient(server, userAuth);
@@ -55,11 +57,11 @@ public class PostLoginRepl {
             }
 
             if (success && result.equals("join")) {
-                var inGame = new InGameRepl(server, userAuth);
+                var inGame = new InGameRepl(server, userAuth, url);
                 inGame.run(game.gameID(), color);
             }
             else if (success && result.equals("observe")) {
-                var inGame = new InGameRepl(server, userAuth);
+                var inGame = new InGameRepl(server, userAuth, url);
                 inGame.run(game.gameID(), null);
             }
         }

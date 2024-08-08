@@ -18,8 +18,8 @@ public class InGameRepl implements NotificationHandler {
     private String team;
     private boolean over;
 
-    public InGameRepl(ServerFacade server, AuthData auth) {
-        client = new InGameClient(server, auth);
+    public InGameRepl(ServerFacade server, AuthData auth, String url) {
+        client = new InGameClient(server, auth, this, url);
         scanner = new Scanner(System.in);
         over = false;
     }
