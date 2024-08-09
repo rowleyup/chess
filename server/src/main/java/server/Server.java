@@ -4,13 +4,14 @@ import dataaccess.MySqlAuthDAO;
 import dataaccess.MySqlGameDAO;
 import dataaccess.MySqlUserDAO;
 import server.handlers.*;
+import server.websocket.WebSocketHandler;
 import service.*;
 import spark.*;
-import static java.lang.System.exit;
 
 public class Server {
-    private UserService userService;
-    private GameService gameService;
+    private final UserService userService;
+    private final GameService gameService;
+    private final WebSocketHandler webSocketHandler;
 
     public Server() {
         try {
@@ -21,12 +22,16 @@ public class Server {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         // Register your endpoints here.
         Spark.delete("/db", new ClearHandler(userService, gameService));

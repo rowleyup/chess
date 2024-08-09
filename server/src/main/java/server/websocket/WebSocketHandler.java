@@ -7,12 +7,14 @@ import server.JsonUsage;
 import websocket.commands.*;
 import websocket.messages.ServerNotifyMessage;
 
+import java.io.IOException;
+
 @WebSocket
 public class WebSocketHandler {
     private final ConnectionManager connections = new ConnectionManager();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) {
+    public void onMessage(Session session, String message) throws IOException {
         UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
         switch (command.getCommandType()) {
             case CONNECT -> {
@@ -35,7 +37,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void connect(UserConnectCommand action, Session session) {
+    private void connect(UserConnectCommand action, Session session) throws IOException {
         String message;
         switch (action.getRole()) {
             case OBSERVER -> {
@@ -57,7 +59,7 @@ public class WebSocketHandler {
         connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void leave(UserLeaveCommand action) {
+    private void leave(UserLeaveCommand action) throws IOException {
         connections.leave(action.getAuthToken().username(), action.getGameID());
         String message = String.format("%s has left the game", action.getAuthToken().username());
         var notification = new ServerNotifyMessage(message);
