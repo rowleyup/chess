@@ -1,9 +1,11 @@
 package websocket.commands;
 
+import model.AuthData;
+
 public class UserConnectCommand extends UserGameCommand{
     private final UserRole role;
 
-    public UserConnectCommand(String authToken, Integer gameID, UserRole role) {
+    public UserConnectCommand(AuthData authToken, Integer gameID, UserRole role) {
         super(CommandType.CONNECT, authToken, gameID);
         this.role = role;
     }

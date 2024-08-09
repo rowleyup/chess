@@ -1,10 +1,10 @@
 package websocket;
 
+import model.AuthData;
 import server.JsonUsage;
 import server.ResponseException;
 import websocket.commands.*;
 import websocket.messages.ServerMessage;
-
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
@@ -38,7 +38,7 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {}
 
-    public void connect(String authToken, Integer gameId, String role) throws ResponseException {
+    public void connect(AuthData authToken, Integer gameId, String role) throws ResponseException {
         try {
             var userRole = UserConnectCommand.UserRole.valueOf(role);
             var command = new UserConnectCommand(authToken, gameId, userRole);
@@ -48,7 +48,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void move(String authToken, Integer gameId, chess.ChessMove move) throws ResponseException {
+    public void move(AuthData authToken, Integer gameId, chess.ChessMove move) throws ResponseException {
         try {
             var command = new UserMoveCommand(authToken, gameId, move);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
@@ -57,7 +57,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void resign(String authToken, Integer gameId) throws ResponseException {
+    public void resign(AuthData authToken, Integer gameId) throws ResponseException {
         try {
             var command = new UserResignCommand(authToken, gameId);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
@@ -66,7 +66,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void leave(String authToken, Integer gameId) throws ResponseException {
+    public void leave(AuthData authToken, Integer gameId) throws ResponseException {
         try {
             var command = new UserLeaveCommand(authToken, gameId);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));

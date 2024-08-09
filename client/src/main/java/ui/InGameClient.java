@@ -61,20 +61,20 @@ public class InGameClient {
     }
 
     public void connect() throws ResponseException {
-        ws.connect(userAuth.authToken(), gameId, team);
+        ws.connect(userAuth, gameId, team);
     }
 
     public String leave() throws ResponseException {
-        ws.leave(userAuth.authToken(), gameId);
+        ws.leave(userAuth, gameId);
         return "Leaving game";
     }
 
     public void move(chess.ChessPosition from, chess.ChessPosition to, chess.ChessPiece.PieceType promote) throws ResponseException {
-        ws.move(userAuth.authToken(), gameId, new chess.ChessMove(from, to, promote));
+        ws.move(userAuth, gameId, new chess.ChessMove(from, to, promote));
     }
 
     public String resign() throws ResponseException {
-        ws.resign(userAuth.authToken(), gameId);
+        ws.resign(userAuth, gameId);
         return "GAME OVER: You have resigned";
     }
 }
