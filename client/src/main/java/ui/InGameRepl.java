@@ -122,7 +122,7 @@ public class InGameRepl implements NotificationHandler {
     }
 
     protected void printUpdate(ServerMessage notification) {
-        ServerMoveMessage note = (ServerMoveMessage) notification;
+        ServerNotifyMessage note = (ServerNotifyMessage) notification;
         String message = note.getMessage();
 
         if (message.contains("OVER")) {

@@ -5,7 +5,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.JsonUsage;
 import websocket.commands.*;
-import websocket.messages.ServerMoveMessage;
+import websocket.messages.ServerNotifyMessage;
 
 @WebSocket
 public class WebSocketHandler {
@@ -21,15 +21,15 @@ public class WebSocketHandler {
             }
             case LEAVE -> {
                 UserLeaveCommand action = JsonUsage.fromJson(message, UserLeaveCommand.class);
-                leave(action, session);
+                leave(action);
             }
             case MAKE_MOVE -> {
                 UserMoveCommand action = JsonUsage.fromJson(message, UserMoveCommand.class);
-                move(action, session);
+                move(action);
             }
             case RESIGN -> {
                 UserResignCommand action = JsonUsage.fromJson(message, UserResignCommand.class);
-                resign(action, session);
+                resign(action);
             }
             default -> throw new IllegalStateException("Unexpected value: " + command.getCommandType());
         }
@@ -53,13 +53,18 @@ public class WebSocketHandler {
             default -> throw new IllegalStateException("Unexpected value: " + action.getRole());
         }
 
-        var notification = new ServerMoveMessage(message);
-        connections.broadcast(action.getGameID(), notification);
+        var notification = new ServerNotifyMessage(message);
+        connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void leave(UserLeaveCommand action, Session session) {}
+    private void leave(UserLeaveCommand action) {
+        connections.leave(action.getAuthToken().username(), action.getGameID());
+        String message = String.format("%s has left the game", action.getAuthToken().username());
+        var notification = new ServerNotifyMessage(message);
+        connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
+    }
 
-    private void move(UserMoveCommand action, Session session) {}
+    private void resign(UserResignCommand action) {}
 
-    private void resign(UserResignCommand action, Session session) {}
+    private void move(UserMoveCommand action) {}
 }

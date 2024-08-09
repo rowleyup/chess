@@ -14,9 +14,9 @@ public class ConnectionManager {
 
     public synchronized void observe(String authToken, String username, int gameId, Session session) {}
 
-    public synchronized void leave() {}
+    public synchronized void leave(String username, int gameId) {}
 
     public synchronized void move() {}
 
-    public synchronized void broadcast(int gameId, ServerMessage message) {}
+    public synchronized void broadcast(String username, int gameId, ServerMessage message) {}
 }
