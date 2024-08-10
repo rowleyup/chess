@@ -76,9 +76,17 @@ public class WebSocketHandler {
         connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void resign(UserResignCommand action) {}
+    private void resign(UserResignCommand action) {
+        //check if player is real
+        //clear game
+        //notify that game is over to all except resigning player
+    }
 
-    private void move(UserMoveCommand action) {}
+    private void move(UserMoveCommand action) {
+        //check if player is real
+        //make move
+        //if move is checkmate, clear game
+    }
 
     private void error(String message) {}
 }

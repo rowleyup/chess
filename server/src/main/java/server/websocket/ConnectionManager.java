@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.InvalidMoveException;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import server.JsonUsage;
@@ -30,23 +31,15 @@ public class ConnectionManager {
         //Check if any new games have been created
     }
 
-    public synchronized void resign() {
-        //Changes connection isOver to true
-        gameService.clearPlayers();
+    public synchronized void clearGame(int gameId) throws ResponseException {
+        for (Connection c : gameUserMap.get(Integer.toString(gameId))) {
+            c.isOver = true;
+        }
+        gameService.clearPlayers(gameId);
     }
 
     public synchronized void leave(String username, int gameId) throws ResponseException {
-        Connection user = null;
-        for (Connection c : gameUserMap.get(Integer.toString(gameId))) {
-            if (c.username.equals(username)) {
-                user = c;
-                break;
-            }
-        }
-        if (user == null) {
-            throw new ResponseException("Unable to find user");
-        }
-
+        Connection user = findUser(username, gameId);
         if (user.role == Connection.SessionRole.WHITE && !user.isOver) {
             throw new ResponseException("Cannot leave while a player in an active game");
         }
@@ -59,11 +52,47 @@ public class ConnectionManager {
                 list.removeIf(c -> c.username.equals(username));
             }
         });
+
+        if (gameUserMap.get(Integer.toString(gameId)).isEmpty()) {
+            gameDataMap.remove(Integer.toString(gameId));
+        }
     }
 
-    public synchronized void move() {
-        //Changes connection isOver to true if checkmate
-        //gameService.clearPlayers(); if checkmate
+    public synchronized void move(String username, int gameId, chess.ChessMove move) throws Exception {
+        String checkmate = null;
+        Connection user = findUser(username, gameId);
+        chess.ChessGame game = gameDataMap.get(Integer.toString(gameId)).game();
+        game.makeMove(move);
+
+        var message = new ServerLoadMessage(game, false, false);
+        if (user.role == Connection.SessionRole.WHITE) {
+            if (game.isInCheckmate(chess.ChessGame.TeamColor.BLACK)) {
+                message = new ServerLoadMessage(game, true, true);
+                checkmate = "BLACK";
+            }
+            else if (game.isInCheck(chess.ChessGame.TeamColor.BLACK)) {
+                message = new ServerLoadMessage(game, true, false);
+            }
+        }
+        else if (user.role == Connection.SessionRole.BLACK) {
+            if (game.isInCheckmate(chess.ChessGame.TeamColor.WHITE)) {
+                message = new ServerLoadMessage(game, true, true);
+                checkmate = "WHITE";
+            }
+            else if (game.isInCheck(chess.ChessGame.TeamColor.WHITE)) {
+                message = new ServerLoadMessage(game, true, false);
+            }
+        }
+
+        String start = convertToCoordinates(move.getStartPosition());
+        String end = convertToCoordinates(move.getEndPosition());
+        broadcast(username, gameId, new ServerNotifyMessage(String.format("%s moved piece from %s to %s", username, start, end)));
+        broadcast(username, gameId, message);
+
+        if (checkmate != null) {
+            var m = new ServerNotifyMessage(String.format("GAME OVER: team %s is in checkmate", checkmate));
+            broadcast(null, gameId, m);
+        }
     }
 
     public synchronized void broadcast(String excludeUsername, int gameId, ServerMessage message) throws IOException {
@@ -74,5 +103,38 @@ public class ConnectionManager {
                 }
             }
         }
+    }
+
+    public synchronized Connection findUser(String username, int gameId) throws ResponseException {
+        Connection user = null;
+        for (Connection c : gameUserMap.get(Integer.toString(gameId))) {
+            if (c.username.equals(username)) {
+                user = c;
+                break;
+            }
+        }
+        if (user == null) {
+            throw new ResponseException("Unable to find user");
+        }
+        return user;
+    }
+
+    private String convertToCoordinates(chess.ChessPosition pos) {
+        int x = pos.getRow();
+        int y = pos.getColumn();
+        String spot = "";
+
+        switch (x) {
+            case 1 -> spot = "a";
+            case 2 -> spot = "b";
+            case 3 -> spot = "c";
+            case 4 -> spot = "d";
+            case 5 -> spot = "e";
+            case 6 -> spot = "f";
+            case 7 -> spot = "g";
+            case 8 -> spot = "h";
+        }
+        spot = spot + y;
+        return spot;
     }
 }
