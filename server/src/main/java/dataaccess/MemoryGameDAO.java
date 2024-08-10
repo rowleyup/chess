@@ -99,4 +99,19 @@ public class MemoryGameDAO implements GameDAO {
         games.add(game);
         return true;
     }
+
+    public boolean removeGame(int gameId) {
+        GameData game = null;
+        for (GameData g : games) {
+            if (g.gameID() == gameId) {
+                game = g;
+                break;
+            }
+        }
+        if (game == null) {
+            return false;
+        }
+        games.remove(game);
+        return true;
+    }
 }

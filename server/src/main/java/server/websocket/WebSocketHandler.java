@@ -69,7 +69,7 @@ public class WebSocketHandler {
         connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void leave(UserLeaveCommand action) throws IOException, ResponseException {
+    private void leave(UserLeaveCommand action) throws Exception {
         connections.leave(action.getAuthToken().username(), action.getGameID());
         String message = String.format("%s has left the game", action.getAuthToken().username());
         var notification = new ServerNotifyMessage(message);

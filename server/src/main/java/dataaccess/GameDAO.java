@@ -70,4 +70,6 @@ public interface GameDAO {
      * @throws DataAccessException if unable to update database
      */
     boolean updateGame(GameData game) throws DataAccessException;
+
+    boolean removeGame(int gameId) throws DataAccessException;
 }

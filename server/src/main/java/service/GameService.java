@@ -99,4 +99,11 @@ public class GameService {
         }
         return auth.username();
     }
+
+    public void removeGame(int gameId) throws DataAccessException {
+        boolean done = gameDao.removeGame(gameId);
+        if (!done) {
+            throw new DataAccessException("Unable to clear game data");
+        }
+    }
 }

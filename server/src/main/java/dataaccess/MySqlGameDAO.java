@@ -170,6 +170,25 @@ public class MySqlGameDAO implements GameDAO {
         return true;
     }
 
+    public boolean removeGame(int gameId) throws DataAccessException {
+        try (var connection = DatabaseManager.getConnection()) {
+            var statement = "DELETE FROM users_in_game WHERE id=?";
+            try (var ps = connection.prepareStatement(statement)) {
+                ps.setInt(1, gameId);
+                ps.executeUpdate();
+            }
+
+            statement = "DELETE FROM game WHERE id=?";
+            try (var ps = connection.prepareStatement(statement)) {
+                ps.setInt(1, gameId);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Error: Unable to access database: %s", e.getMessage()));
+        }
+        return true;
+    }
+
     private boolean exists(int gameID) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()) {
             var statement = "SELECT id FROM game WHERE id=?";
