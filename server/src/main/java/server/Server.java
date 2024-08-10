@@ -17,13 +17,13 @@ public class Server {
         try {
             var user = new MySqlUserDAO();
             var auth = new MySqlAuthDAO();
+            var game = new MySqlGameDAO();
             userService = new UserService(user, auth);
-            gameService = new GameService(new MySqlGameDAO(), auth);
+            gameService = new GameService(game, auth);
+            webSocketHandler = new WebSocketHandler(gameService);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {

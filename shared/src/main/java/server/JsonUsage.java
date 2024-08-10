@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
  * Class for holding Gson data and implementing json-related functions
  */
 public class JsonUsage {
-    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static final Gson GSON = new GsonBuilder().create();
 
     /**
      * Translates the given json string into the given object

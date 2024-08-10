@@ -1,6 +1,5 @@
 package chess;
 
-import com.google.gson.annotations.Expose;
 import java.util.Collection;
 import java.util.HashSet;
 import static java.lang.Math.abs;
@@ -12,10 +11,7 @@ import static java.lang.Math.abs;
  * signature of the existing methods.
  */
 public class ChessGame {
-    @Expose
     private ChessBoard board;
-
-    @Expose
     private TeamColor turn;
 
     public ChessGame() {

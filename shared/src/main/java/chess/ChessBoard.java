@@ -1,6 +1,5 @@
 package chess;
 
-import com.google.gson.annotations.Expose;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -9,8 +8,6 @@ import com.google.gson.annotations.Expose;
  * signature of the existing methods.
  */
 public class ChessBoard {
-
-    @Expose
     public ChessPiece[][] board;
 
     public ChessBoard() {

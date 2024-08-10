@@ -8,6 +8,7 @@ public class Connection {
     public String username;
     public Session session;
     public SessionRole role;
+    public boolean isOver;
 
     public enum SessionRole {
         WHITE,
@@ -19,6 +20,7 @@ public class Connection {
         this.username = username;
         this.session = session;
         this.role = role;
+        this.isOver = false;
     }
 
     public void send(String message) throws IOException {

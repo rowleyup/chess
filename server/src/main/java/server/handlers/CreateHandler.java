@@ -52,7 +52,7 @@ public class CreateHandler implements Route{
                 message = JsonUsage.fromError("Error: game name already exists");
             }
             else {
-                message = JsonUsage.getJson(new GameData(gameID, null, null, null, new ChessGame()));
+                message = JsonUsage.getJson(new GameData(gameID, null, null, null, null));
             }
         } catch (ResponseException e) {
             res.status(401);

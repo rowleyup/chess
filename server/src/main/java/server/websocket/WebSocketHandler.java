@@ -4,6 +4,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.JsonUsage;
+import server.ResponseException;
+import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ServerNotifyMessage;
 
@@ -11,29 +13,37 @@ import java.io.IOException;
 
 @WebSocket
 public class WebSocketHandler {
-    private final ConnectionManager connections = new ConnectionManager();
+    private final ConnectionManager connections;
+
+    public WebSocketHandler(GameService gameService) {
+        this.connections = new ConnectionManager(gameService);
+    }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
-        UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
-        switch (command.getCommandType()) {
-            case CONNECT -> {
-                UserConnectCommand action = JsonUsage.fromJson(message, UserConnectCommand.class);
-                connect(action, session);
+    public void onMessage(Session session, String message) {
+        try {
+            UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
+            switch (command.getCommandType()) {
+                case CONNECT -> {
+                    UserConnectCommand action = JsonUsage.fromJson(message, UserConnectCommand.class);
+                    connect(action, session);
+                }
+                case LEAVE -> {
+                    UserLeaveCommand action = JsonUsage.fromJson(message, UserLeaveCommand.class);
+                    leave(action);
+                }
+                case MAKE_MOVE -> {
+                    UserMoveCommand action = JsonUsage.fromJson(message, UserMoveCommand.class);
+                    move(action);
+                }
+                case RESIGN -> {
+                    UserResignCommand action = JsonUsage.fromJson(message, UserResignCommand.class);
+                    resign(action);
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + command.getCommandType());
             }
-            case LEAVE -> {
-                UserLeaveCommand action = JsonUsage.fromJson(message, UserLeaveCommand.class);
-                leave(action);
-            }
-            case MAKE_MOVE -> {
-                UserMoveCommand action = JsonUsage.fromJson(message, UserMoveCommand.class);
-                move(action);
-            }
-            case RESIGN -> {
-                UserResignCommand action = JsonUsage.fromJson(message, UserResignCommand.class);
-                resign(action);
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + command.getCommandType());
+        } catch (Throwable e) {
+            error(e.getMessage());
         }
     }
 
@@ -59,7 +69,7 @@ public class WebSocketHandler {
         connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void leave(UserLeaveCommand action) throws IOException {
+    private void leave(UserLeaveCommand action) throws IOException, ResponseException {
         connections.leave(action.getAuthToken().username(), action.getGameID());
         String message = String.format("%s has left the game", action.getAuthToken().username());
         var notification = new ServerNotifyMessage(message);
@@ -69,4 +79,6 @@ public class WebSocketHandler {
     private void resign(UserResignCommand action) {}
 
     private void move(UserMoveCommand action) {}
+
+    private void error(String message) {}
 }
