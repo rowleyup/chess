@@ -1,6 +1,5 @@
 package server.websocket;
 
-import chess.InvalidMoveException;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import server.JsonUsage;
@@ -22,16 +21,35 @@ public class ConnectionManager {
         gameUserMap = new ConcurrentHashMap<>();
     }
 
-    public synchronized void join(String authToken, String username, int gameId, String role, Session session) {
+    public synchronized void join(String authToken, String username, int gameId, String role, Session session) throws Exception {
         //Does not need to add player in gameService
         //Check if any new games have been created since
+        updateGames(authToken);
+        if (!username.equals(gameService.authenticate(authToken))) {
+            throw new ResponseException("Unauthorized");
+        }
+
+        var list = gameUserMap.get(Integer.toString(gameId));
+        var roleEnum = Connection.SessionRole.valueOf(role);
+        for (Connection c : list) {
+            if (c.role.equals(roleEnum)) {
+                throw new ResponseException("Player already taken");
+            }
+        }
+
+        list.add(new Connection(username, session, roleEnum));
     }
 
-    public synchronized void observe(String authToken, String username, int gameId, Session session) {
-        //Check if any new games have been created
+    public synchronized void observe(String authToken, String username, int gameId, Session session) throws Exception {
+        updateGames(authToken);
+        if (!username.equals(gameService.authenticate(authToken))) {
+            throw new ResponseException("Unauthorized");
+        }
+        var list = gameUserMap.get(Integer.toString(gameId));
+        list.add(new Connection(username, session, Connection.SessionRole.OBSERVER));
     }
 
-    public synchronized void clearGame(int gameId) throws ResponseException {
+    public synchronized void clearGame(int gameId) throws Exception {
         for (Connection c : gameUserMap.get(Integer.toString(gameId))) {
             c.isOver = true;
         }
@@ -136,5 +154,16 @@ public class ConnectionManager {
         }
         spot = spot + y;
         return spot;
+    }
+
+    private void updateGames(String authToken) throws Exception {
+        var games = gameService.listGames(authToken);
+        for (GameData game : games) {
+            String id = Integer.toString(game.gameID());
+            if (!gameDataMap.containsKey(id)) {
+                gameDataMap.put(id, game);
+                gameUserMap.put(id, new ArrayList<>());
+            }
+        }
     }
 }

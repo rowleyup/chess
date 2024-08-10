@@ -47,7 +47,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void connect(UserConnectCommand action, Session session) throws IOException {
+    private void connect(UserConnectCommand action, Session session) throws Exception {
         String message;
         switch (action.getRole()) {
             case OBSERVER -> {

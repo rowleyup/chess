@@ -92,10 +92,11 @@ public class GameService {
         return true;
     }
 
-    private void authenticate(String authToken) throws DataAccessException, ResponseException {
+    public String authenticate(String authToken) throws DataAccessException, ResponseException {
         AuthData auth = authDao.getAuth(authToken);
         if (auth == null) {
             throw new ResponseException("Error: Unauthorized");
         }
+        return auth.username();
     }
 }
