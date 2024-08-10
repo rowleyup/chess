@@ -4,11 +4,10 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.JsonUsage;
-import server.ResponseException;
 import service.GameService;
 import websocket.commands.*;
+import websocket.messages.ServerErrorMessage;
 import websocket.messages.ServerNotifyMessage;
-
 import java.io.IOException;
 
 @WebSocket
@@ -20,9 +19,10 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) {
+    public void onMessage(Session session, String message) throws IOException {
+        UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
+        int gameId = command.getGameID();
         try {
-            UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
             switch (command.getCommandType()) {
                 case CONNECT -> {
                     UserConnectCommand action = JsonUsage.fromJson(message, UserConnectCommand.class);
@@ -43,7 +43,7 @@ public class WebSocketHandler {
                 default -> throw new IllegalStateException("Unexpected value: " + command.getCommandType());
             }
         } catch (Throwable e) {
-            error(e.getMessage());
+            error(e.getMessage(), gameId);
         }
     }
 
@@ -76,17 +76,20 @@ public class WebSocketHandler {
         connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void resign(UserResignCommand action) {
-        //check if player is real
-        //clear game
-        //notify that game is over to all except resigning player
+    private void resign(UserResignCommand action) throws Exception {
+        connections.findUser(action.getAuthToken().username(), action.getGameID());
+        connections.clearGame(action.getGameID());
+        String message = String.format("GAME OVER: %s has resigned", action.getAuthToken().username());
+        var notification = new ServerNotifyMessage(message);
+        connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
     }
 
-    private void move(UserMoveCommand action) {
-        //check if player is real
-        //make move
-        //if move is checkmate, clear game
+    private void move(UserMoveCommand action) throws Exception {
+        connections.findUser(action.getAuthToken().username(), action.getGameID());
+        connections.move(action.getAuthToken().username(), action.getGameID(), action.getMove());
     }
 
-    private void error(String message) {}
+    private void error(String message, int gameId) throws IOException {
+        connections.broadcast(null, gameId, new ServerErrorMessage(message));
+    }
 }

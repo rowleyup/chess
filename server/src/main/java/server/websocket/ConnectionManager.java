@@ -109,6 +109,7 @@ public class ConnectionManager {
         if (checkmate != null) {
             var m = new ServerNotifyMessage(String.format("GAME OVER: team %s is in checkmate", checkmate));
             broadcast(null, gameId, m);
+            clearGame(gameId);
         }
     }
 
