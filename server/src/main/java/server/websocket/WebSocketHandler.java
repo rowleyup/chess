@@ -8,7 +8,6 @@ import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ServerErrorMessage;
 import websocket.messages.ServerNotifyMessage;
-import java.io.IOException;
 
 @WebSocket
 public class WebSocketHandler {
@@ -21,9 +20,9 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
         UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
-        connections.updateGames(command.getAuthToken());
         int gameId = command.getGameID();
         try {
+            connections.updateGames(command.getAuthToken());
             switch (command.getCommandType()) {
                 case CONNECT -> {
                     UserConnectCommand action = JsonUsage.fromJson(message, UserConnectCommand.class);
@@ -44,7 +43,7 @@ public class WebSocketHandler {
                 default -> throw new IllegalStateException("Unexpected value: " + command.getCommandType());
             }
         } catch (Throwable e) {
-            error(e.getMessage(), gameId);
+            error(e.getMessage(), gameId, session);
         }
     }
 
@@ -53,17 +52,22 @@ public class WebSocketHandler {
         String username;
         String role = connections.getRole(action.getAuthToken(), action.getGameID());
         username = connections.join(action.getAuthToken() ,action.getGameID(), role, session);
-        message = String.format("%s has joined the game as an observer", username);
+        if (role.equals("WHITE") || role.equals("BLACK")) {
+            message = String.format("%s has joined the game as player %s", username, role);
+        }
+        else {
+            message = String.format("%s has joined the game as an observer", username);
+        }
 
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(username, action.getGameID(), notification);
+        connections.broadcast(username, action.getGameID(), notification, null);
     }
 
     private void leave(UserLeaveCommand action) throws Exception {
         String username = connections.leave(action.getAuthToken(), action.getGameID());
         String message = String.format("%s has left the game", username);
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(username, action.getGameID(), notification);
+        connections.broadcast(username, action.getGameID(), notification, null);
     }
 
     private void resign(UserResignCommand action) throws Exception {
@@ -71,7 +75,7 @@ public class WebSocketHandler {
         connections.clearGame(action.getGameID());
         String message = String.format("GAME OVER: %s has resigned", username);
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(username, action.getGameID(), notification);
+        connections.broadcast(username, action.getGameID(), notification, null);
     }
 
     private void move(UserMoveCommand action) throws Exception {
@@ -79,7 +83,7 @@ public class WebSocketHandler {
         connections.move(username, action.getGameID(), action.getMove());
     }
 
-    private void error(String message, int gameId) throws IOException {
-        connections.broadcast(null, gameId, new ServerErrorMessage(message));
+    private void error(String message, int gameId, Session session) throws Exception {
+        connections.broadcast(null, gameId, new ServerErrorMessage(message), session);
     }
 }

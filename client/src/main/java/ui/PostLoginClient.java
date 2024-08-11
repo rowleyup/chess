@@ -41,7 +41,7 @@ public class PostLoginClient {
 
     public String list() throws ResponseException {
         updateList();
-        StringBuilder table = new StringBuilder(SET_TEXT_UNDERLINE + "  ID  NAME          PLAYER_WHITE  PLAYER_BLACK");
+        StringBuilder table = new StringBuilder(SET_TEXT_UNDERLINE + "  NUM  NAME          PLAYER_WHITE  PLAYER_BLACK");
         table.append(RESET_TEXT_UNDERLINE + "\n");
         var keys = gameList.keySet();
         for (String key : keys) {
@@ -93,7 +93,7 @@ public class PostLoginClient {
     }
 
     private String tableTemplate(String id, GameData g) {
-        String m = "  " + id + " ".repeat(Math.max(0, 4 - id.length())) + g.gameName();
+        String m = "  " + id + " ".repeat(Math.max(0, 5 - id.length())) + g.gameName();
         m = m + " ".repeat(Math.max(0, 14 - g.gameName().length()));
 
         if (g.whiteUsername() != null) {

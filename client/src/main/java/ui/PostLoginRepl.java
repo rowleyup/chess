@@ -87,7 +87,7 @@ public class PostLoginRepl {
             gameId = getId();
         } catch (ResponseException e) {
             success = false;
-            return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
+            return SET_TEXT_COLOR_RED + "ERROR: invalid game num";
         }
 
         game = client.observe(gameId);
@@ -100,7 +100,7 @@ public class PostLoginRepl {
             gameId = getId();
         } catch (ResponseException e) {
             success = false;
-            return SET_TEXT_COLOR_RED + "ERROR: invalid game id";
+            return SET_TEXT_COLOR_RED + "ERROR: invalid game num";
         }
 
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "PLAYER COLOR >>> " + SET_TEXT_COLOR_LIGHT_GREY);
@@ -126,7 +126,7 @@ public class PostLoginRepl {
     }
 
     private int getId() throws ResponseException {
-        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME ID >>> " + SET_TEXT_COLOR_LIGHT_GREY);
+        System.out.print("\n" + SET_TEXT_COLOR_BLUE + "GAME NUM >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine();
         if (input.equals("\n") || input.isEmpty()) {
             throw new ResponseException("");

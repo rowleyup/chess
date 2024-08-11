@@ -6,7 +6,6 @@ import server.JsonUsage;
 import server.ResponseException;
 import service.GameService;
 import websocket.messages.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,11 +22,19 @@ public class ConnectionManager {
 
     public synchronized String join(String authToken, int gameId, String role, Session session) throws Exception {
         String username = gameService.authenticate(authToken);
-
         var list = gameUserMap.get(Integer.toString(gameId));
         var roleEnum = Connection.SessionRole.valueOf(role);
-
         list.add(new Connection(username, session, roleEnum));
+
+        var board = gameDataMap.get(Integer.toString(gameId)).game();
+        boolean isCheck = false;
+        boolean isCheckmate = false;
+        if (role.equals("WHITE") || role.equals("BLACK")) {
+            isCheck = board.isInCheck(chess.ChessGame.TeamColor.valueOf(role));
+            isCheckmate = board.isInCheckmate(chess.ChessGame.TeamColor.valueOf(role));
+        }
+        var message = new ServerLoadMessage(board, isCheck, isCheckmate);
+        broadcast(null, -1, message, session);
         return username;
     }
 
@@ -98,22 +105,30 @@ public class ConnectionManager {
 
         String start = convertToCoordinates(move.getStartPosition());
         String end = convertToCoordinates(move.getEndPosition());
-        broadcast(username, gameId, new ServerNotifyMessage(String.format("%s moved piece from %s to %s", username, start, end)));
-        broadcast(username, gameId, message);
+        broadcast(username, gameId, new ServerNotifyMessage(String.format("%s moved piece from %s to %s", username, start, end)), null);
+        broadcast(username, gameId, message, null);
 
         if (checkmate != null) {
             var m = new ServerNotifyMessage(String.format("GAME OVER: team %s is in checkmate", checkmate));
-            broadcast(null, gameId, m);
+            broadcast(null, gameId, m, null);
             clearGame(gameId);
         }
     }
 
-    public synchronized void broadcast(String excludeUsername, int gameId, ServerMessage message) throws IOException {
-        for (Connection conn : gameUserMap.get(Integer.toString(gameId))) {
-            if (!conn.username.equals(excludeUsername)) {
-                if (conn.session.isOpen()) {
-                    conn.send(JsonUsage.getJson(message));
+    public synchronized void broadcast(String excludeUsername, int gameId, ServerMessage message, Session session) throws Exception {
+        var list = gameUserMap.get(Integer.toString(gameId));
+        if (list != null) {
+            for (Connection conn : list) {
+                if (!conn.username.equals(excludeUsername)) {
+                    if (conn.session.isOpen()) {
+                        conn.send(JsonUsage.getJson(message));
+                    }
                 }
+            }
+        }
+        if (session != null) {
+            if (session.isOpen()) {
+                session.getRemote().sendString(JsonUsage.getJson(message));
             }
         }
     }
