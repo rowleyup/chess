@@ -49,44 +49,45 @@ public class WebSocketHandler {
 
     private void connect(UserConnectCommand action, Session session) throws Exception {
         String message;
+        String username;
         switch (action.getRole()) {
             case OBSERVER -> {
-                connections.observe(action.getAuthToken().authToken(), action.getAuthToken().username() ,action.getGameID(), session);
-                message = String.format("%s has joined the game as an observer", action.getAuthToken().username());
+                username = connections.observe(action.getAuthToken() ,action.getGameID(), session);
+                message = String.format("%s has joined the game as an observer", username);
             }
             case WHITE -> {
-                connections.join(action.getAuthToken().authToken(), action.getAuthToken().username(), action.getGameID(), "w", session);
-                message = String.format("%s has joined the game as player WHITE", action.getAuthToken().username());
+                username = connections.join(action.getAuthToken(), action.getGameID(), "w", session);
+                message = String.format("%s has joined the game as player WHITE", username);
             }
             case BLACK -> {
-                connections.join(action.getAuthToken().authToken(), action.getAuthToken().username(), action.getGameID(), "b", session);
-                message = String.format("%s has joined the game as player BLACK", action.getAuthToken().username());
+                username = connections.join(action.getAuthToken(), action.getGameID(), "b", session);
+                message = String.format("%s has joined the game as player BLACK", username);
             }
             default -> throw new IllegalStateException("Unexpected value: " + action.getRole());
         }
 
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
+        connections.broadcast(username, action.getGameID(), notification);
     }
 
     private void leave(UserLeaveCommand action) throws Exception {
-        connections.leave(action.getAuthToken().username(), action.getGameID());
-        String message = String.format("%s has left the game", action.getAuthToken().username());
+        String username = connections.leave(action.getAuthToken(), action.getGameID());
+        String message = String.format("%s has left the game", username);
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
+        connections.broadcast(username, action.getGameID(), notification);
     }
 
     private void resign(UserResignCommand action) throws Exception {
-        connections.findUser(action.getAuthToken().username(), action.getGameID());
+        String username = connections.findUser(action.getAuthToken(), action.getGameID()).username;
         connections.clearGame(action.getGameID());
-        String message = String.format("GAME OVER: %s has resigned", action.getAuthToken().username());
+        String message = String.format("GAME OVER: %s has resigned", username);
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(action.getAuthToken().username(), action.getGameID(), notification);
+        connections.broadcast(username, action.getGameID(), notification);
     }
 
     private void move(UserMoveCommand action) throws Exception {
-        connections.findUser(action.getAuthToken().username(), action.getGameID());
-        connections.move(action.getAuthToken().username(), action.getGameID(), action.getMove());
+        String username = connections.findUser(action.getAuthToken(), action.getGameID()).username;
+        connections.move(username, action.getGameID(), action.getMove());
     }
 
     private void error(String message, int gameId) throws IOException {

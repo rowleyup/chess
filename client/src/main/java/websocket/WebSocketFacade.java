@@ -41,7 +41,7 @@ public class WebSocketFacade extends Endpoint {
     public void connect(AuthData authToken, Integer gameId, String role) throws ResponseException {
         try {
             var userRole = UserConnectCommand.UserRole.valueOf(role);
-            var command = new UserConnectCommand(authToken, gameId, userRole);
+            var command = new UserConnectCommand(authToken.authToken(), gameId, userRole);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
@@ -50,7 +50,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void move(AuthData authToken, Integer gameId, chess.ChessMove move) throws ResponseException {
         try {
-            var command = new UserMoveCommand(authToken, gameId, move);
+            var command = new UserMoveCommand(authToken.authToken(), gameId, move);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
@@ -59,7 +59,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void resign(AuthData authToken, Integer gameId) throws ResponseException {
         try {
-            var command = new UserResignCommand(authToken, gameId);
+            var command = new UserResignCommand(authToken.authToken(), gameId);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
@@ -68,7 +68,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void leave(AuthData authToken, Integer gameId) throws ResponseException {
         try {
-            var command = new UserLeaveCommand(authToken, gameId);
+            var command = new UserLeaveCommand(authToken.authToken(), gameId);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
             this.session.close();
         } catch (IOException e) {

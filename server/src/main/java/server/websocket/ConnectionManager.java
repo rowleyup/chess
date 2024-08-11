@@ -21,11 +21,9 @@ public class ConnectionManager {
         gameUserMap = new ConcurrentHashMap<>();
     }
 
-    public synchronized void join(String authToken, String username, int gameId, String role, Session session) throws Exception {
+    public synchronized String join(String authToken, int gameId, String role, Session session) throws Exception {
         updateGames(authToken);
-        if (!username.equals(gameService.authenticate(authToken))) {
-            throw new ResponseException("Unauthorized");
-        }
+        String username = gameService.authenticate(authToken);
 
         var list = gameUserMap.get(Integer.toString(gameId));
         var roleEnum = Connection.SessionRole.valueOf(role);
@@ -36,15 +34,16 @@ public class ConnectionManager {
         }
 
         list.add(new Connection(username, session, roleEnum));
+        return username;
     }
 
-    public synchronized void observe(String authToken, String username, int gameId, Session session) throws Exception {
+    public synchronized String observe(String authToken, int gameId, Session session) throws Exception {
         updateGames(authToken);
-        if (!username.equals(gameService.authenticate(authToken))) {
-            throw new ResponseException("Unauthorized");
-        }
+        String username = gameService.authenticate(authToken);
+
         var list = gameUserMap.get(Integer.toString(gameId));
         list.add(new Connection(username, session, Connection.SessionRole.OBSERVER));
+        return username;
     }
 
     public synchronized void clearGame(int gameId) {
@@ -53,7 +52,8 @@ public class ConnectionManager {
         }
     }
 
-    public synchronized void leave(String username, int gameId) throws Exception {
+    public synchronized String leave(String authToken, int gameId) throws Exception {
+        String username = gameService.authenticate(authToken);
         Connection user = findUser(username, gameId);
         if (user.role == Connection.SessionRole.WHITE && !user.isOver) {
             throw new ResponseException("Cannot leave while a player in an active game");
@@ -73,6 +73,7 @@ public class ConnectionManager {
             gameUserMap.remove(Integer.toString(gameId));
             gameService.removeGame(gameId);
         }
+        return username;
     }
 
     public synchronized void move(String username, int gameId, chess.ChessMove move) throws Exception {
@@ -123,8 +124,9 @@ public class ConnectionManager {
         }
     }
 
-    public synchronized Connection findUser(String username, int gameId) throws ResponseException {
+    public synchronized Connection findUser(String authToken, int gameId) throws Exception {
         Connection user = null;
+        String username = gameService.authenticate(authToken);
         for (Connection c : gameUserMap.get(Integer.toString(gameId))) {
             if (c.username.equals(username)) {
                 user = c;
