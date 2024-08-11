@@ -109,13 +109,10 @@ public class InGameRepl implements NotificationHandler {
         ServerLoadMessage note = (ServerLoadMessage) notification;
         this.gameData = note.getGame();
         if (note.isCheckMate()) {
-            System.out.print("\n" + SET_TEXT_COLOR_YELLOW + "GAME OVER: You are in checkmate");
             over = true;
         }
-        else if (note.isCheck()) {
-            System.out.print("\n" + SET_TEXT_COLOR_YELLOW + "WARNING: You are in check");
-        }
 
+        System.out.print("\n" + SET_TEXT_COLOR_YELLOW + note.getMessage());
         System.out.print(SET_TEXT_COLOR_GREEN + drawBoard());
         printPrompt();
     }

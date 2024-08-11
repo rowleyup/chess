@@ -79,11 +79,11 @@ public class WebSocketHandler {
     }
 
     private void move(UserMoveCommand action) throws Exception {
-        String username = connections.findUser(action.getAuthToken(), action.getGameID()).username;
-        connections.move(username, action.getGameID(), action.getMove());
+        connections.move(action.getAuthToken(), action.getGameID(), action.getMove());
     }
 
     private void error(String message, int gameId, Session session) throws Exception {
+        //TODO: set gameId to -1 and remove parameter
         connections.broadcast(null, gameId, new ServerErrorMessage(message), session);
     }
 }

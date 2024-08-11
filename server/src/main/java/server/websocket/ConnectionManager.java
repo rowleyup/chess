@@ -33,7 +33,7 @@ public class ConnectionManager {
             isCheck = board.isInCheck(chess.ChessGame.TeamColor.valueOf(role));
             isCheckmate = board.isInCheckmate(chess.ChessGame.TeamColor.valueOf(role));
         }
-        var message = new ServerLoadMessage(board, isCheck, isCheckmate);
+        var message = new ServerLoadMessage(board, isCheck, isCheckmate, null);
         broadcast(null, -1, message, session);
         return username;
     }
@@ -77,36 +77,40 @@ public class ConnectionManager {
         return username;
     }
 
-    public synchronized void move(String username, int gameId, chess.ChessMove move) throws Exception {
+    public synchronized void move(String authToken, int gameId, chess.ChessMove move) throws Exception {
         String checkmate = null;
-        Connection user = findUser(username, gameId);
+        Connection user = findUser(authToken, gameId);
         chess.ChessGame game = gameDataMap.get(Integer.toString(gameId)).game();
         game.makeMove(move);
 
-        var message = new ServerLoadMessage(game, false, false);
+        String start = convertToCoordinates(move.getStartPosition());
+        String end = convertToCoordinates(move.getEndPosition());
+        String notification = String.format("%s moved piece from %s to %s", user.username, start, end);
+        var message = new ServerLoadMessage(game, false, false, null);
+
         if (user.role == Connection.SessionRole.WHITE) {
             if (game.isInCheckmate(chess.ChessGame.TeamColor.BLACK)) {
-                message = new ServerLoadMessage(game, true, true);
+                message = new ServerLoadMessage(game, true, true, null);
                 checkmate = "BLACK";
             }
             else if (game.isInCheck(chess.ChessGame.TeamColor.BLACK)) {
-                message = new ServerLoadMessage(game, true, false);
+                message = new ServerLoadMessage(game, true, false, null);
             }
         }
         else if (user.role == Connection.SessionRole.BLACK) {
             if (game.isInCheckmate(chess.ChessGame.TeamColor.WHITE)) {
-                message = new ServerLoadMessage(game, true, true);
+                message = new ServerLoadMessage(game, true, true, null);
                 checkmate = "WHITE";
             }
             else if (game.isInCheck(chess.ChessGame.TeamColor.WHITE)) {
-                message = new ServerLoadMessage(game, true, false);
+                message = new ServerLoadMessage(game, true, false, null);
             }
         }
 
-        String start = convertToCoordinates(move.getStartPosition());
-        String end = convertToCoordinates(move.getEndPosition());
-        broadcast(username, gameId, new ServerNotifyMessage(String.format("%s moved piece from %s to %s", username, start, end)), null);
-        broadcast(username, gameId, message, null);
+        broadcast(user.username, gameId, message, null);
+        broadcast(user.username, gameId, new ServerNotifyMessage(notification), null);
+        var message2 = new ServerLoadMessage(message.getGame(), message.isCheck(), message.isCheckMate(), null);
+        broadcast(null, -1, message2, user.session);
 
         if (checkmate != null) {
             var m = new ServerNotifyMessage(String.format("GAME OVER: team %s is in checkmate", checkmate));
@@ -120,8 +124,10 @@ public class ConnectionManager {
         if (list != null) {
             for (Connection conn : list) {
                 if (!conn.username.equals(excludeUsername)) {
-                    if (conn.session.isOpen()) {
-                        conn.send(JsonUsage.getJson(message));
+                    if (session != conn.session) {
+                        if (conn.session.isOpen()) {
+                            conn.send(JsonUsage.getJson(message));
+                        }
                     }
                 }
             }
