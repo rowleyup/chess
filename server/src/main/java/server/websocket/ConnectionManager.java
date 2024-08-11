@@ -22,7 +22,6 @@ public class ConnectionManager {
     }
 
     public synchronized String join(String authToken, int gameId, String role, Session session) throws Exception {
-        updateGames(authToken);
         String username = gameService.authenticate(authToken);
 
         var list = gameUserMap.get(Integer.toString(gameId));
@@ -153,7 +152,7 @@ public class ConnectionManager {
         return spot;
     }
 
-    private void updateGames(String authToken) throws Exception {
+    public synchronized void updateGames(String authToken) throws Exception {
         var games = gameService.listGames(authToken);
         for (GameData game : games) {
             String id = Integer.toString(game.gameID());

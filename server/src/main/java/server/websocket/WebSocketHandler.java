@@ -19,8 +19,9 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws Exception {
         UserGameCommand command = JsonUsage.fromJson(message, UserGameCommand.class);
+        connections.updateGames(command.getAuthToken());
         int gameId = command.getGameID();
         try {
             switch (command.getCommandType()) {
