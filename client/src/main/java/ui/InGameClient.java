@@ -10,7 +10,6 @@ import static ui.EscapeSequences.SET_TEXT_COLOR_LIGHT_GREY;
 public class InGameClient {
     private final AuthData userAuth;
     private int gameId;
-    private String team;
     private final WebSocketFacade ws;
 
     public InGameClient(AuthData auth, NotificationHandler notificationHandler, String url) {
@@ -24,10 +23,6 @@ public class InGameClient {
 
     public void setId(int id) {
         gameId = id;
-    }
-
-    public void setTeam(String team) {
-        this.team = team;
     }
 
     public String help() {
@@ -61,7 +56,7 @@ public class InGameClient {
     }
 
     public void connect() throws ResponseException {
-        ws.connect(userAuth, gameId, team);
+        ws.connect(userAuth, gameId);
     }
 
     public String leave() throws ResponseException {

@@ -106,4 +106,21 @@ public class GameService {
             throw new DataAccessException("Unable to clear game data");
         }
     }
+
+    public String getRole(String username, int gameId) throws DataAccessException {
+        GameData game = gameDao.getGameByID(gameId);
+        if (game == null) {
+            throw new DataAccessException("Game not found");
+        }
+
+        if (username.equals(game.whiteUsername())) {
+            return "WHITE";
+        }
+        else if (username.equals(game.blackUsername())) {
+            return "BLACK";
+        }
+        else {
+            return "OBSERVER";
+        }
+    }
 }

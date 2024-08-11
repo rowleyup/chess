@@ -14,7 +14,6 @@ public class ObserveGameRepl extends InGameRepl {
     public void run(int game, String color) {
         this.team = color;
         client.setId(game);
-        client.setTeam(color);
 
         try {
             client.connect();

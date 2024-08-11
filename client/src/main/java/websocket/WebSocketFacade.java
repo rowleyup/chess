@@ -38,10 +38,9 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {}
 
-    public void connect(AuthData authToken, Integer gameId, String role) throws ResponseException {
+    public void connect(AuthData authToken, Integer gameId) throws ResponseException {
         try {
-            var userRole = UserConnectCommand.UserRole.valueOf(role);
-            var command = new UserConnectCommand(authToken.authToken(), gameId, userRole);
+            var command = new UserConnectCommand(authToken.authToken(), gameId);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());

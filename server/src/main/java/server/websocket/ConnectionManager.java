@@ -27,23 +27,18 @@ public class ConnectionManager {
 
         var list = gameUserMap.get(Integer.toString(gameId));
         var roleEnum = Connection.SessionRole.valueOf(role);
-        for (Connection c : list) {
-            if (c.role.equals(roleEnum)) {
-                throw new ResponseException("Player already taken");
-            }
-        }
 
         list.add(new Connection(username, session, roleEnum));
         return username;
     }
 
-    public synchronized String observe(String authToken, int gameId, Session session) throws Exception {
-        updateGames(authToken);
+    public synchronized String getRole(String authToken, int gameId) throws Exception {
         String username = gameService.authenticate(authToken);
-
-        var list = gameUserMap.get(Integer.toString(gameId));
-        list.add(new Connection(username, session, Connection.SessionRole.OBSERVER));
-        return username;
+        String role = gameService.getRole(username, gameId);
+        if (role == null) {
+            return "OBSERVER";
+        }
+        return role;
     }
 
     public synchronized void clearGame(int gameId) {

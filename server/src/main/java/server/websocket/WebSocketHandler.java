@@ -50,21 +50,9 @@ public class WebSocketHandler {
     private void connect(UserConnectCommand action, Session session) throws Exception {
         String message;
         String username;
-        switch (action.getRole()) {
-            case OBSERVER -> {
-                username = connections.observe(action.getAuthToken() ,action.getGameID(), session);
-                message = String.format("%s has joined the game as an observer", username);
-            }
-            case WHITE -> {
-                username = connections.join(action.getAuthToken(), action.getGameID(), "w", session);
-                message = String.format("%s has joined the game as player WHITE", username);
-            }
-            case BLACK -> {
-                username = connections.join(action.getAuthToken(), action.getGameID(), "b", session);
-                message = String.format("%s has joined the game as player BLACK", username);
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + action.getRole());
-        }
+        String role = connections.getRole(action.getAuthToken(), action.getGameID());
+        username = connections.join(action.getAuthToken() ,action.getGameID(), role, session);
+        message = String.format("%s has joined the game as an observer", username);
 
         var notification = new ServerNotifyMessage(message);
         connections.broadcast(username, action.getGameID(), notification);
