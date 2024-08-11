@@ -43,7 +43,7 @@ public class WebSocketHandler {
                 default -> throw new IllegalStateException("Unexpected value: " + command.getCommandType());
             }
         } catch (Throwable e) {
-            error(e.getMessage(), gameId, session);
+            error(e.getMessage(), session);
         }
     }
 
@@ -82,8 +82,7 @@ public class WebSocketHandler {
         connections.move(action.getAuthToken(), action.getGameID(), action.getMove());
     }
 
-    private void error(String message, int gameId, Session session) throws Exception {
-        //TODO: set gameId to -1 and remove parameter
-        connections.broadcast(null, gameId, new ServerErrorMessage(message), session);
+    private void error(String message, Session session) throws Exception {
+        connections.broadcast(null, -1, new ServerErrorMessage(message), session);
     }
 }

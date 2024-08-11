@@ -81,6 +81,14 @@ public class ConnectionManager {
         String checkmate = null;
         Connection user = findUser(authToken, gameId);
         chess.ChessGame game = gameDataMap.get(Integer.toString(gameId)).game();
+        chess.ChessPiece piece = game.getBoard().getPiece(move.getStartPosition());
+        if (!(piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && user.role == Connection.SessionRole.WHITE)) {
+            throw new ResponseException("Cannot move the other team's piece");
+        }
+        else if (!(piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && user.role == Connection.SessionRole.BLACK)) {
+            throw new ResponseException("Cannot move the other team's piece");
+        }
+
         game.makeMove(move);
 
         String start = convertToCoordinates(move.getStartPosition());
