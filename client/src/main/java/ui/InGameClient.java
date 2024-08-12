@@ -68,8 +68,7 @@ public class InGameClient {
         ws.move(userAuth, gameId, new chess.ChessMove(from, to, promote));
     }
 
-    public String resign() throws ResponseException {
+    public void resign() throws ResponseException {
         ws.resign(userAuth, gameId);
-        return "GAME OVER: You have resigned";
     }
 }

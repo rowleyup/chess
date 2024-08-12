@@ -80,6 +80,13 @@ public class ConnectionManager {
     public synchronized void move(String authToken, int gameId, chess.ChessMove move) throws Exception {
         String checkmate = null;
         Connection user = findUser(authToken, gameId);
+        if (user.isOver) {
+            throw new ResponseException("Game is over");
+        }
+        if (user.role == Connection.SessionRole.OBSERVER) {
+            throw new ResponseException("Observing cannot move pieces");
+        }
+
         chess.ChessGame game = gameDataMap.get(Integer.toString(gameId)).game();
         chess.ChessPiece piece = game.getBoard().getPiece(move.getStartPosition());
         if (piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && user.role == Connection.SessionRole.BLACK) {

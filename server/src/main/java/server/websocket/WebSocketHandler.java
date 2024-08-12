@@ -4,6 +4,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.JsonUsage;
+import server.ResponseException;
 import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ServerErrorMessage;
@@ -71,11 +72,19 @@ public class WebSocketHandler {
     }
 
     private void resign(UserResignCommand action) throws Exception {
-        String username = connections.findUser(action.getAuthToken(), action.getGameID()).username;
-        connections.clearGame(action.getGameID());
+        Connection c = connections.findUser(action.getAuthToken(), action.getGameID());
+        String username = c.username;
+        if (c.role == Connection.SessionRole.OBSERVER) {
+            throw new ResponseException("Observer cannot resign");
+        }
+        if (c.isOver) {
+            throw new ResponseException("Game is over");
+        }
+
         String message = String.format("GAME OVER: %s has resigned", username);
         var notification = new ServerNotifyMessage(message);
-        connections.broadcast(username, action.getGameID(), notification, null);
+        connections.broadcast(null, action.getGameID(), notification, null);
+        connections.clearGame(action.getGameID());
     }
 
     private void move(UserMoveCommand action) throws Exception {

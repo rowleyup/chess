@@ -155,9 +155,9 @@ public class InGameRepl implements NotificationHandler {
         input = input.toUpperCase();
         switch (input) {
             case "Y", "YES" -> {
-                String m = client.resign();
+                client.resign();
                 over = true;
-                return m;
+                return "";
             }
             case "NO", "N" -> {
                 return "Resignation canceled";
