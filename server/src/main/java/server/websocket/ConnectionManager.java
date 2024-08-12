@@ -117,7 +117,7 @@ public class ConnectionManager {
                 checkmate = "BLACK";
             }
             else if (game.isInCheck(chess.ChessGame.TeamColor.BLACK)) {
-                message = new ServerLoadMessage(game, true, false, null);
+                message = new ServerLoadMessage(game, true, false, "BLACK is in check");
             }
         }
         else if (user.role == Connection.SessionRole.BLACK) {
@@ -126,19 +126,21 @@ public class ConnectionManager {
                 checkmate = "WHITE";
             }
             else if (game.isInCheck(chess.ChessGame.TeamColor.WHITE)) {
-                message = new ServerLoadMessage(game, true, false, null);
+                message = new ServerLoadMessage(game, true, false, "WHITE is in check");
             }
         }
 
-        broadcast(user.username, gameId, message, null);
         broadcast(user.username, gameId, new ServerNotifyMessage(notification), null);
-        var message2 = new ServerLoadMessage(message.getGame(), message.isCheck(), message.isCheckMate(), null);
-        broadcast(null, -1, message2, user.session);
+        broadcast(user.username, gameId, message, user.session);
 
         if (checkmate != null) {
             var m = new ServerNotifyMessage(String.format("GAME OVER: team %s is in checkmate", checkmate));
             broadcast(null, gameId, m, null);
             clearGame(gameId);
+        }
+        if (game.isInStalemate(chess.ChessGame.TeamColor.BLACK) || game.isInStalemate(chess.ChessGame.TeamColor.WHITE)) {
+            var m = new ServerNotifyMessage("GAME OVER: stalemate");
+            broadcast(null, gameId, m, null);
         }
     }
 

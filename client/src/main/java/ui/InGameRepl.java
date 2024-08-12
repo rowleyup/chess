@@ -200,15 +200,15 @@ public class InGameRepl implements NotificationHandler {
     }
 
     protected chess.ChessPosition getSquare() throws ResponseException {
-        var numbers = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8));
+        var numStrings = new ArrayList<>(List.of("1", "2", "3", "4", "5", "6", "7", "8"));
 
         System.out.print(SET_TEXT_COLOR_BLUE + "Square (e.g. a1) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine();
         var inputs = input.toLowerCase().split("");
-        int firstNum = Integer.parseInt(inputs[1]);
-        if (!numbers.contains(firstNum)) {
+        if (!numStrings.contains(inputs[1])) {
             throw new ResponseException("Error: Invalid coordinates");
         }
+        int firstNum = Integer.parseInt(inputs[1]);
 
         int secondNum;
         switch (inputs[0]) {
