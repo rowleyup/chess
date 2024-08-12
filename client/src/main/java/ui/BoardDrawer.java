@@ -52,28 +52,27 @@ public class BoardDrawer {
 
         if (direction == 1) {
             for (int i = 1; i <= 8; i++) {
-                if (moves.contains(new ChessPosition(Integer.parseInt(num), i))) {
-                    pic.append(square(i, num, board, true));
-                }
-                else {
-                    pic.append(square(i, num, board, false));
-                }
+                pic.append(checkHighlight(i, num, board, moves));
             }
         }
         else {
             for (int i = 8; i >= 1; i--) {
-                if (moves.contains(new ChessPosition(Integer.parseInt(num), i))) {
-                    pic.append(square(i, num, board, true));
-                }
-                else {
-                    pic.append(square(i, num, board, false));
-                }
+                pic.append(checkHighlight(i, num, board, moves));
             }
         }
 
         pic.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE);
         pic.append(" ").append(num).append(" ").append(RESET_BG_COLOR).append("\n");
         return pic.toString();
+    }
+
+    private String checkHighlight(int i, String num, ChessBoard board, Collection<ChessPosition> moves) {
+        if (moves.contains(new ChessPosition(Integer.parseInt(num), i))) {
+            return square(i, num, board, true);
+        }
+        else {
+            return square(i, num, board, false);
+        }
     }
 
     private String square(int i, String num, ChessBoard board, boolean highlight) {

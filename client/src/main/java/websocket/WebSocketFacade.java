@@ -36,10 +36,16 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {}
 
-    public void connect(AuthData authToken, Integer gameId) throws ResponseException {
+    public void connect(AuthData authToken, Integer gameId, String type) throws ResponseException {
         try {
-            var command = new UserConnectCommand(authToken.authToken(), gameId);
-            this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+            if (type.equals("connect")) {
+                var command = new UserConnectCommand(authToken.authToken(), gameId);
+                this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+            }
+            else if (type.equals("resign")){
+                var command = new UserResignCommand(authToken.authToken(), gameId);
+                this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
+            }
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());
         }
@@ -48,15 +54,6 @@ public class WebSocketFacade extends Endpoint {
     public void move(AuthData authToken, Integer gameId, chess.ChessMove move) throws ResponseException {
         try {
             var command = new UserMoveCommand(authToken.authToken(), gameId, move);
-            this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
-        } catch (IOException e) {
-            throw new ResponseException(e.getMessage());
-        }
-    }
-
-    public void resign(AuthData authToken, Integer gameId) throws ResponseException {
-        try {
-            var command = new UserResignCommand(authToken.authToken(), gameId);
             this.session.getBasicRemote().sendText(JsonUsage.getJson(command));
         } catch (IOException e) {
             throw new ResponseException(e.getMessage());

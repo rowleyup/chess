@@ -56,7 +56,7 @@ public class InGameClient {
     }
 
     public void connect() throws ResponseException {
-        ws.connect(userAuth, gameId);
+        ws.connect(userAuth, gameId, "connect");
     }
 
     public String leave() throws ResponseException {
@@ -69,6 +69,6 @@ public class InGameClient {
     }
 
     public void resign() throws ResponseException {
-        ws.resign(userAuth, gameId);
+        ws.connect(userAuth, gameId, "resign");
     }
 }

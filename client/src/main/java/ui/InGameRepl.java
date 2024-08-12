@@ -47,18 +47,9 @@ public class InGameRepl implements NotificationHandler {
                 switch (result) {
                     case "leave" -> response = client.leave();
                     case "redraw" -> response = drawBoard();
-                    case "move" -> {
-                        if (!over) {response = movePrompt();}
-                        else {response = client.overHelp();}
-                    }
-                    case "highlight" -> {
-                        if (!over) {response = highlightMove(getSquare());}
-                        else {response = client.overHelp();}
-                    }
-                    case "resign" -> {
-                        if (!over) {response = resignPrompt();}
-                        else {response = client.overHelp();}
-                    }
+                    case "move" -> response = movePrompt();
+                    case "highlight" -> response = highlightMove(getSquare());
+                    case "resign" -> response = resignPrompt();
                     default -> response = client.help();
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
@@ -150,6 +141,10 @@ public class InGameRepl implements NotificationHandler {
     }
 
     protected String resignPrompt() throws ResponseException {
+        if (over) {
+            return client.overHelp();
+        }
+
         System.out.print("\n" + SET_TEXT_COLOR_BLUE + "Are you sure you want to resign? (Y/N) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine();
         input = input.toUpperCase();
@@ -169,6 +164,10 @@ public class InGameRepl implements NotificationHandler {
     }
 
     protected String movePrompt() throws ResponseException {
+        if (over) {
+            return client.overHelp();
+        }
+
         System.out.print(SET_TEXT_COLOR_BLUE + "Move from ");
         var from = getSquare();
         System.out.print(SET_TEXT_COLOR_BLUE + "Move to ");
@@ -251,6 +250,10 @@ public class InGameRepl implements NotificationHandler {
     }
 
     protected String highlightMove(chess.ChessPosition pos) {
+        if (over) {
+            return client.overHelp();
+        }
+
         Collection<chess.ChessMove> moves = gameData.validMoves(pos);
 
         if (team.equals("WHITE")) {

@@ -148,11 +148,9 @@ public class ConnectionManager {
         var list = gameUserMap.get(Integer.toString(gameId));
         if (list != null) {
             for (Connection conn : list) {
-                if (!conn.username.equals(excludeUsername)) {
-                    if (session != conn.session) {
-                        if (conn.session.isOpen()) {
-                            conn.send(JsonUsage.getJson(message));
-                        }
+                if (!conn.username.equals(excludeUsername) || session != conn.session) {
+                    if (conn.session.isOpen()) {
+                        conn.send(JsonUsage.getJson(message));
                     }
                 }
             }
