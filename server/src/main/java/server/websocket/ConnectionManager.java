@@ -54,27 +54,32 @@ public class ConnectionManager {
     }
 
     public synchronized String leave(String authToken, int gameId) throws Exception {
-        String username = gameService.authenticate(authToken);
-        Connection user = findUser(username, gameId);
-        if (user.role == Connection.SessionRole.WHITE && !user.isOver) {
-            throw new ResponseException("Cannot leave while a player in an active game");
-        }
-        else if (user.role == Connection.SessionRole.BLACK && !user.isOver) {
-            throw new ResponseException("Cannot leave while a player in an active game");
-        }
+        Connection user = findUser(authToken, gameId);
 
         gameUserMap.forEach((game, list) -> {
             if (game.equals(Integer.toString(gameId))) {
-                list.removeIf(c -> c.username.equals(username));
+                list.removeIf(c -> c.username.equals(user.username));
             }
         });
+        if (user.role == Connection.SessionRole.WHITE) {
+            GameData oldGame = gameDataMap.get(Integer.toString(gameId));
+            GameData newGame = new GameData(oldGame.gameID(), null, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+            gameDataMap.put(Integer.toString(gameId), newGame);
+            gameService.removePlayer(oldGame.gameID(), user.username, "white");
+        }
+        else if (user.role == Connection.SessionRole.BLACK) {
+            GameData oldGame = gameDataMap.get(Integer.toString(gameId));
+            GameData newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), null, oldGame.gameName(), oldGame.game());
+            gameDataMap.put(Integer.toString(gameId), newGame);
+            gameService.removePlayer(oldGame.gameID(), user.username, "black");
+        }
 
         if (gameUserMap.get(Integer.toString(gameId)).isEmpty()) {
             gameDataMap.remove(Integer.toString(gameId));
             gameUserMap.remove(Integer.toString(gameId));
             gameService.removeGame(gameId);
         }
-        return username;
+        return user.username;
     }
 
     public synchronized void move(String authToken, int gameId, chess.ChessMove move) throws Exception {

@@ -72,4 +72,6 @@ public interface GameDAO {
     boolean updateGame(GameData game) throws DataAccessException;
 
     boolean removeGame(int gameId) throws DataAccessException;
+
+    boolean removePlayer(int gameId, String username, String role) throws Exception;
 }

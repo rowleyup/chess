@@ -123,4 +123,10 @@ public class GameService {
             return "OBSERVER";
         }
     }
+
+    public void removePlayer(int gameId, String username, String role) throws Exception {
+        if (!gameDao.removePlayer(gameId, username, role)) {
+            throw new DataAccessException("Game not found");
+        }
+    }
 }

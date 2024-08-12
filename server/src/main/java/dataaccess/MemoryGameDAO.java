@@ -114,4 +114,28 @@ public class MemoryGameDAO implements GameDAO {
         games.remove(game);
         return true;
     }
+
+    public boolean removePlayer(int gameId, String username, String role) {
+        GameData game = null;
+        for (GameData g : games) {
+            if (g.gameID() == gameId) {
+                game = g;
+                break;
+            }
+        }
+        if (game == null) {
+            return false;
+        }
+        games.remove(game);
+
+        if (role.equals("white")) {
+            GameData newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
+            games.add(newGame);
+        }
+        else if (role.equals("black")) {
+            GameData newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
+            games.add(newGame);
+        }
+        return true;
+    }
 }
