@@ -179,6 +179,9 @@ public class InGameRepl implements NotificationHandler {
             if (piece.getTeamColor() != chess.ChessGame.TeamColor.valueOf(team)) {
                 throw new ResponseException("Error: Not your piece");
             }
+            if (chess.ChessGame.TeamColor.valueOf(team) != gameData.getTeamTurn()) {
+                throw new ResponseException("Error: Not your turn");
+            }
             if (piece.getPieceType() == chess.ChessPiece.PieceType.PAWN) {
                 if (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && from.getRow() == 2) {
                     client.move(from, to, getPromote());
@@ -187,6 +190,9 @@ public class InGameRepl implements NotificationHandler {
                     client.move(from, to, getPromote());
                 }
             }
+        }
+        else {
+            throw new ResponseException("Error: No piece");
         }
 
         client.move(from, to, null);
@@ -247,10 +253,10 @@ public class InGameRepl implements NotificationHandler {
     protected String highlightMove(chess.ChessPosition pos) {
         Collection<chess.ChessMove> moves = gameData.validMoves(pos);
 
-        if (team.equals("white")) {
+        if (team.equals("WHITE")) {
             return new BoardDrawer(gameData).drawWhite(moves);
         }
-        else if (team.equals("black")) {
+        else if (team.equals("BLACK")) {
             return new BoardDrawer(gameData).drawBlack(moves);
         }
         else {

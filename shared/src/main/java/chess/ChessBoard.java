@@ -38,7 +38,7 @@ public class ChessBoard {
         int row = position.getRow() - 1;
         int column = position.getColumn() - 1;
         if (row >= 8 || row < 0 || column >= 8 || column < 0) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Invalid position");
         }
         return board[row][column];
     }

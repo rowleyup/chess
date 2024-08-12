@@ -182,7 +182,7 @@ public class ConnectionManager {
         int y = pos.getColumn();
         String spot = "";
 
-        switch (x) {
+        switch (y) {
             case 1 -> spot = "a";
             case 2 -> spot = "b";
             case 3 -> spot = "c";
@@ -192,7 +192,7 @@ public class ConnectionManager {
             case 7 -> spot = "g";
             case 8 -> spot = "h";
         }
-        spot = spot + y;
+        spot = spot + x;
         return spot;
     }
 

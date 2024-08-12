@@ -81,7 +81,7 @@ public class ChessGame {
             throw new InvalidMoveException("No piece at this location");
         }
         if (piece.getTeamColor() != getTeamTurn()) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("It is not your turn");
         }
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
         boolean valid = false;
@@ -95,7 +95,7 @@ public class ChessGame {
         }
 
         if (!valid) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move");
         }
 
         movePiece(move);
