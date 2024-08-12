@@ -4,7 +4,6 @@ import model.AuthData;
 import server.JsonUsage;
 import server.ResponseException;
 import websocket.commands.*;
-import websocket.messages.ServerMessage;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
@@ -26,8 +25,7 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    ServerMessage notification = JsonUsage.fromJson(message, ServerMessage.class);
-                    handler.notify(notification);
+                    handler.notify(message);
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException e) {

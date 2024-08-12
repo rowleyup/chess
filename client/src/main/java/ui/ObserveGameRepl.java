@@ -22,7 +22,7 @@ public class ObserveGameRepl extends InGameRepl {
             System.out.print(SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message);
         }
 
-        System.out.println(client.help());
+        System.out.println(client.observeHelp());
         String result = "";
 
         while (!result.equals("leave")) {

@@ -15,8 +15,8 @@ public class PostLoginRepl {
     private GameData game;
     private String color;
     private final AuthData userAuth;
-    private boolean success;
     private final String url;
+    private boolean success;
 
     public PostLoginRepl(ServerFacade server, AuthData auth, String url) {
         this.url = url;
@@ -43,24 +43,29 @@ public class PostLoginRepl {
                     case "logout" -> response = client.logout();
                     case "create" -> response = createPrompt();
                     case "list" -> response = client.list();
-                    case "join" -> response = joinPrompt();
-                    case "observe" -> response = observePrompt();
+                    case "join" -> {
+                        response = joinPrompt();
+                        new InGameRepl(userAuth, url).run(game.gameID(), color);
+                    }
+                    case "observe" -> {
+                        response = observePrompt();
+                        new ObserveGameRepl(userAuth, url).run(game.gameID(), "OBSERVER");
+                    }
                     default -> response = client.help();
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);
+
+                if (success) {
+                    if (result.equals("join")) {
+                        new InGameRepl(userAuth, url).run(game.gameID(), color);
+                    }
+                    else if (result.equals("observe")) {
+                        new ObserveGameRepl(userAuth, url).run(game.gameID(), "OBSERVER");
+                    }
+                }
             } catch (Throwable e) {
                 String message = e.getMessage();
                 System.out.print(SET_TEXT_BLINKING + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + message + RESET_TEXT_BLINKING);
-                success = false;
-            }
-
-            if (success && result.equals("join")) {
-                var inGame = new InGameRepl(userAuth, url);
-                inGame.run(game.gameID(), color);
-            }
-            else if (success && result.equals("observe")) {
-                var inGame = new ObserveGameRepl(userAuth, url);
-                inGame.run(game.gameID(), "OBSERVER");
             }
         }
     }
@@ -117,8 +122,8 @@ public class PostLoginRepl {
         }
 
         switch (color) {
-            case "w", "white": this.color = "WHITE";
-            case "b", "black": this.color = "BLACK";
+            case "w", "white" -> this.color = "WHITE";
+            case "b", "black" -> this.color = "BLACK";
         }
 
         game = client.join(gameId, color);

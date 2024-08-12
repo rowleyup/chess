@@ -1,11 +1,8 @@
 package ui;
 
 import chess.*;
-
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-
 import static ui.EscapeSequences.*;
 
 public class BoardDrawer {
@@ -16,11 +13,12 @@ public class BoardDrawer {
     }
 
     public String drawWhite(Collection<ChessMove> moves) {
-        String top = SET_BG_COLOR_YELLOW + SET_TEXT_COLOR_BLACK + "    a" + EMPTY;
+        String top = SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "    a" + EMPTY;
         top = top + " b" + EMPTY + " c" + EMPTY + " d" + EMPTY + " e" + EMPTY + " f" + EMPTY + " g" + EMPTY;
         top = top + " h" + EMPTY + "   ";
         top = top + RESET_BG_COLOR + RESET_TEXT_COLOR + "\n";
-        StringBuilder picture = new StringBuilder(top);
+        StringBuilder picture = new StringBuilder("\n");
+        picture.append(top);
 
         for (int i = 8; i >= 1; i--) {
             picture.append(boardTemplate(String.valueOf(i), 1, getPosList(moves)));
@@ -31,11 +29,12 @@ public class BoardDrawer {
     }
 
     public String drawBlack(Collection<ChessMove> moves) {
-        String top = SET_BG_COLOR_YELLOW + SET_TEXT_COLOR_BLACK + "    h" + EMPTY;
+        String top = SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "    h" + EMPTY;
         top = top + " g" + EMPTY + " f" + EMPTY + " e" + EMPTY + " d" + EMPTY + " c" + EMPTY;
         top = top + " b" + EMPTY + " a" + EMPTY + "   ";
         top = top + RESET_BG_COLOR + RESET_TEXT_COLOR + "\n";
-        StringBuilder picture = new StringBuilder(top);
+        StringBuilder picture = new StringBuilder("\n");
+        picture.append(top);
 
         for (int i = 1; i <= 8; i++) {
             picture.append(boardTemplate(String.valueOf(i), 0, getPosList(moves)));
@@ -48,8 +47,8 @@ public class BoardDrawer {
     private String boardTemplate(String num, int direction, Collection<ChessPosition> moves) {
         ChessBoard board = game.getBoard();
         StringBuilder pic = new StringBuilder();
-        pic.append(SET_BG_COLOR_YELLOW + SET_TEXT_COLOR_BLACK);
-        pic.append(" ").append(num).append(" ");
+        pic.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE);
+        pic.append(" ").append(num).append(" ").append(SET_TEXT_COLOR_BLACK);
 
         if (direction == 1) {
             for (int i = 1; i <= 8; i++) {
@@ -72,7 +71,7 @@ public class BoardDrawer {
             }
         }
 
-        pic.append(SET_BG_COLOR_YELLOW + SET_TEXT_COLOR_BLACK);
+        pic.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE);
         pic.append(" ").append(num).append(" ").append(RESET_BG_COLOR).append("\n");
         return pic.toString();
     }

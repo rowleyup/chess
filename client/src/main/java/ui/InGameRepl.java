@@ -1,6 +1,7 @@
 package ui;
 
 import model.AuthData;
+import server.JsonUsage;
 import server.ResponseException;
 import websocket.NotificationHandler;
 import websocket.messages.*;
@@ -96,8 +97,8 @@ public class InGameRepl implements NotificationHandler {
     }
 
     @Override
-    public void notify(ServerMessage notification) {
-        ServerMessage.ServerMessageType type = notification.getServerMessageType();
+    public void notify(String notification) {
+        ServerMessage.ServerMessageType type = JsonUsage.fromJson(notification, ServerMessage.class).getServerMessageType();
         switch (type) {
             case ServerMessage.ServerMessageType.NOTIFICATION -> printUpdate(notification);
             case ServerMessage.ServerMessageType.LOAD_GAME -> printBoard(notification);
@@ -105,20 +106,22 @@ public class InGameRepl implements NotificationHandler {
         }
     }
 
-    protected void printBoard(ServerMessage notification) {
-        ServerLoadMessage note = (ServerLoadMessage) notification;
+    protected void printBoard(String notification) {
+        ServerLoadMessage note = JsonUsage.fromJson(notification, ServerLoadMessage.class);
         this.gameData = note.getGame();
         if (note.isCheckMate()) {
             over = true;
         }
 
-        System.out.print("\n" + SET_TEXT_COLOR_YELLOW + note.getMessage());
+        if (note.getMessage() != null) {
+            System.out.print("\n" + SET_TEXT_COLOR_YELLOW + note.getMessage());
+        }
         System.out.print(SET_TEXT_COLOR_GREEN + drawBoard());
         printPrompt();
     }
 
-    protected void printUpdate(ServerMessage notification) {
-        ServerNotifyMessage note = (ServerNotifyMessage) notification;
+    protected void printUpdate(String notification) {
+        ServerNotifyMessage note = JsonUsage.fromJson(notification, ServerNotifyMessage.class);
         String message = note.getMessage();
 
         if (message.contains("OVER")) {
@@ -128,17 +131,17 @@ public class InGameRepl implements NotificationHandler {
         printPrompt();
     }
 
-    protected void printError(ServerMessage notification) {
-        ServerErrorMessage note = (ServerErrorMessage) notification;
+    protected void printError(String notification) {
+        ServerErrorMessage note = JsonUsage.fromJson(notification, ServerErrorMessage.class);
         System.out.print("\n" + SET_TEXT_BOLD + SET_TEXT_COLOR_RED + note.getErrorMessage());
         printPrompt();
     }
 
     protected String drawBoard() {
-        if (team == null) {
+        if (team.equals("OBSERVER")) {
             return new BoardDrawer(gameData).drawWhite(new HashSet<>());
         }
-        else if (team.equals("white")) {
+        else if (team.equals("WHITE")) {
             return new BoardDrawer(gameData).drawWhite(new HashSet<>());
         }
         else {
@@ -196,21 +199,21 @@ public class InGameRepl implements NotificationHandler {
         System.out.print(SET_TEXT_COLOR_BLUE + "Square (e.g. a1) >>> " + SET_TEXT_COLOR_LIGHT_GREY);
         String input = scanner.nextLine();
         var inputs = input.toLowerCase().split("");
-        int secondNum = Integer.parseInt(inputs[1]);
-        if (!numbers.contains(secondNum)) {
+        int firstNum = Integer.parseInt(inputs[1]);
+        if (!numbers.contains(firstNum)) {
             throw new ResponseException("Error: Invalid coordinates");
         }
 
-        int firstNum;
+        int secondNum;
         switch (inputs[0]) {
-            case "a" -> firstNum = 1;
-            case "b" -> firstNum = 2;
-            case "c" -> firstNum = 3;
-            case "d" -> firstNum = 4;
-            case "e" -> firstNum = 5;
-            case "f" -> firstNum = 6;
-            case "g" -> firstNum = 7;
-            case "h" -> firstNum = 8;
+            case "a" -> secondNum = 1;
+            case "b" -> secondNum = 2;
+            case "c" -> secondNum = 3;
+            case "d" -> secondNum = 4;
+            case "e" -> secondNum = 5;
+            case "f" -> secondNum = 6;
+            case "g" -> secondNum = 7;
+            case "h" -> secondNum = 8;
             default -> throw new ResponseException("Error: Invalid coordinates");
         }
 
