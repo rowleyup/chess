@@ -104,7 +104,7 @@ public class PostLoginClient {
         }
 
         if (g.blackUsername() != null) {
-            m = m + g.blackUsername() + " ".repeat(Math.max(0, 12 - g.blackUsername().length())) + "\n";
+            m = m + g.blackUsername() + " ".repeat(Math.max(0, 12 - g.blackUsername().length()));
         }
         else {
             m = m + "none" + " ".repeat(10);

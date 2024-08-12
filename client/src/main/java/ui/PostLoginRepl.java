@@ -43,14 +43,8 @@ public class PostLoginRepl {
                     case "logout" -> response = client.logout();
                     case "create" -> response = createPrompt();
                     case "list" -> response = client.list();
-                    case "join" -> {
-                        response = joinPrompt();
-                        new InGameRepl(userAuth, url).run(game.gameID(), color);
-                    }
-                    case "observe" -> {
-                        response = observePrompt();
-                        new ObserveGameRepl(userAuth, url).run(game.gameID(), "OBSERVER");
-                    }
+                    case "join" -> response = joinPrompt();
+                    case "observe" -> response = observePrompt();
                     default -> response = client.help();
                 }
                 System.out.print(SET_TEXT_COLOR_GREEN + response);

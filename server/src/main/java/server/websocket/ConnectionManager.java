@@ -82,11 +82,14 @@ public class ConnectionManager {
         Connection user = findUser(authToken, gameId);
         chess.ChessGame game = gameDataMap.get(Integer.toString(gameId)).game();
         chess.ChessPiece piece = game.getBoard().getPiece(move.getStartPosition());
-        if (!(piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && user.role == Connection.SessionRole.WHITE)) {
+        if (piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && user.role == Connection.SessionRole.BLACK) {
             throw new ResponseException("Cannot move the other team's piece");
         }
-        else if (!(piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && user.role == Connection.SessionRole.BLACK)) {
+        else if (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && user.role == Connection.SessionRole.WHITE) {
             throw new ResponseException("Cannot move the other team's piece");
+        }
+        else if (user.role == Connection.SessionRole.OBSERVER) {
+            throw new ResponseException("Cannot move pieces as an observer");
         }
 
         game.makeMove(move);
